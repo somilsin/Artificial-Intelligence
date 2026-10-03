@@ -1,4 +1,14 @@
-# Inside AI website
+<div align="center">
+
+# 🌌 Inside AI
+
+![Artificial Intelligence](https://img.shields.io/badge/Artificial%20Intelligence-6E40C9?style=for-the-badge) ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge) ![Research Notes](https://img.shields.io/badge/Research%20Notes-58A6FF?style=for-the-badge)
+
+**By [Somil Singh](https://github.com/somilsin)**
+
+</div>
+
+[← Artificial Intelligence](../README.md)
 
 Static adaptation of Somil's pixel-perfect-replica archive design. Original template files and provenance stay in the private editorial workspace, outside this site repository.
 

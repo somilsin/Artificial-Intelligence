@@ -1,3 +1,5 @@
+[← Artificial Intelligence](../README.md)
+
 # BehaviorAI — Behavioral Change Engine
 
 <div align="center">

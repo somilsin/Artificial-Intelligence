@@ -86,10 +86,13 @@ I'm a Full Stack AI Engineer with my passion in Deep Learning & Computer Vision.
 
 ### Get In Touch
 
-Feel free to connect on [LinkedIn](https://linkedin.com/in/somil-singh) or check out my projects here on GitHub!
+Feel free to connect below or check out my projects here on GitHub!
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/somil-singh)
 [![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:somils@andrew.cmu.edu)
+[![X](https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/Skywalkerlyzv)
+[![Medium](https://img.shields.io/badge/Medium-12100E?style=for-the-badge&logo=medium&logoColor=white)](https://medium.com/@thesomilsinghofficial)
+[![Substack](https://img.shields.io/badge/Substack-FF6719?style=for-the-badge&logo=substack&logoColor=white)](https://substack.com/@thesomilsingh)
 
 *Thanks for stopping by!*
 

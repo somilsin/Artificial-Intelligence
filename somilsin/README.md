@@ -103,4 +103,4 @@ Feel free to connect below or check out my projects here on GitHub!
 
 | [Artificial Intelligence](https://github.com/somilsin/Artificial-Intelligence) | [Machine Learning](https://github.com/somilsin/Machine-Learning) | [Computer Vision](https://github.com/somilsin/Computer-Vision) | [Learning Archive](https://github.com/somilsin/Learning-Archive) |
 
-I organize my work into these four categories. Each category contains the project folders and notes I use to explain the experiments.
+I organized my work into these four categories. Each category contains the project folders and notes I use to explain the experiments.

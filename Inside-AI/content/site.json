@@ -1,0 +1,59 @@
+{
+  "name": "Inside AI",
+  "tagline": "Learn it. Build it. Explain it.",
+  "description": "Public AI study notes, model explainers and sourced world AI updates by Somil Singh.",
+  "proposed_site_url": "https://somilsin.github.io/Inside-AI/",
+  "links": {
+    "medium": "https://medium.com/@thesomilsinghofficial",
+    "substack": "https://thesomilsingh.substack.com/",
+    "x": "https://x.com/Skywalkerlyzv",
+    "linkedin": "https://www.linkedin.com/in/somil-singh/",
+    "newsletter": "https://www.linkedin.com/newsletters/7511777490416250880/",
+    "github": "https://github.com/somilsin",
+    "portfolio": "https://somilsin.github.io/somilsin_portfolio/",
+    "email": "mailto:thesomilsinghofficial@gmail.com"
+  },
+  "articles": [
+    {
+      "part": "01",
+      "type": "Overview",
+      "model": "VAE",
+      "title": "How VAEs Learn to Generate New Images",
+      "description": "An encoder, a decoder and a space between them. See how a VAE trains and generates, with diagrams, PyTorch and actual output.",
+      "image": "assets/vae-overview.png",
+      "image_alt": "VAE overview illustration from the published article",
+      "medium": "https://medium.com/@thesomilsinghofficial/how-vaes-learn-to-generate-new-images-9ebfd7a6a508",
+      "substack": "https://thesomilsingh.substack.com/p/how-vaes-learn-to-generate-new-images",
+      "published": true
+    },
+    {
+      "part": "02",
+      "type": "Foundations",
+      "model": "VAE",
+      "title": "Why a VAE Needs KL Divergence, Variational Inference and a Little Noise",
+      "description": "Read Part 01 first, then unpack the maths behind its code: KL divergence, the ELBO and reparameterization, with numerical checks.",
+      "image": "assets/vae-foundations.png",
+      "image_alt": "Concept map showing the mathematical foundations behind a VAE",
+      "medium": "https://medium.com/@thesomilsinghofficial/why-a-vae-needs-kl-divergence-variational-inference-and-a-little-noise-e29c5932d597",
+      "substack": "https://thesomilsingh.substack.com/p/why-a-vae-needs-kl-divergence-variational",
+      "published": true
+    }
+  ],
+  "news": [
+    {
+      "id": "2026-10-03",
+      "title": "Five AI updates for builders",
+      "date": "3 October 2026",
+      "source_window": "Announcements dated 2 October 2026",
+      "source": "news-2026-10-03.md",
+      "approval": "approved",
+      "topics": [
+        "Decision models in llama.cpp",
+        "AstaBrief for cited research",
+        "AutoSynthData for agent training",
+        "Claude Frontier Academy",
+        "Grok transcription migration"
+      ]
+    }
+  ]
+}

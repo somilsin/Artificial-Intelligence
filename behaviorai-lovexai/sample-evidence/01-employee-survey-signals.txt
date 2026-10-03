@@ -1,0 +1,43 @@
+Source: Global AI Transformation Pulse Survey — Q1 2025
+Respondents: 2,847 employees across 40 countries
+Conducted by: People Analytics team, Fortune 500 client
+
+SURVEY FINDINGS — AI UPSKILLING INITIATIVE (WAVE 2)
+
+Completion vs. Application Gap:
+- 84% of employees have completed at least one AI module in the LMS.
+- Only 11% say they have used an AI tool to complete a real work task in the past 30 days.
+- 73% say they "understand the concept" but "don't know how to start" applying it to their job.
+
+Fear and Psychological Safety:
+- 61% say they are afraid of making a mistake with AI in front of their manager.
+- 54% say they feel "watched" when experimenting with new tools at work.
+- 48% say their manager has never mentioned AI in a 1:1 conversation.
+- 39% say they believe AI will be used to monitor their performance, not help them.
+
+Manager Behavior Signals:
+- Only 19% of managers have modeled AI tool usage in a team meeting.
+- 67% of managers say they feel "unequipped" to coach their teams on AI adoption.
+- Managers who have used AI tools themselves have teams with 3.4x higher AI adoption rates.
+
+What Employees Say They Need (open text, top themes):
+- "Show me how to use it for my actual job, not a fake example." (mentioned 812 times)
+- "I need to practice without it going on my record." (mentioned 634 times)
+- "My manager needs to use it first before I will." (mentioned 509 times)
+- "One nudge at the right moment would help more than 10 courses." (mentioned 441 times)
+
+LMS Completion vs. Behavior Change (6-week post-training audit):
+- Employees who scored 90%+ on AI quizzes: 83% still not using AI tools on the job.
+- Employees who received a peer recommendation to try a tool: 47% used it within 3 days.
+- Employees who received a manager-assigned practice task: 58% used the tool within 1 week.
+
+Constraints noted by HR and Legal:
+- Individual AI usage data cannot be stored or shared without explicit employee consent.
+- Behavioral nudges must be opt-out, not mandatory.
+- No individual performance scoring based on AI tool adoption rate.
+- Must support 6 languages: English, French, German, Mandarin, Spanish, Arabic.
+- Must integrate with Microsoft Teams and Outlook — no new app installs permitted.
+
+ROI requirement from transformation lead (Greg):
+- Evidence of measurable behavioral change within 90 days.
+- Success defined as: employee uses AI tool unprompted, on a real task, without being told to.

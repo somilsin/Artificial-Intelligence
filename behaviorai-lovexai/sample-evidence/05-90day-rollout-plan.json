@@ -1,0 +1,112 @@
+{
+  "project": "BehaviorAI — 10,000 Employee AI Transformation Rollout",
+  "client": "Fortune 500 (Confidential)",
+  "transformation_lead": "Greg",
+  "total_employees": 10000,
+  "regions": ["North America", "EMEA", "APAC", "LATAM", "MEA"],
+  "languages": ["English", "French", "German", "Mandarin", "Spanish", "Arabic"],
+  "integrations_required": ["Microsoft Teams", "Outlook", "SAP"],
+  "success_definition": "Employee uses an AI tool unprompted on a real work task without being asked to.",
+
+  "phase_1": {
+    "name": "Pilot — Behavioral baseline and nudge engine test",
+    "duration_days": 30,
+    "employee_count": 200,
+    "regions": ["North America", "APAC"],
+    "target_behaviors": [
+      "Uses AI to draft first version of a weekly report (Operations)",
+      "Uses AI to summarize a customer email before responding (Customer Service)",
+      "Uses AI to generate a first-pass meeting agenda (All roles)"
+    ],
+    "nudge_types": [
+      "In-the-moment task nudge: triggered when employee opens a known repetitive task in Teams or Outlook",
+      "Peer propagation signal: anonymized 'someone on your team just did X in 3 minutes with AI'",
+      "Weekly reflection prompt: one question about what they tried and what happened"
+    ],
+    "constraints": [
+      "All nudges are opt-out. Employees can dismiss or pause for 7 days.",
+      "No individual AI usage data stored without consent form signed.",
+      "No manager visibility into individual behavior — team aggregates only.",
+      "No leaderboards or public adoption scores."
+    ],
+    "success_metrics": [
+      "% of pilot employees who perform a target behavior at least once (goal: 40%)",
+      "Nudge engagement rate (goal: 55% open, 30% act-on)",
+      "Self-reported confidence score increase after 30 days (goal: +18 points)",
+      "Opt-out rate (health signal — goal: under 12%)"
+    ],
+    "human_touchpoints": [
+      "Week 1: Manager briefing — how to read team dashboard and have a coaching conversation",
+      "Week 2: Optional employee Q&A session (psychological safety first)",
+      "Week 4: HR review of aggregated signals — decide what to carry to Phase 2"
+    ]
+  },
+
+  "phase_2": {
+    "name": "Scale — Full APAC and EMEA rollout with peer layer",
+    "duration_days": 30,
+    "employee_count": 3000,
+    "regions": ["APAC", "EMEA"],
+    "new_features_activated": [
+      "Peer propagation layer: anonymized social proof signals in Teams channels",
+      "Manager behavior dashboard: team-level adoption signals, no individual scores",
+      "Human coach escalation: employees stuck after 3 nudge cycles flagged for HRBP conversation",
+      "Multi-language nudge delivery: Mandarin, French, German, Arabic"
+    ],
+    "target_behaviors_added": [
+      "Uses AI to prepare for a client meeting (Sales, Client Services)",
+      "Uses AI to synthesize feedback from multiple sources (HR, Operations)",
+      "Uses AI to draft a policy or process document first draft (Finance, Legal)"
+    ],
+    "success_metrics": [
+      "% behavior change maintained from Phase 1 cohort after 30 days without active nudges (goal: 65%)",
+      "Peer propagation conversion rate: % who try a behavior after social proof signal (goal: 28%)",
+      "Manager-observed behavior change rate without being prompted (goal: 42%)",
+      "Human coach escalation rate — stalled employees routed to HRBP (goal: under 8%)"
+    ]
+  },
+
+  "phase_3": {
+    "name": "Global — Full 10,000 employee deployment and ROI evidence",
+    "duration_days": 30,
+    "employee_count": 10000,
+    "regions": ["North America", "EMEA", "APAC", "LATAM", "MEA"],
+    "roi_evidence_package": {
+      "primary_metric": "% of 10,000 employees who perform a target AI behavior unprompted at least once per week",
+      "target": "35% by Day 90",
+      "comparison_baseline": "11% at start of programme (from pulse survey Wave 2)",
+      "secondary_metrics": [
+        "Time saved per employee per week using AI (self-reported)",
+        "Manager satisfaction with team AI adoption",
+        "Peer propagation rate across regions",
+        "NPS score for the coaching nudge system itself"
+      ]
+    },
+    "what_does_not_get_automated": [
+      "Individual performance ratings based on AI usage data",
+      "Disciplinary actions triggered by nudge non-response",
+      "Public ranking of employees or teams by adoption score",
+      "Manager conversations about growth and development",
+      "HR decisions about promotion or compensation"
+    ]
+  },
+
+  "key_risks_and_mitigations": [
+    {
+      "risk": "Employees perceive nudges as surveillance",
+      "mitigation": "Opt-in framing, clear data consent process, no individual scores, HR communication campaign before launch"
+    },
+    {
+      "risk": "Managers don't use the dashboard",
+      "mitigation": "Manager behavior is itself a target behavior — nudge the managers too, model the change"
+    },
+    {
+      "risk": "Low adoption in LATAM and MEA due to lower LMS completion baseline",
+      "mitigation": "Deploy in local language with regional champions, start with simpler target behaviors, increase human touchpoints"
+    },
+    {
+      "risk": "Legal blocks individual data tracking",
+      "mitigation": "All behavioral data is aggregated and anonymized by default. Individual tracking requires explicit opt-in consent only."
+    }
+  ]
+}

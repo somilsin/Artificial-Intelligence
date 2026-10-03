@@ -1,0 +1,93 @@
+VENDOR EVALUATION SUMMARY — AI Transformation Coaching Tools
+Client: Fortune 500 (Confidential)
+Evaluator: Greg, VP Transformation
+Review period: January–February 2025
+Vendors assessed: 6
+
+========================================
+VENDOR 1: LearningBot Pro
+========================================
+Pitch: "AI-powered learning assistant that answers questions and links to your LMS content."
+What it does: Chatbot that parses your existing course PDFs and answers FAQ questions.
+Demo impression: Impressive on surface. Fell apart when asked non-standard questions.
+Knowing-doing gap addressed? NO. Tells employees what to do. Does not coach them to do it.
+Behavioral feedback loop? NO. No mechanism to know if the employee changed behavior.
+Fear / psychological safety addressed? NO. No mention of emotional resistance.
+Scalability to 40 countries: Partial. English only in base tier.
+Integration with Teams/Outlook: NO. Requires separate app install.
+Greg's verdict: "This is a better search engine, not a behavioral change engine."
+
+========================================
+VENDOR 2: CoachGPT Enterprise
+========================================
+Pitch: "Your always-on AI coach for every employee."
+What it does: Generative AI chatbot employees can ask for advice anytime.
+Demo impression: Fluent, friendly, and completely generic. Responses not role-specific.
+Knowing-doing gap addressed? PARTIAL. Gives advice but no follow-through mechanism.
+Behavioral feedback loop? NO. Conversation ends with no tracking of what happens next.
+Fear / psychological safety addressed? PARTIAL. Friendly tone but no design for fear.
+Scalability to 40 countries: YES. Multi-language supported.
+Integration with Teams/Outlook: PARTIAL. Teams app available but not native integration.
+Greg's verdict: "Better than a PDF chatbot. Still not a behavioral change engine."
+
+========================================
+VENDOR 3: SkillsMapper AI
+========================================
+Pitch: "AI-driven skills gap analysis and personalized learning paths."
+What it does: Assesses skill levels and recommends courses from a content library.
+Demo impression: Slick skills dashboard. Beautiful UI. Same fundamental problem — more courses.
+Knowing-doing gap addressed? NO. Recommends more learning, not behavioral practice.
+Behavioral feedback loop? NO. Tracks course completion, not real-world behavior.
+Fear / psychological safety addressed? NO. No mention of emotional or cultural barriers.
+Scalability to 40 countries: YES.
+Integration with Teams/Outlook: NO. Standalone platform.
+Greg's verdict: "Recommending more courses to people who aren't applying the ones they've done is not a solution."
+
+========================================
+VENDOR 4: NudgeFlow
+========================================
+Pitch: "Micro-nudges for habit formation delivered in your workflow."
+What it does: Sends scheduled reminders and tips via email and Teams.
+Demo impression: Closest to what Greg needs in concept. Execution too generic.
+Knowing-doing gap addressed? PARTIAL. Nudges in workflow is right direction. Not personalized.
+Behavioral feedback loop? PARTIAL. Tracks nudge opens but not behavioral outcomes.
+Fear / psychological safety addressed? NO. Nudges are informational, not empathetic.
+Scalability to 40 countries: YES. Multi-language.
+Integration with Teams/Outlook: YES. Native Teams integration.
+Greg's verdict: "Right direction, wrong depth. A reminder is not a coaching nudge."
+
+========================================
+VENDOR 5: HumanFirst AI Platform
+========================================
+Pitch: "Human-centered AI coaching that drives behavioral change at scale."
+What it does: Role-specific micro-coaching nudges delivered in Teams, triggered by real work events, with a behavioral feedback loop and manager dashboard.
+Demo impression: Only vendor to open with the behavior change problem, not the AI feature.
+Knowing-doing gap addressed? YES. Nudges tied to real tasks in real tools.
+Behavioral feedback loop? YES. Tracks whether employee behaved differently after nudge.
+Fear / psychological safety addressed? YES. Opt-in design, no individual scoring, safe practice space.
+Scalability to 40 countries: YES. 6-language support. No new app required.
+Integration with Teams/Outlook: YES. Native integration, zero additional installs.
+Greg's verdict: "This is the behavioral change engine I've been looking for."
+
+========================================
+VENDOR 6: AITrainPro
+========================================
+Pitch: "Gamified AI training with leaderboards and certificates."
+What it does: Adds gamification and social competition to LMS completion.
+Demo impression: Fun. Employees might enjoy it. Measures the wrong thing.
+Knowing-doing gap addressed? NO. Gamifies course completion, not behavior change.
+Behavioral feedback loop? NO. Tracks badges and points, not real behavior.
+Fear / psychological safety addressed? NO. Leaderboards actively increase fear of judgment.
+Greg's verdict: "Making the wrong metric more fun is not a solution."
+
+========================================
+OVERALL RECOMMENDATION
+========================================
+Only Vendor 5 addressed the behavioral change problem at its root.
+All other vendors optimized for the wrong outcome: course completion, not on-the-job behavior.
+Core requirement for any viable solution:
+- Nudges must be role-specific and contextual, not generic.
+- Must integrate into existing tools — no new app installs.
+- Must include a behavioral feedback loop — not just delivery tracking.
+- Must be opt-in and consent-based — no individual surveillance.
+- Must be measurable within 90 days.

@@ -1,0 +1,5 @@
+# GitHub Pages config — tells Jekyll to pass through all files as-is
+include:
+  - "*.html"
+  - "*.js"
+  - "*.css"

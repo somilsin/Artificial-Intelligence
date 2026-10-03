@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BehaviorAI — Behavioral Change Engine</title>
+    <link rel="stylesheet" href="./styles.css" />
+    <script defer src="./app.js"></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand-lockup" aria-label="Softway LoveXAI prototype">
+        <span class="mark">BC</span>
+        <div>
+          <p class="eyebrow">LOVE x AI · Behavioral Change Engine</p>
+          <h1>BehaviorAI — Scale Human Change, Not Just Knowledge</h1>
+        </div>
+      </div>
+      <div class="status-strip" aria-label="Prototype status">
+        <span class="status-pill">Agentic · two-agent pipeline</span>
+        <span id="llmStatusPill" class="status-pill llm-pill">Agents: add API key</span>
+        <span class="status-pill">Human review gates</span>
+        <button id="settingsButton" type="button" class="icon-button settings-button" title="Settings — Anthropic API key">
+          <span aria-hidden="true">⚙</span>
+          <span class="sr-only">Settings</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- SETTINGS MODAL -->
+    <div id="settingsModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+      <div id="settingsBackdrop" class="modal-backdrop"></div>
+      <div class="modal-panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Bring your own key</p>
+            <h2 id="settingsTitle">Connect the Claude API</h2>
+          </div>
+          <button id="settingsClose" type="button" class="icon-button" title="Close">
+            <span aria-hidden="true">X</span>
+            <span class="sr-only">Close settings</span>
+          </button>
+        </div>
+        <p class="muted modal-copy">
+          BehaviorAI runs two live Claude agents — an Evidence Analyst and a Coaching Design Strategist —
+          directly from your browser. Your API key is stored only in this browser's local storage and is
+          sent only to <code>api.anthropic.com</code>, never to any other server. Get a key at
+          <a href="https://console.anthropic.com/settings/keys" target="_blank" rel="noopener">console.anthropic.com</a>.
+        </p>
+        <label class="field">
+          <span>Anthropic API key</span>
+          <input id="settingsKeyInput" type="password" autocomplete="off" spellcheck="false" placeholder="sk-ant-..." />
+        </label>
+        <label class="field compact">
+          <span>Model</span>
+          <select id="settingsModelSelect"></select>
+        </label>
+        <div class="button-row">
+          <button id="settingsSave" type="button" class="primary">Save</button>
+          <button id="settingsClear" type="button" class="quiet">Clear key</button>
+        </div>
+      </div>
+    </div>
+
+    <main class="workspace">
+      <!-- LEFT: Intake -->
+      <section class="panel intake-panel" aria-labelledby="intake-title">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Challenge intake</p>
+            <h2 id="intake-title">Transformation context</h2>
+          </div>
+          <span class="step-badge">01</span>
+        </div>
+
+        <label class="field">
+          <span>Problem statement</span>
+          <textarea
+            id="problemInput"
+            spellcheck="true"
+            placeholder="Describe the transformation challenge — who needs to change behavior, what they need to do differently, and what is blocking it..."
+          ></textarea>
+        </label>
+
+        <div class="field-grid">
+          <label class="field compact">
+            <span>Industry / Function</span>
+            <select id="industryInput">
+              <option>AI upskilling &amp; transformation</option>
+              <option>Leadership development</option>
+              <option>Compliance &amp; safety behavior</option>
+              <option>Customer experience behavior</option>
+              <option>Sales behavior change</option>
+              <option>DEI &amp; culture change</option>
+              <option>Operational process adoption</option>
+              <option>Technology adoption</option>
+            </select>
+          </label>
+          <label class="field compact">
+            <span>Scale</span>
+            <select id="riskInput">
+              <option>Global (5,000+ employees)</option>
+              <option>Regional (1,000–5,000)</option>
+              <option>Department (100–1,000)</option>
+              <option>Team (under 100)</option>
+            </select>
+          </label>
+        </div>
+
+        <label class="field">
+          <span>Evidence &amp; context</span>
+          <textarea
+            id="evidenceInput"
+            class="notes"
+            spellcheck="true"
+            placeholder="Paste listening data, survey comments, LMS completion rates, manager observations, or client context notes..."
+          ></textarea>
+        </label>
+
+        <label class="file-drop" for="fileInput">
+          <input id="fileInput" type="file" multiple accept=".txt,.md,.csv,.json,.pdf" />
+          <span class="file-icon" aria-hidden="true">+</span>
+          <span>
+            <strong>Add evidence files</strong>
+            <small id="fileStatus">TXT, PDF, CSV, JSON, or MD</small>
+          </span>
+        </label>
+
+        <div id="sourceList" class="source-list" aria-live="polite"></div>
+
+        <p id="runStatus" class="run-status" role="status">Ready. Enter a transformation challenge or load the Greg demo, then click Run analysis.</p>
+
+        <div class="button-row">
+          <button id="runButton" class="primary" type="button">Run analysis</button>
+          <button id="demoButton" type="button">Load Greg demo</button>
+          <button id="clearButton" type="button" class="quiet">Clear</button>
+        </div>
+      </section>
+
+      <!-- CENTER: Analysis -->
+      <section class="analysis-area" aria-labelledby="analysis-title">
+        <div class="analysis-header">
+          <div>
+            <p class="eyebrow">Behavioral change design workspace</p>
+            <h2 id="analysis-title">Human behavior map and AI coaching design</h2>
+          </div>
+          <div class="toolbar" role="group" aria-label="Report actions">
+            <button id="copyButton" type="button" class="icon-button" title="Copy pitch">
+              <span aria-hidden="true">CP</span>
+              <span class="sr-only">Copy pitch</span>
+            </button>
+            <button id="exportButton" type="button" class="icon-button" title="Export report">
+              <span aria-hidden="true">EX</span>
+              <span class="sr-only">Export report</span>
+            </button>
+          </div>
+        </div>
+
+        <nav class="tabs" aria-label="Analysis views">
+          <button class="tab active" type="button" data-tab="human">Behavior map</button>
+          <button class="tab" type="button" data-tab="evidence">Evidence</button>
+          <button class="tab" type="button" data-tab="solution">Coaching design</button>
+          <button class="tab" type="button" data-tab="rollout">Rollout</button>
+        </nav>
+
+        <div id="emptyState" class="empty-state">
+          <div class="system-visual" aria-hidden="true">
+            <span>Behavior</span>
+            <i></i>
+            <span>Context</span>
+            <i></i>
+            <span>Nudge</span>
+            <i></i>
+            <span>Change</span>
+          </div>
+          <h3>Start with the human behavior, not the AI feature.</h3>
+          <p>
+            The strongest design shows what specific behavior must change, what is blocking it,
+            and how AI coaching closes that gap — at scale — without replacing human accountability.
+          </p>
+        </div>
+
+        <div id="results" class="results hidden">
+          <!-- Behavior Map Tab -->
+          <section class="tab-panel active" data-panel="human">
+            <div class="result-grid two">
+              <article class="result-card">
+                <p class="eyebrow">Behavior gap</p>
+                <h3 id="coreProblem">-</h3>
+                <p id="humanSummary" class="muted"></p>
+              </article>
+              <article class="result-card">
+                <p class="eyebrow">Change resistance level</p>
+                <div id="toneMeter" class="meter" aria-label="Resistance score">
+                  <span></span>
+                </div>
+                <p id="toneLabel" class="muted"></p>
+              </article>
+            </div>
+
+            <div class="result-grid two">
+              <article class="result-card">
+                <p class="eyebrow">People in the change</p>
+                <div id="stakeholders" class="chip-list"></div>
+              </article>
+              <article class="result-card">
+                <p class="eyebrow">AI must never replace</p>
+                <ul id="doNotAutomate" class="clean-list"></ul>
+              </article>
+            </div>
+
+            <article class="result-card behavior-barriers-card">
+              <p class="eyebrow">Behavioral barriers identified</p>
+              <div id="behaviorBarriers" class="barriers-list"></div>
+            </article>
+          </section>
+
+          <!-- Evidence Tab -->
+          <section class="tab-panel" data-panel="evidence">
+            <div class="result-card wide">
+              <p class="eyebrow">Retrieved evidence from context</p>
+              <div id="evidenceList" class="evidence-list"></div>
+            </div>
+          </section>
+
+          <!-- Coaching Design Tab -->
+          <section class="tab-panel" data-panel="solution">
+            <div class="coaching-intro result-card" style="margin-bottom:14px;">
+              <p class="eyebrow">Coaching engine design</p>
+              <p id="coachingIntro" class="muted"></p>
+            </div>
+            <div class="result-grid three" id="solutionCards"></div>
+          </section>
+
+          <!-- Rollout Tab -->
+          <section class="tab-panel" data-panel="rollout">
+            <div class="timeline" id="timeline"></div>
+            <div class="result-grid two">
+              <article class="result-card">
+                <p class="eyebrow">Behavioral success metrics</p>
+                <ul id="metricsList" class="clean-list"></ul>
+              </article>
+              <article class="result-card">
+                <p class="eyebrow">Room-ready pitch</p>
+                <p id="pitchText" class="pitch"></p>
+              </article>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <!-- RIGHT: Guardrails -->
+      <aside class="panel guardrail-panel" aria-labelledby="guardrail-title">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow">Quality gates</p>
+            <h2 id="guardrail-title">Evals and change risks</h2>
+          </div>
+          <span class="step-badge">02</span>
+        </div>
+
+        <div class="score-board">
+          <div>
+            <span id="confidenceScore">--</span>
+            <small>behavior confidence</small>
+          </div>
+          <div>
+            <span id="groundingScore">--</span>
+            <small>evidence grounding</small>
+          </div>
+        </div>
+
+        <div id="evalList" class="eval-list"></div>
+
+        <div class="risk-box">
+          <p class="eyebrow">Change risk signals</p>
+          <div id="riskTags" class="chip-list compact-list"></div>
+        </div>
+
+        <div class="architecture">
+          <p class="eyebrow">Production coaching architecture</p>
+          <ol>
+            <li>Ingest role context, past behavior, and goals per employee.</li>
+            <li>Generate personalized micro-coaching nudges via LLM.</li>
+            <li>Deliver nudges in the flow of work (Slack, Teams, email).</li>
+            <li>Track behavior signals: did they act differently?</li>
+            <li>Escalate stalled employees to human coaches or managers.</li>
+          </ol>
+        </div>
+      </aside>
+    </main>
+  </body>
+</html>

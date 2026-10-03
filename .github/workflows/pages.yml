@@ -1,0 +1,44 @@
+name: Publish Artificial Intelligence websites
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'Inside-AI/**'
+      - 'behaviorai-lovexai/**'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: artificial-intelligence-pages
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Build approved Inside AI content
+        run: python Inside-AI/build.py
+      - name: Assemble websites
+        run: |
+          mkdir -p _site/Inside-AI _site/behaviorai-lovexai
+          cp -R Inside-AI/dist/. _site/Inside-AI/
+          cp behaviorai-lovexai/index.html behaviorai-lovexai/styles.css behaviorai-lovexai/app.js _site/behaviorai-lovexai/
+          cp -R behaviorai-lovexai/sample-evidence _site/behaviorai-lovexai/
+          touch _site/.nojekyll
+          printf '%s' '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Somil Singh | Artificial Intelligence</title><main><h1>My Artificial Intelligence Projects</h1><ul><li><a href="Inside-AI/">Inside AI</a></li><li><a href="behaviorai-lovexai/">BehaviorAI</a></li></ul><p><a href="https://github.com/somilsin/Artificial-Intelligence">Source and notes</a></p></main></html>' > _site/index.html
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - name: Deploy websites
+        id: deployment
+        uses: actions/deploy-pages@v4

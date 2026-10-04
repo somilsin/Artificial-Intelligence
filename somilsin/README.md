@@ -108,51 +108,6 @@ Feel free to connect on [LinkedIn](https://linkedin.com/in/somil-singh) or check
 
 <br>
 
-## 🛠️ Tech Stack
-
----
-
-<p align="center">
-<img src="https://skillicons.dev/icons?i=python,pytorch,tensorflow,js,react,nodejs,cpp,c,linux,aws,git&theme=dark" alt="Python, PyTorch, TensorFlow, JavaScript, React, Node.js, C++, C, Linux, Amazon Web Services, Git" />
-</p>
-
-`Python` · `PyTorch` · `TensorFlow` · `JavaScript` · `React` · `Node.js` · `C++` · `C` · `Linux` · `Amazon Web Services` · `Git`
-
-<br>
-
-## ⚙️ Getting Started
-
----
-
-```bash
-git clone https://github.com/somilsin/Artificial-Intelligence.git
-cd Artificial-Intelligence/somilsin
-```
-
-This is profile documentation. It has no application runtime.
-
-<br>
-
-## 📝 My Notes and Results
-
----
-
-### Currently Learning
-
-![Advanced Deep Learning & ML](https://img.shields.io/badge/Advanced_Deep_Learning_%26_ML-238636?style=for-the-badge) ![Computer Vision and Robotics](https://img.shields.io/badge/Computer_Vision_%26_Robotics-238636?style=for-the-badge)
-
-GitHub renders a profile README automatically only from a repository named after the account. My account now has four category repositories so this preserved README is read inside Artificial Intelligence.
-
-<br>
-
-## 📚 References and Credit
-
----
-
-I retain the source context and any existing licenses with the project. The category move changes the location of the files rather than their ownership.
-
-<br>
-
 ## 🗂️ Explore My Other Work
 
 ---

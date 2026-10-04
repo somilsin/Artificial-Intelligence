@@ -1,0 +1,21 @@
+{
+  "pages": [
+    {
+      "path": "/",
+      "prerender": {
+        "outputPath": "/_shell",
+        "crawlLinks": true,
+        "retryCount": 0,
+        "enabled": true,
+        "headers": {
+          "X-TSS_SHELL": "true"
+        }
+      },
+      "sitemap": {
+        "exclude": true
+      }
+    }
+  ],
+  "host": "https://somilsin.github.io/Artificial-Intelligence/portfolio",
+  "lastBuilt": "2026-10-03T16:25:28.660Z"
+}

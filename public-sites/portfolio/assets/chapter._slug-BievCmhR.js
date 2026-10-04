@@ -1,0 +1,1 @@
+import{t as e}from"./jsx-runtime-DGeXAQPT.js";var t=e(),n=()=>(0,t.jsx)(`div`,{className:`flex min-h-screen items-center justify-center hud-text text-[color:var(--color-neon)]`,children:`SIGNAL LOST · Chapter not found`});export{n as notFoundComponent};

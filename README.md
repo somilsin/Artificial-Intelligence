@@ -25,7 +25,7 @@ I use this space to connect my artificial intelligence projects with the questio
 
 My Inside AI website is now part of this category. Its source files and build instructions are in the Inside AI folder.
 
-The profile README is included in the somilsin folder. My standalone profile repository continues to display it on my GitHub profile.
+My background and profile notes are included in the somilsin folder. I keep all project sources within my four category repositories.
 
 <div align="center">
 
@@ -36,3 +36,13 @@ The profile README is included in the somilsin folder. My standalone profile rep
 ## 📍 Working with these folders
 
 Each project keeps its own files and source credit. I open a terminal inside its project folder before running its commands so relative data paths resolve correctly.
+
+## 🌐 My websites
+
+• [Inside AI](https://somilsin.github.io/Artificial-Intelligence/Inside-AI/)
+
+• [BehaviorAI](https://somilsin.github.io/Artificial-Intelligence/behaviorai-lovexai/)
+
+• [My portfolio](https://somilsin.github.io/Artificial-Intelligence/portfolio/)
+
+The portfolio source is in Learning Archive. Its verified generated assets are in public-sites/portfolio here for hosting.

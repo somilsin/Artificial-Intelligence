@@ -6,6 +6,7 @@ on:
       - 'Inside-AI/**'
       - 'behaviorai-lovexai/**'
       - '.github/workflows/pages.yml'
+      - 'public-sites/**'
   workflow_dispatch:
 permissions:
   contents: read
@@ -33,8 +34,10 @@ jobs:
           cp -R Inside-AI/dist/. _site/Inside-AI/
           cp behaviorai-lovexai/index.html behaviorai-lovexai/styles.css behaviorai-lovexai/app.js _site/behaviorai-lovexai/
           cp -R behaviorai-lovexai/sample-evidence _site/behaviorai-lovexai/
+          mkdir -p _site/portfolio
+          cp -R public-sites/portfolio/. _site/portfolio/
           touch _site/.nojekyll
-          printf '%s' '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Somil Singh | Artificial Intelligence</title><main><h1>My Artificial Intelligence Projects</h1><ul><li><a href="Inside-AI/">Inside AI</a></li><li><a href="behaviorai-lovexai/">BehaviorAI</a></li></ul><p><a href="https://github.com/somilsin/Artificial-Intelligence">Source and notes</a></p></main></html>' > _site/index.html
+          printf '%s' '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Somil Singh | Artificial Intelligence</title><main><h1>My Artificial Intelligence Projects</h1><ul><li><a href="Inside-AI/">Inside AI</a></li><li><a href="behaviorai-lovexai/">BehaviorAI</a></li><li><a href="portfolio/">My Portfolio</a></li></ul><p><a href="https://github.com/somilsin/Artificial-Intelligence">Source and notes</a></p></main></html>' > _site/index.html
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

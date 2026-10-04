@@ -12,6 +12,10 @@
 
 Run `python build.py --preview` for local review including pending news. Run `python build.py` for the release build. Pending news is omitted from the release build. Approval is recorded in `content/site.json`; no automatic process may change it to approved.
 
-The Pages workflow builds on pull requests and deploys only from main. Website updates require Somil's review before merging or pushing to main. No daily autonomous deployment is configured.
+The root category Pages workflow builds and deploys website changes from main. Website updates require Somil's review before merging or pushing to main. No daily autonomous deployment is configured.
 
 Model cards link to existing published articles. The LinkedIn newsletter link points to the existing newsletter, without creating or transferring a newsletter.
+
+[Read Inside AI](https://somilsin.github.io/Artificial-Intelligence/Inside-AI/)
+
+The website uses the category path above. My portfolio source is in Learning Archive and its public website is [here](https://somilsin.github.io/Artificial-Intelligence/portfolio/).

@@ -8,7 +8,7 @@
 
 *Shortlisted from 1,000+ applicants → 20 finalists → 5 winners*
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-brightgreen?style=for-the-badge)](https://somilsin.github.io/behaviorai-lovexai/)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-GitHub%20Pages-brightgreen?style=for-the-badge)](https://somilsin.github.io/Artificial-Intelligence/behaviorai-lovexai/)
 [![Built with Claude](https://img.shields.io/badge/Built%20with-Claude%20AI-orange?style=for-the-badge)](https://anthropic.com)
 [![Vanilla JS](https://img.shields.io/badge/Stack-Vanilla%20JS-yellow?style=for-the-badge)]()
 [![Zero Dependencies](https://img.shields.io/badge/Dependencies-Zero-blue?style=for-the-badge)]()
@@ -42,7 +42,7 @@ This is not a training problem. It is a behavioral change problem. BehaviorAI wa
 
 ## Live Demo
 
-**[→ Open BehaviorAI](https://somilsin.github.io/behaviorai-lovexai/)**
+**[→ Open BehaviorAI](https://somilsin.github.io/Artificial-Intelligence/behaviorai-lovexai/)**
 
 1. Click the **⚙ settings** icon top-right and paste an Anthropic API key (get one at [console.anthropic.com](https://console.anthropic.com/settings/keys)). The key is stored only in your browser's local storage and is sent only to `api.anthropic.com`.
 2. Click **"Load Greg demo"** to see the full agent pipeline run on a real scenario
@@ -168,7 +168,7 @@ AI/ML Engineer · Oracle
 Incoming MS AI Systems · Carnegie Mellon University (August 2026)
 IISc Bangalore Visual AI Lab (NeRF, Gaussian splatting) · Wipro PARI (Autonomous Driving)
 
-[somils@andrew.cmu.edu](mailto:somils@andrew.cmu.edu) · [linkedin.com/in/somilsingh](https://linkedin.com/in/somilsingh) · [github.com/somilsingh](https://github.com/somilsingh)
+[somils@andrew.cmu.edu](mailto:somils@andrew.cmu.edu) · [linkedin.com/in/somil-singh](https://linkedin.com/in/somil-singh) · [github.com/somilsin](https://github.com/somilsin)
 
 ---
 

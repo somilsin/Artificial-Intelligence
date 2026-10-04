@@ -1,48 +1,119 @@
+<!-- Shared decorative layout inspired by my original vision README and profile README. -->
 <div align="center">
 
-# 🧠 Artificial Intelligence
+<h1>🌌 Artificial Intelligence</h1>
+<h3><code>Build, explain and learn in public</code></h3>
 
-### My ideas, experiments and applied systems
+<img src="https://readme-typing-svg.demolab.com/?font=Fira+Code&weight=500&size=22&pause=1000&color=58A6FF&center=true&vCenter=true&width=900&lines=Build%2C%20explain%20and%20learn%20in%20public;Learn+it.+Build+it.+Explain+it." alt="Build, explain and learn in public" />
 
-![Category](https://img.shields.io/badge/Artificial%20Intelligence-6E40C9?style=for-the-badge)
-![Maintained by Somil Singh](https://img.shields.io/badge/Maintained%20by-Somil%20Singh-58A6FF?style=for-the-badge&logo=github&logoColor=white)
+<p>
+<img src="https://img.shields.io/badge/Artificial%20Intelligence-6E40C9?style=for-the-badge" alt="Artificial Intelligence" />
+<img src="https://img.shields.io/badge/Maintained%20by%20Somil%20Singh-58A6FF?style=for-the-badge&logo=github&logoColor=white" alt="Maintained by Somil Singh" />
+
+<img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge" alt="Python" />
+<img src="https://img.shields.io/badge/HTML-E34F26?style=for-the-badge" alt="HTML" />
+<img src="https://img.shields.io/badge/CSS-1572B6?style=for-the-badge" alt="CSS" />
+<img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge" alt="JavaScript" />
+</p>
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/somil-singh)
+[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:somils@andrew.cmu.edu)
+
+[Open this project](https://github.com/somilsin/Artificial-Intelligence) · [My GitHub](https://github.com/somilsin) · [My portfolio](https://somilsin.github.io/Artificial-Intelligence/portfolio/)
 
 </div>
 
-## 🔎 What I keep here
+<br>
 
-I use this space to connect my artificial intelligence projects with the questions that shaped them. I am interested in systems that turn evidence into useful decisions and make their reasoning clear to the person using them.
+## 📖 About This Repository
 
-## 📂 Explore my projects
+---
 
-| Project | What is inside |
-| --- | --- |
-| [Inside AI](Inside-AI/README.md) | My public model explainers and sourced artificial intelligence study notes with a static website. |
-| [BehaviorAI](https://github.com/somilsin/Artificial-Intelligence/tree/main/behaviorai-lovexai) | My behavioral change application with an Evidence Analyst and a Coaching Design Strategist. |
-| [My profile](https://github.com/somilsin/Artificial-Intelligence/tree/main/somilsin) | My background and interests with links to the work I share on GitHub. |
+I keep my artificial intelligence applications and public learning work together here. Each project folder has its own notes and entry points.
 
-## 📝 My notes
+<br>
 
-My Inside AI website is now part of this category. Its source files and build instructions are in the Inside AI folder.
+## 🚀 Key Implementations
 
-My background and profile notes are included in the somilsin folder. I keep all project sources within my four category repositories.
+---
+
+* Inside AI: Model notes and article links.
+* BehaviorAI: Evidence analysis and coaching design.
+* Hi, I’m Somil Singh!: My background and current learning interests.
+
+<br>
+
+## 🎓 Project Guide
+
+---
+
+| Project | What I keep here |
+| :--- | :--- |
+| [Inside AI](Inside-AI/README.md) | I use Inside AI to share model explainers and research notes with diagrams, code and links to my published articles. |
+| [BehaviorAI](behaviorai-lovexai/README.md) | I built BehaviorAI for the Softway LoveXAI Hackathon. Its two agent workflow turns employee evidence into a behavioral change plan with human review. |
+| [Hi, I’m Somil Singh!](somilsin/README.md) | I keep my profile notes here alongside the projects that show what I build and study. This folder preserves the README from my former profile repository. |
+
+<br>
+
+## 🛠️ Tech Stack
+
+---
+
+<p align="center">
+<img src="https://skillicons.dev/icons?i=python,html,css,js&theme=dark" alt="Python, HTML, CSS, JavaScript" />
+</p>
+
+`Python` · `HTML` · `CSS` · `JavaScript`
+
+<br>
+
+## ⚙️ Getting Started
+
+---
+
+```bash
+git clone https://github.com/somilsin/Artificial-Intelligence.git
+cd Artificial-Intelligence
+```
+
+I open the README in the project folder I want to use. Each project has its own dependencies and entry points.
+
+<br>
+
+## 📝 My Notes and Results
+
+---
+
+I keep publication review separate from website builds. Inside AI publishes approved news only and BehaviorAI requires an Anthropic API key for live analysis.
+
+<br>
+
+## 📚 References and Credit
+
+---
+
+I retain course credit and original licenses in the individual project folders. Reorganizing the source does not change its authorship or license.
+
+<br>
+
+## 🗂️ Explore My Other Work
+
+---
+
+| [Artificial Intelligence](https://github.com/somilsin/Artificial-Intelligence) | [Machine Learning](https://github.com/somilsin/Machine-Learning) | [Computer Vision](https://github.com/somilsin/Computer-Vision) | [Learning Archive](https://github.com/somilsin/Learning-Archive) |
+| :---: | :---: | :---: | :---: |
+
+<br>
 
 <div align="center">
 
-[Explore my GitHub profile](https://github.com/somilsin)
+### Get In Touch
+
+I share my learning and projects here. Connect with me on [LinkedIn](https://linkedin.com/in/somil-singh) or explore [my portfolio](https://somilsin.github.io/Artificial-Intelligence/portfolio/).
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/somil-singh)
+[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:somils@andrew.cmu.edu)
+
+*Thanks for stopping by!*
 
 </div>
-
-## 📍 Working with these folders
-
-Each project keeps its own files and source credit. I open a terminal inside its project folder before running its commands so relative data paths resolve correctly.
-
-## 🌐 My websites
-
-• [Inside AI](https://somilsin.github.io/Artificial-Intelligence/Inside-AI/)
-
-• [BehaviorAI](https://somilsin.github.io/Artificial-Intelligence/behaviorai-lovexai/)
-
-• [My portfolio](https://somilsin.github.io/Artificial-Intelligence/portfolio/)
-
-The portfolio source is in Learning Archive. Its verified generated assets are in public-sites/portfolio here for hosting.

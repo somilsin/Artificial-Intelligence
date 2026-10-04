@@ -29,7 +29,7 @@
 
 ---
 
-I keep my artificial intelligence applications and public learning work together here. Each project folder has its own notes and entry points.
+I keep my artificial intelligence applications, portfolio source and public learning work together here. Each project folder has its own notes and entry points.
 
 <br>
 
@@ -39,7 +39,6 @@ I keep my artificial intelligence applications and public learning work together
 
 * Inside AI: Model notes and article links.
 * BehaviorAI: Evidence analysis and coaching design.
-* Hi, I’m Somil Singh!: My background and current learning interests.
 * Interactive Portfolio Website: My project chapters and research links.
 
 <br>
@@ -53,7 +52,6 @@ I keep my artificial intelligence applications and public learning work together
 | [Inside AI](Inside-AI/README.md) | I use Inside AI to share model explainers and research notes with diagrams, code and links to my published articles. |
 | [BehaviorAI](behaviorai-lovexai/README.md) | I built BehaviorAI for the Softway LoveXAI Hackathon. Its two agent workflow turns employee evidence into a behavioral change plan with human review. |
 | [Interactive Portfolio Website](somilsin_portfolio/README.md) | I present my experience and projects through chapters, interactive scenes and research links. |
-| [Hi, I’m Somil Singh!](somilsin/README.md) | I keep my profile notes here alongside the projects that show what I build and study. This folder preserves the README from my former profile repository. |
 
 <br>
 

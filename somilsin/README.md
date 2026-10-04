@@ -25,28 +25,6 @@
 
 <br>
 
-## 📖 About This Repository
-
----
-
-I keep my profile notes here alongside the projects that show what I build and study. This folder preserves the README from my former profile repository.
-
-<br>
-
-## 🚀 Key Implementations
-
----
-
-* My background and current learning interests
-* Research and publication notes
-* Links to my projects and professional profiles
-
-<br>
-
-## 🎓 Project Guide
-
----
-
 ### Overview
 
 ---

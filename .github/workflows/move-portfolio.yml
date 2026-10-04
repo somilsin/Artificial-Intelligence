@@ -1,0 +1,44 @@
+name: Move portfolio source into Artificial Intelligence
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/move-portfolio.yml']
+permissions:
+  contents: write
+jobs:
+  move:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Copy the verified portfolio source
+        run: |
+          git clone --filter=blob:none --no-checkout https://github.com/somilsin/Learning-Archive.git /tmp/portfolio-source
+          git -C /tmp/portfolio-source sparse-checkout init --cone
+          git -C /tmp/portfolio-source sparse-checkout set somilsin_portfolio
+          git -C /tmp/portfolio-source checkout c7c7f1af3750ce56e3e28b3b0b51a43f4fa2bd4e
+          python - <<'PY'
+          import hashlib, pathlib, shutil, subprocess
+          source = pathlib.Path('/tmp/portfolio-source/somilsin_portfolio')
+          target = pathlib.Path('somilsin_portfolio')
+          tracked = subprocess.check_output(['git', '-C', '/tmp/portfolio-source', 'ls-tree', '-r', '--name-only', 'HEAD', 'somilsin_portfolio']).decode().splitlines()
+          copied = 0
+          for path in tracked:
+              relative = pathlib.PurePosixPath(path).relative_to('somilsin_portfolio')
+              if str(relative) == 'README.md':
+                  continue
+              destination = target.joinpath(*relative.parts)
+              assert not destination.exists(), str(destination)
+              destination.parent.mkdir(parents=True, exist_ok=True)
+              shutil.copy2(source.joinpath(*relative.parts), destination)
+              expected = subprocess.check_output(['git', '-C', '/tmp/portfolio-source', 'rev-parse', 'HEAD:' + path]).decode().strip()
+              data = destination.read_bytes()
+              actual = hashlib.sha1(b'blob ' + str(len(data)).encode() + b'\0' + data).hexdigest()
+              assert actual == expected, path
+              copied += 1
+          print(f'Copied and verified {copied} portfolio files')
+          PY
+          git config user.name "Somil Singh"
+          git config user.email "thesomilsinghofficial@gmail.com"
+          git add somilsin_portfolio
+          git commit -m "Move the preserved portfolio source into Artificial Intelligence"
+          git push origin HEAD:main

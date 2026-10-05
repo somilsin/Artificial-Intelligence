@@ -38,14 +38,30 @@ def footer():
 <a href="{links['linkedin']}">LinkedIn profile</a><a href="{links['email']}">Reach me / collab</a></nav></div></footer>'''
 
 cards = []
+article_urls = []
 for item in data['articles']:
     if not item['published']:
         continue
+    reading_links = []
+    if item.get('source'):
+        file = item['page']
+        article_urls.append(data['proposed_site_url'] + file)
+        body = (ROOT / 'content' / item['source']).read_text(encoding='utf-8')
+        article_page = head(item['title'] + ' | Inside AI', item['description'], item['medium'])
+        article_page += '<main class="reader"><a class="back label" href="index.html#library">← Back to the library</a>'
+        article_page += '<p class="article-date">' + esc(item['date']) + ' · Somil Singh</p>' + body
+        article_page += '<p>Also read this article on <a href="' + esc(item['medium']) + '">Medium</a> or <a href="' + esc(item['substack']) + '">Substack</a>.</p>'
+        article_page += '</main>' + footer() + '</body></html>'
+        (out / file).write_text(article_page, encoding='utf-8')
+        reading_links.append('<a href="' + esc(file) + '">Read here ↗</a>')
+    for key, label in [('medium', 'Medium'), ('substack', 'Substack'), ('x', 'X'), ('company', 'LinkedIn')]:
+        if item.get(key):
+            reading_links.append('<a href="' + esc(item[key]) + '">' + label + ' ↗</a>')
     cards.append(f'''<article class="article-card" data-article data-type="{esc(item['type'])}">
 <img class="article-art" src="{esc(item['image'])}" alt="{esc(item['image_alt'])}" loading="lazy" width="640" height="360">
 <div class="article-copy"><div class="part-label label"><span>Part {item['part']} · Deep Learning Models</span><span class="type">{item['type']}</span></div>
 <h3>{esc(item['title'])}</h3><p>{esc(item['description'])}</p><nav class="reading" aria-label="Read Part {item['part']}">
-<a href="{esc(item['medium'])}">Medium ↗</a><a href="{esc(item['substack'])}">Substack ↗</a></nav></div></article>''')
+{''.join(reading_links)}</nav></div></article>''')
 
 def inline(text):
     text = esc(text)
@@ -70,12 +86,14 @@ if visible:
     item = visible[-1]
     file = 'news-' + item['id'] + '.html'
     news_html = f'''<article class="news-entry"><div class="news-summary"><span class="label">{esc(item['date'])}</span>
-<h3>{esc(item['title'])}</h3><p>What changed, what you can use and what I’d check before building. Original sources are linked in every update.</p>
-<a class="button" href="{file}">Read the five updates ↗</a></div><ol class="news-list">{''.join('<li>'+esc(topic)+'</li>' for topic in item['topics'])}</ol></article>'''
+<h3>{esc(item['title'])}</h3><p>{esc(item.get('description', 'What changed, what you can use and what I’d check before building. Original sources are linked in every update.'))}</p>
+<a class="button" href="{file}">{esc(item.get('reading_label', 'Read the updates ↗'))}</a></div><ol class="news-list">{''.join('<li>'+esc(topic)+'</li>' for topic in item['topics'])}</ol></article>'''
+    if len(visible) > 1:
+        news_html += '<nav class="news-archive reading" aria-label="Earlier world AI editions">' + ''.join('<a href="news-' + esc(previous['id']) + '.html">' + esc(previous['date'] + ' · ' + previous['title']) + ' ↗</a>' for previous in reversed(visible[:-1])) + '</nav>'
 for item in visible:
     file = 'news-' + item['id'] + '.html'
     text = (ROOT / 'content' / item['source']).read_text(encoding='utf-8')
-    page = head(item['title'] + ' | Inside AI', 'Five sourced AI updates for builders, with availability, limitations and practical context.', data['proposed_site_url'] + file)
+    page = head(item['title'] + ' | Inside AI', item.get('description', 'Sourced AI updates for builders, with availability, limitations and practical context.'), data['proposed_site_url'] + file)
     page += '<main class="reader"><a class="back label" href="index.html#news">← Back to Inside AI</a>' + markdown(text) + '</main>' + footer() + '</body></html>'
     (out / file).write_text(page, encoding='utf-8')
 
@@ -92,8 +110,8 @@ page += f'''<a class="skip" href="#main">Skip to content</a>
 <section class="section library" id="library" aria-labelledby="library-title"><div class="wrap"><div class="section-head"><div><span class="label">01 / The model library</span><h2 class="display" id="library-title">One model. Two ways in.</h2></div><p class="section-note">Start with the overview and code. Then dig into the concepts behind them.</p></div>
 <div class="tools"><div class="filters" role="group" aria-label="Filter model notes"><button data-filter="All" aria-pressed="true">All notes</button><button data-filter="Overview" aria-pressed="false">Overview</button><button data-filter="Foundations" aria-pressed="false">Foundations</button></div>
 <label class="search" for="article-search">Search <input id="article-search" type="search" placeholder="Try KL divergence" autocomplete="off"></label></div>
-<p id="result-count" class="label" aria-live="polite">2 notes</p><div class="cards">{''.join(cards)}</div><p id="no-results" class="empty" hidden>No notes match that search. Try VAE or clear the filter.</p>
-<div class="path"><span class="label">Inside AI series</span><p>Starting with generative AI. VQ VAE, GANs and diffusion are next on the learning path.</p></div></div></section>
+<p id="result-count" class="label" aria-live="polite">{len(cards)} notes</p><div class="cards">{''.join(cards)}</div><p id="no-results" class="empty" hidden>No notes match that search. Try VAE or clear the filter.</p>
+<div class="path"><span class="label">Inside AI series</span><p>Starting with generative AI. VAE and VQ VAE notes are in the library; GANs and diffusion are next on the learning path.</p></div></div></section>
 <section class="section news" id="news" aria-labelledby="news-title"><div class="wrap"><div class="section-head"><div><span class="label">02 / World AI</span><h2 class="display" id="news-title">Research moves fast.<br>Let’s make sense of it.</h2></div><p class="section-note">Selected AI updates with links to the original research and announcements.</p></div>{news_html}</div></section>
 <section class="section about" id="about" aria-labelledby="about-title"><div class="wrap"><span class="label">03 / Why Inside AI exists</span><div class="about-grid"><h2 class="display" id="about-title">Learning in public.<br>Bringing you all along.</h2><div class="about-copy"><p>I’m an AI engineer @ Oracle and I’m actively upskilling in the fields I’m passionate about. Inside AI is where I share what I learn, from foundational models to new research.</p><p><strong>From my notes to your next project.</strong> Expect model explainers, diagrams and code for projects and interview prep. Questions are welcome. If something clicks, share it with a friend ❤️</p></div></div>
 <div class="principles"><div><span class="label">Understand</span><p>Build intuition before diving into the maths.</p></div><div><span class="label">Try</span><p>Connect the ideas to runnable code and actual output.</p></div><div><span class="label">Check</span><p>Read the sources and separate reported claims from verified results.</p></div></div>
@@ -104,6 +122,6 @@ page += f'''<a class="skip" href="#main">Skip to content</a>
 page += footer() + '<script src="script.js" defer></script></body></html>'
 (out / 'index.html').write_text(page, encoding='utf-8')
 (out / 'robots.txt').write_text('User-agent: *\nAllow: /\nSitemap: ' + data['proposed_site_url'] + 'sitemap.xml\n', encoding='utf-8')
-urls = [data['proposed_site_url']] + [data['proposed_site_url'] + 'news-' + x['id'] + '.html' for x in visible]
+urls = [data['proposed_site_url']] + article_urls + [data['proposed_site_url'] + 'news-' + x['id'] + '.html' for x in visible]
 (out / 'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' + ''.join('<url><loc>'+esc(url)+'</loc></url>' for url in urls) + '</urlset>', encoding='utf-8')
 print(json.dumps({'mode': 'preview' if args.preview else 'production', 'output': str(out), 'published_articles': len(cards), 'news_editions': len(visible), 'pending_news_included': args.preview}, indent=2))

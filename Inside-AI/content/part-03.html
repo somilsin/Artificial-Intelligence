@@ -1,0 +1,162 @@
+<h1>How a VQ VAE turns an image into a code from a learned dictionary</h1>
+<p>Choosing an image code is one problem. Learning which codes to sample is another.</p>
+<p>Author: Somil Singh · Inside AI</p>
+<p><strong>Deep Learning Models · Part 03</strong></p>
+<p>A decoder can learn to reconstruct an image from a dictionary entry. That still leaves a question: which entry should we choose to make another image?</p>
+<p><strong>If the model learned the dictionary, why does generation need another rule?</strong></p>
+<p>A VQ VAE gives the encoder a learned dictionary of codes. The encoder chooses an entry and the decoder uses its vector to reconstruct the image. A separate prior tells us which entries to sample when there is no input image.</p>
+<p>These are my visual notes for Part 03 of <strong>Inside AI: Deep Learning Models</strong>. We will connect that distinction to a small PyTorch experiment and its recorded output. The <a href="https://arxiv.org/abs/1711.00937">original VQ VAE paper</a> introduces the approach and training objective.</p>
+<p><img src="assets/part-03/01-concept-map.png" alt="Encoder output chooses the nearest learned code, which the decoder uses"></p>
+<p><em>Figure 1. Original teaching schematic.</em></p>
+<h3>1. What changes from a Gaussian VAE</h3>
+<p>In a common Gaussian VAE, the encoder predicts a distribution and training samples a continuous code. Here it produces a continuous vector zₑ(x), then chooses the closest entry from a learned codebook E = {e₀, …, eK₋₁}.</p>
+<pre><code>k(x) = argminj ‖zₑ(x) − ej‖²
+zq(x) = ek(x)</code></pre>
+<p>The index k is discrete. The selected code eₖ is a learned continuous vector. These are related but different objects. The decoder consumes the vector, while a prior can assign probabilities to the indices.</p>
+<p>For a larger image model, the encoder often outputs a grid of vectors and quantizes each location. Our experiment deliberately uses one code for the entire image. That keeps the codebook and generation process visible without a large network or dataset.</p>
+<h3>2. The decoder still needs a training signal</h3>
+<p>The decoder takes zq and predicts pixel logits. For our binary patterns, sigmoid converts each logit into a Bernoulli probability. Binary cross entropy measures how well those predictions explain the observed pixels. During training we use <a href="https://docs.pytorch.org/docs/2.14/generated/torch.nn.BCEWithLogitsLoss.html">BCEWithLogits through PyTorch’s functional equivalent</a>, which combines the sigmoid and loss stably.</p>
+<p>There is a problem upstream: nearest code selection uses argmin. Ordinary differentiation does not give us a useful derivative of the selected index with respect to the encoder vector. If we simply backpropagate through that selection, the encoder would not receive the reconstruction gradient it needs.</p>
+<p>We use a straight through construction:</p>
+<pre><code>z_st = ze + (zq - ze).detach()</code></pre>
+<p>The forward value is zq. Autograd treats the derivative with respect to ze as the identity. This is a deliberately chosen gradient surrogate. It is not the exact derivative of nearest neighbor selection. Part 04 will trace each gradient with actual tensors.</p>
+<h3>3. Three losses with separate jobs</h3>
+<p>For the gradient based codebook update used here, minimize:</p>
+<pre><code>L = reconstruction
+  + ‖stopgrad(zₑ) − zq‖²
+  + β ‖zₑ − stopgrad(zq)‖²</code></pre>
+<p>Reconstruction trains the decoder and, through our straight through path, the encoder. The codebook term moves selected dictionary entries toward encoder outputs. The commitment term encourages the encoder to stay near the entries it uses. The stop gradients keep those last two jobs separate.</p>
+<p>We use β = 0.25 for this demonstration. Our reconstruction cost sums pixels and averages images. Both squared vector costs sum coordinates and average images. Those reductions are part of the configuration. A β that worked elsewhere is not automatically appropriate for every scaling convention.</p>
+<p>Exponential moving averages are another way to update the codebook. That is an alternative to the gradient update implemented here, not an extra update to apply accidentally on top of it.</p>
+<p><img src="assets/part-03/02-gradient-routes.png" alt="Three losses send gradients to different parts of the VQ VAE"></p>
+<p><em>Figure 2. Stop gradients separate codebook learning from encoder commitment.</em></p>
+<h3>4. A codebook is not a generation prior</h3>
+<p>Training the reconstruction model teaches the decoder what each code means. It does not yet tell us which indices should occur or how a grid of indices should fit together.</p>
+<p>After learning the representation, a prior models the encoded training data. For grids, the original work uses autoregressive priors that model dependencies between positions. Sampling all grid entries independently would ignore those dependencies.</p>
+<p>Our entire image has one index, so a categorical prior is sufficient. We encode the eight training patterns, count each selected index and divide by the total. This is maximum likelihood estimation for a categorical distribution.</p>
+<pre><code>prior probability of code j = count(j) / number of training images
+generation: sample k from that prior, then decode ek</code></pre>
+<p>There is no input image during generation. Uniformly sampling a dictionary is appropriate only if a uniform distribution actually represents the intended code usage. Unused entries should not quietly receive sample probability in this fitted prior.</p>
+<h3>5. The tiny experiment and its deliberate warm start</h3>
+<p>The dataset contains four vertical bars and four horizontal bars, each a binary 4 by 4 image. The encoder maps 16 pixels to an eight dimensional vector. The codebook has eight entries. The decoder maps one selected vector back to 16 pixel logits.</p>
+<p>We first train an ordinary autoencoder for 200 steps and initialize each codebook entry from one encoded template. We then train the quantized model for 401 steps. This warm start makes the eight code identities easy to inspect. It is a teaching choice that differs from the original paper’s setup and it benefits directly from knowing all eight templates.</p>
+<p>This experiment therefore demonstrates quantization, gradient routing and sampling. It does not demonstrate discovery of a rich representation from an unseen image collection. A one code model can only produce one of its code conditioned decoder distributions. It cannot create arbitrary new arrangements of bars.</p>
+<h3>6. A tiny VQ VAE you can actually run</h3>
+<p>Install PyTorch and Matplotlib with <code>pip install torch matplotlib</code>. Save the three blocks below in order as one Python file and run it. Together they print the code assignments, fitted prior and sampled IDs and save the figure below.</p>
+<p><strong>Step 1. Build the encoder, decoder and dictionary.</strong> The warm start is a deliberate teaching choice using all eight templates.</p>
+<pre><code>&quot;&quot;&quot;A one-code VQ VAE with a learned categorical prior on eight tiny images.&quot;&quot;&quot;
+from pathlib import Path
+import platform
+import torch
+from torch import nn
+from torch.nn import functional as F
+import matplotlib
+matplotlib.use(&quot;Agg&quot;)
+import matplotlib.pyplot as plt
+
+torch.manual_seed(7)
+torch.set_num_threads(1)
+out = Path(__file__).resolve().parent / &quot;images&quot;
+out.mkdir(exist_ok=True)
+print(f&quot;Python {platform.python_version()} | PyTorch {torch.__version__} | CPU | seed 7&quot;)
+vertical = torch.eye(4).repeat(1, 4).view(4, 4, 4)
+data = torch.cat([vertical, vertical.transpose(1, 2)]).reshape(8, 16)
+encoder = nn.Sequential(nn.Linear(16, 32), nn.ReLU(), nn.Linear(32, 8))
+decoder = nn.Sequential(nn.Linear(8, 32), nn.ReLU(), nn.Linear(32, 16))
+embedding = nn.Embedding(8, 8)
+
+# Warm start is a deliberate teaching choice, not the paper&#x27;s initialization.
+optimizer = torch.optim.Adam(list(encoder.parameters()) + list(decoder.parameters()), lr=0.01)
+for _ in range(200):
+    loss = F.binary_cross_entropy_with_logits(decoder(encoder(data)), data)
+    optimizer.zero_grad()
+    loss.backward()
+    optimizer.step()
+with torch.no_grad():
+    embedding.weight.copy_(encoder(data))</code></pre>
+<p><strong>Step 2. Quantize and train with three costs.</strong> The straight through path carries the reconstruction gradient to the encoder.</p>
+<pre><code>def quantize(x):
+    ze = encoder(x)
+    distances = (ze[:, None, :] - embedding.weight[None, :, :]).square().sum(-1)
+    ids = distances.argmin(1)
+    zq = embedding(ids)
+    return ze, zq, ids
+
+optimizer = torch.optim.Adam(
+    list(encoder.parameters()) + list(decoder.parameters()) + list(embedding.parameters()), lr=0.002)
+for step in range(401):
+    x = data[torch.randint(8, (64,))]
+    ze, zq, ids = quantize(x)
+    z_st = ze + (zq - ze).detach()
+    reconstruction = F.binary_cross_entropy_with_logits(decoder(z_st), x, reduction=&quot;none&quot;).sum(1).mean()
+    codebook = (zq - ze.detach()).square().sum(1).mean()
+    commitment = (ze - zq.detach()).square().sum(1).mean()
+    loss = reconstruction + codebook + 0.25 * commitment
+    optimizer.zero_grad()
+    loss.backward()
+    optimizer.step()
+    if step in (0, 400):
+        print(f&quot;Step {step:3d} | reconstruction {reconstruction.item():.4f} | codebook {codebook.item():.4f} | commitment {commitment.item():.4f}&quot;)</code></pre>
+<p><strong>Step 3. Fit the prior and generate without the encoder.</strong> Sample code IDs, look up their vectors and plot the decoder means.</p>
+<pre><code># Fit the maximum likelihood categorical prior after freezing the representation.
+with torch.no_grad():
+    _, zq, ids = quantize(data)
+    counts = torch.bincount(ids, minlength=8).float()
+    prior = counts / counts.sum()
+    new_ids = torch.multinomial(prior, 8, replacement=True)
+    reconstructions = decoder(zq).sigmoid().view(8, 4, 4)
+    generated = decoder(embedding(new_ids)).sigmoid().view(8, 4, 4)
+    bce = F.binary_cross_entropy(reconstructions.flatten(1), data, reduction=&quot;none&quot;).sum(1).mean()
+    perplexity = (-(prior[prior &gt; 0] * prior[prior &gt; 0].log()).sum()).exp()
+print(&quot;Encoded IDs:&quot;, ids.tolist())
+print(&quot;Prior probabilities:&quot;, [round(v, 3) for v in prior.tolist()])
+print(&quot;Sampled IDs:&quot;, new_ids.tolist())
+print(f&quot;Used codes: {(counts &gt; 0).sum().item()}/8 | perplexity: {perplexity.item():.3f} | reconstruction BCE/image: {bce.item():.4f}&quot;)
+assert (counts &gt; 0).sum().item() == 8
+assert torch.isfinite(generated).all()
+torch.save({&quot;ids&quot;: ids, &quot;prior&quot;: prior, &quot;generated&quot;: generated}, out.parent / &quot;result.pt&quot;)
+fig, axes = plt.subplots(3, 8, figsize=(12, 5))
+for row, images in enumerate((data.view(8, 4, 4), reconstructions, generated)):
+    for col in range(8):
+        axes[row, col].imshow(images[col].numpy(), cmap=&quot;gray&quot;, vmin=0, vmax=1)
+        axes[row, col].axis(&quot;off&quot;)
+        axes[row, col].set_title([&quot;Input&quot;, &quot;Reconstruction&quot;, &quot;Prior sample&quot;][row], fontsize=9)
+fig.suptitle(&quot;Actual tiny VQ VAE output: decoder means&quot;, fontsize=15)
+fig.tight_layout()
+fig.savefig(out / &quot;actual-output.png&quot;, dpi=180)
+plt.close(fig)</code></pre>
+<h3>Recorded output</h3>
+<pre><code>Python 3.12.14 | PyTorch 2.14.1+cpu | CPU | seed 7
+Step   0 | reconstruction 0.0004 | codebook 0.0000 | commitment 0.0000
+Step 400 | reconstruction 0.0000 | codebook 0.0005 | commitment 0.0005
+Encoded IDs: [0, 1, 2, 3, 4, 5, 6, 7]
+Prior probabilities: [0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.125]
+Sampled IDs: [0, 3, 5, 0, 5, 7, 5, 2]
+Used codes: 8/8 | perplexity: 8.000 | reconstruction BCE/image: 0.0000</code></pre>
+<p><img src="assets/part-03/actual-output.png" alt="Actual inputs, reconstructions and outputs sampled through the categorical prior"></p>
+<p><em>Figure 3. Recorded experiment plot from 2 October 2026. The bottom row shows decoder means.</em></p>
+<p>The bottom row displays decoder means after sampling code IDs. We do not take an additional Bernoulli pixel draw. Calling these decoder means makes that choice explicit: sampling the code and sampling the observation are separate operations.</p>
+<p>The printed 0.0000 is rounded to four decimals, not a claim of exact zero error. The reconstruction BCE reports the final model on all eight templates. Training lines report the minibatch loss before the update at that step. They answer slightly different questions.</p>
+<h3>7. What the code usage tells us</h3>
+<p>We report how many entries are used and exp(entropy) of the empirical code distribution. This perplexity is an effective number of used codes. It equals eight when the eight entries are used equally. It is not text model perplexity or an image quality score.</p>
+<p>A model can use many codes while reconstructing badly. It can also reconstruct a small dataset well while leaving many entries unused. Inspect reconstruction, code frequencies and generated outputs together. In larger experiments, repeated use of only a few entries can reduce the useful discrete capacity.</p>
+<p>Practical warning signs include dead entries, encoder outputs that drift far from their selected codes and a prior that produces implausible combinations. The corresponding checks are code counts, quantization error and actual prior samples. No single loss replaces those checks.</p>
+<h3>8. Training and generation take different routes</h3>
+<p>Training takes an image, encodes it, chooses a code and compares decoder predictions with the image. Prior fitting takes the resulting indices. Generation starts with sampled indices and runs the decoder alone.</p>
+<p>That is the mechanism you should be able to sketch in an interview. If someone asks where the Gaussian KL went, you now have the right question for the companion article.</p>
+<p>Try changing the prior frequencies after training. More probability on one code should produce more of its template, even though the decoder weights stay fixed. Then ask what changes when the latent becomes a grid and neighboring indices matter.</p>
+<h3>Keep these five ideas</h3>
+<ol>
+<li>The code ID is discrete. The selected dictionary vector is continuous.</li>
+<li>The decoder reconstructs from that selected vector.</li>
+<li>The straight through path is a gradient surrogate for training the encoder.</li>
+<li>The codebook and commitment terms update different parameters.</li>
+<li>A generation prior chooses the IDs. A codebook alone does not provide their distribution.</li>
+</ol>
+<p><img src="assets/part-03/04-summary-map.png" alt="A summary of representation learning, prior fitting and generation"></p>
+<p><em>Figure 4. Representation learning and generation form two connected processes.</em></p>
+<p><strong>Next in Deep Learning Models:</strong> we will calculate the nearest code, trace all three gradient paths and explain why a uniform discrete prior gives a constant KL during representation learning. Part 04 connects those details to the code you just saw. Stick around. We’re making each equation earn its place ❤️</p>
+<p>Want to understand these ideas well enough to explain them in an interview? I’m actively upskilling in AI, machine learning, deep learning, computer vision and robotics. I’ll share study notes with clear explanations, diagrams and code so you can learn alongside me and build foundations for your projects and interview preparation.</p>
+<p>Follow me on all my socials to stay up to date with every post and the fun ❤️</p>
+<p>Find me on <a href="https://medium.com/@thesomilsinghofficial">Medium</a> and/or <a href="https://thesomilsingh.substack.com/">Substack</a>. For all my other links, check out my pinned post on <a href="https://x.com/Skywalkerlyzv">X</a>.</p>
+<p>If this explanation helped something click, support my work with a clap on Medium, share it with someone who is learning or leave a question. Your feedback helps me decide what to explain next (sharing is caring.)</p>

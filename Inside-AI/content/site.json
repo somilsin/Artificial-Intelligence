@@ -37,6 +37,23 @@
       "medium": "https://medium.com/@thesomilsinghofficial/why-a-vae-needs-kl-divergence-variational-inference-and-a-little-noise-e29c5932d597",
       "substack": "https://thesomilsingh.substack.com/p/why-a-vae-needs-kl-divergence-variational",
       "published": true
+    },
+    {
+      "part": "03",
+      "type": "Overview",
+      "model": "VQ VAE",
+      "title": "How a VQ VAE turns an image into a code from a learned dictionary",
+      "description": "Choosing an image code is one problem. Learning which codes to sample is another. Codebook selection, gradient routes and a recorded PyTorch experiment.",
+      "image": "assets/part-03/01-concept-map.png",
+      "image_alt": "Encoder output chooses a learned code and the decoder reconstructs; a separate prior samples the codes.",
+      "medium": "https://medium.com/@thesomilsinghofficial/how-a-vq-vae-turns-an-image-into-a-code-from-a-learned-dictionary-c5b0e0b96c64",
+      "substack": "https://thesomilsingh.substack.com/p/how-a-vq-vae-turns-an-image-into",
+      "x": "https://x.com/Skywalkerlyzv/article/2106953560051322942",
+      "company": "https://www.linkedin.com/pulse/how-vq-vae-turns-image-code-from-learned-dictionary-nmerc/",
+      "published": true,
+      "source": "part-03.html",
+      "page": "part-03-vq-vae.html",
+      "date": "First published 4 October 2026; updated 5 October 2026"
     }
   ],
   "news": [
@@ -53,6 +70,23 @@
         "AutoSynthData for agent training",
         "Claude Frontier Academy",
         "Grok transcription migration"
+      ],
+      "reading_label": "Read the five updates ↗"
+    },
+    {
+      "id": "2026-10-03-posts",
+      "title": "Earlier AI notes from X",
+      "date": "2–4 October 2026",
+      "source_window": "Previously published posts; original announcements dated 30 September–2 October 2026",
+      "source": "news-2026-10-03-posts.md",
+      "approval": "approved",
+      "description": "Catch up on the AI notes already shared on X. These are archived updates, with their original dates and source links.",
+      "reading_label": "Read the earlier notes ↗",
+      "topics": [
+        "Copilot desktop computer use",
+        "Gemini 4 Argon output and access",
+        "Bonsai World simulation",
+        "Claude engineering residency: X reading links"
       ]
     }
   ]

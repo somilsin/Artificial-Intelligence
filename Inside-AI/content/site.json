@@ -88,6 +88,24 @@
         "Bonsai World simulation",
         "Claude engineering residency: X reading links"
       ]
+    },
+    {
+      "id": "2026-10-05",
+      "title": "Five AI updates: databases, search and agent infrastructure",
+      "date": "5 October 2026",
+      "source_window": "Announcements dated 2 October 2026; checked and published 5 October 2026",
+      "source": "news-2026-10-05.md",
+      "approval": "approved",
+      "description": "Five recent announcements, with detailed study notes, practical checks, original sources and matching X and Inside AI company posts.",
+      "topics": [
+        "Why Supabase is acquiring Turso for the age of AI agents",
+        "Supabase gives your app an MCP server for its users' agents",
+        "Cloudflare adds live web search to AI Gateway",
+        "Cloudflare brings Pi Durable into its Agents SDK",
+        "Prime Inference: what serving an AI agent actually requires"
+      ],
+      "reading_label": "Read the five new notes ↗"
     }
   ]
 }
+

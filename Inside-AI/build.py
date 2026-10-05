@@ -75,6 +75,11 @@ def markdown(text):
             parts.append('<h1>' + inline(block[2:]) + '</h1>')
         elif block.startswith('## '):
             parts.append('<h2>' + inline(block[3:]) + '</h2>')
+        elif block.startswith('### '):
+            parts.append('<h3>' + inline(block[4:]) + '</h3>')
+        elif re.fullmatch(r'!\[[^\]]*\]\(assets/[^\s)]+\)', block):
+            media = re.fullmatch(r'!\[([^\]]*)\]\((assets/[^\s)]+)\)', block)
+            parts.append('<figure><img src="' + esc(media.group(2)) + '" alt="' + esc(media.group(1)) + '" loading="lazy"><figcaption>' + esc(media.group(1)) + '</figcaption></figure>')
         else:
             parts.append('<p>' + inline(block.replace('\n', ' ')) + '</p>')
     return '\n'.join(parts)
@@ -125,3 +130,4 @@ page += footer() + '<script src="script.js" defer></script></body></html>'
 urls = [data['proposed_site_url']] + article_urls + [data['proposed_site_url'] + 'news-' + x['id'] + '.html' for x in visible]
 (out / 'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' + ''.join('<url><loc>'+esc(url)+'</loc></url>' for url in urls) + '</urlset>', encoding='utf-8')
 print(json.dumps({'mode': 'preview' if args.preview else 'production', 'output': str(out), 'published_articles': len(cards), 'news_editions': len(visible), 'pending_news_included': args.preview}, indent=2))
+

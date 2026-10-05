@@ -14,7 +14,7 @@ GitHub's public preview brings desktop clicks and typing to Copilot CLI and the 
 
 Announced 30 September 2026; posted 3 October 2026.
 
-Google's announcement raises the output-token limit from 64K to one million. That is output capacity, not a statement about the context window or guaranteed reliability. The initial rollout is to trusted cybersecurity defenders through Fairwind. Wider paid API and Google AI Ultra access is planned without a public date in the announcement. [Google announcement](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-argon/) · [My X post](https://x.com/Skywalkerlyzv/status/2106225304515875044).
+Google's announcement raises the output token limit from 64K to one million. That is output capacity, not a statement about the context window or guaranteed reliability. The initial rollout is to trusted cybersecurity defenders through Fairwind. Wider paid API and Google AI Ultra access is planned without a public date in the announcement. [Google announcement](https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-argon/) · [My X post](https://x.com/Skywalkerlyzv/status/2106225304515875044).
 
 ## Bonsai World: a robot can practise before reaching the field
 
@@ -27,3 +27,4 @@ Bonsai says Bonsai World turns satellite imagery into structured 3D simulations 
 Announced 2 October 2026; posted 4 October 2026.
 
 The residency is already covered in [the five-update edition](https://somilsin.github.io/Artificial-Intelligence/Inside-AI/news-2026-10-03.html). Anthropic's $100 million commitment and goal of training 10,000 engineers by the end of 2027 describe a plan, rather than a completed outcome. [My detailed X Article](https://x.com/Skywalkerlyzv/status/2106768166789722127) · [Earlier X post](https://x.com/Skywalkerlyzv/status/2106762838299836422) · [Anthropic announcement](https://www.anthropic.com/news/claude-frontier-academy).
+

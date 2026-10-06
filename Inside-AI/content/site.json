@@ -152,6 +152,23 @@
         "Knowing Arabic is not the same as knowing a dialect"
       ],
       "reading_label": "Read the development note ↗"
+    },
+    {
+      "id": "2026-10-06",
+      "title": "Five fresh research notes: training, features and agents",
+      "date": "6 October 2026",
+      "source_window": "Preprints submitted 5 October 2026; verified and published 6 October 2026",
+      "source": "news-2026-10-06.md",
+      "approval": "approved",
+      "description": "Five distinct primary source studies, with original diagrams, reported findings, useful examples, limits and matching X and company reading links.",
+      "topics": [
+        "A phone can train an adapter. Sustaining it is the harder part.",
+        "A good accuracy score can hide a fragile backbone",
+        "TasteVal asks which experiment an AI researcher chooses next",
+        "HEAR connects what an agent knows with what its server sees",
+        "Mentioned in a chat does not mean still required"
+      ],
+      "reading_label": "Read the five research notes ↗"
     }
   ]
 }

@@ -8,17 +8,17 @@ export const Route = createFileRoute("/")({
   component: Index,
   head: () => ({
     meta: [
-      { title: "Somil Singh — AI & Computer Vision Engineer" },
+      { title: "Somil Singh · AI & Computer Vision Engineer" },
       {
         name: "description",
         content:
           "AI and Computer Vision Engineer, Inside AI founder and machine learning researcher at Strand Life Sciences. Visual study notes, code and published computer vision research.",
       },
-      { property: "og:title", content: "Somil Singh — AI & Computer Vision Engineer" },
+      { property: "og:title", content: "Somil Singh · AI & Computer Vision Engineer" },
       {
         property: "og:description",
         content:
-          "AI engineering and research across Oracle, IISc VAL and Strand Life Sciences. Founder of Inside AI and coauthor of computer vision research in IJISRT.",
+          "AI engineering at Oracle, cancer detection research at Strand Life Sciences and earlier 3D perception research at IISc. Founder of Inside AI and coauthor of computer vision research in IJISRT.",
       },
       { property: "og:type", content: "profile" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -56,80 +56,157 @@ const METRICS = [
 ];
 
 const EXPERIENCE = [
-{
-  "role": "Founder",
-  "name": "Inside AI",
-  "tag": "October 2026 to present",
-  "points": [
-    "I share what I am learning in AI, machine learning, deep learning, computer vision and robotics through visual study notes, diagrams and runnable code.",
-    "Published the first four Deep Learning Models articles on VAE and VQ VAE. I also curate sourced world AI updates and develop educational videos."
-  ],
-  "link": {
-    "label": "Explore Inside AI ↗",
-    "href": "https://somilsin.github.io/Artificial-Intelligence/Inside-AI/"
+  {
+    "role": "Founder and Creator",
+    "name": "Inside AI",
+    "tag": "October 2026 to present",
+    "points": [
+      "Building Inside AI, a public AI learning initiative with an open source focus. I share research notes, diagrams and code across AI, machine learning, deep learning, computer vision and robotics.",
+      "Published the first four Deep Learning Models articles on VAE and VQ VAE. I also curate sourced world AI updates and develop educational videos. Learning in public, because sharing is caring."
+    ],
+    "link": {
+      "label": "View my LinkedIn experience ↗",
+      "href": "https://www.linkedin.com/in/somil-singh/details/experience/"
+    }
+  },
+  {
+    "role": "Machine Learning Researcher",
+    "name": "Strand Life Sciences",
+    "tag": "September 2026 to present · Part time",
+    "points": [
+      "Research deep learning methods and build predictive pipelines for early cancer detection using clinical blood data, with a focus on limited samples and data bias.",
+      "Developed a variational autoencoder (VAE) to debias tabular cancer data, outperforming the previous model for early detection across 10 cancer types."
+    ],
+    "link": {
+      "label": "View my research experience ↗",
+      "href": "https://www.linkedin.com/in/somil-singh/details/experience/"
+    }
+  },
+  {
+    "role": "Full Stack AI Engineer",
+    "name": "Oracle · Primavera Cloud",
+    "tag": "August 2025 to present",
+    "points": [
+      "Specialise in agentic AI and LLM orchestration, leading adoption of agentic tools across Oracle Primavera Cloud.",
+      "Engineered compositional SQL mapping for Text to SQL RAG agents, consolidating complex routing into a relational table and accelerating fetch queries by 75%.",
+      "Automated code generation, test verification and GitLab and SmartBear reviews through Cline, Kilo Code and Codex, with $1.1M in projected savings.",
+      "Built a multi agent LLM ecosystem across MCP, PL/SQL, Jira and the codebase to triage 150 to 200 bugs per week. Reduced resolution time from 45 minutes to 2 minutes and saved more than 120 engineering hours monthly.",
+      "Built RAG pipelines processing more than 500 RFP documents daily over a knowledge base of more than 100,000 vectors using LangChain and Oracle Vector 23ai. Achieved retrieval latency under 1.5 seconds and improved throughput by 35%.",
+      "Led a proof of concept for an agentic low code framework through Oracle Integration Cloud and coordinated team upskilling with organisation directors."
+    ],
+    "link": {
+      "label": "View my LinkedIn experience ↗",
+      "href": "https://www.linkedin.com/in/somil-singh/details/experience/"
+    }
+  },
+  {
+    "role": "Associate Software Engineer",
+    "name": "Oracle · Primavera Cloud",
+    "tag": "July 2024 to July 2025",
+    "points": [
+      "Owned design and development of more than 30 React frontend features with Java and Spring backends, improving workflow responsiveness by 28%.",
+      "Learned the React and Redux ecosystem within 72 hours to deliver a schedule interface for stakeholders and was selected for the organisation wide AI and SDLC overhaul.",
+      "Resolved more than 25 priority performance and architecture issues and delivered more than 2,500 lines of production code with CI/CD ownership.",
+      "Owned the Code Smells epic to reduce automation debt and maintained a zero defect record after fixes across AI augmented deployments."
+    ],
+    "link": {
+      "label": "View my LinkedIn experience ↗",
+      "href": "https://www.linkedin.com/in/somil-singh/details/experience/"
+    }
+  },
+  {
+    "role": "Project Intern",
+    "name": "Oracle",
+    "tag": "January 2024 to June 2024 · Internship",
+    "points": [
+      "Developed experience in Java and full stack software development before moving into a core engineering role at Oracle."
+    ],
+    "link": {
+      "label": "View my LinkedIn experience ↗",
+      "href": "https://www.linkedin.com/in/somil-singh/details/experience/"
+    }
+  },
+  {
+    "role": "Founder",
+    "name": "Stealth AI Startup",
+    "tag": "July 2026 to September 2026 · Paused",
+    "points": [
+      "Explored an early AI startup idea. The initiative is paused while I focus on research and learn from startup founders."
+    ],
+    "link": {
+      "label": "View my LinkedIn experience ↗",
+      "href": "https://www.linkedin.com/in/somil-singh/details/experience/"
+    }
+  },
+  {
+    "role": "Founder",
+    "name": "BehaviorAI (v1)",
+    "tag": "June 2026 · Part time",
+    "points": [
+      "Built a working AI product for an enterprise behaviour change challenge covering 10,000 employees in a two hour sprint using Claude.",
+      "Selected as one of five Star Builders from more than 1,000 applicants at the Softway LoveXAI Hackathon.",
+      "Presented the product design, ethics and commercial case to Softway leadership, securing possible corporate interest in an enterprise rollout."
+    ],
+    "link": {
+      "label": "View my LinkedIn experience ↗",
+      "href": "https://www.linkedin.com/in/somil-singh/details/experience/"
+    }
+  },
+  {
+    "role": "AI Research Assistant",
+    "name": "Indian Institute of Science (IISc) Bangalore",
+    "tag": "July 2023 to December 2023 · Internship",
+    "points": [
+      "Researched Neural Radiance Fields and plenoptic functions for 7D scene representations and human pose estimation. Improved reconstruction fidelity by 25% on benchmarks across Blender, LLFF and DTU.",
+      "Integrated SfM and SLAM camera calibration with differentiable ray tracing for 3D scene reconstruction, maintaining real time inference at 12 fps.",
+      "Used Gaussian splatting, supersampling and custom BVH acceleration structures to reduce mean joint position error by 18% on out of distribution datasets.",
+      "Built a volumetric rendering and lightfield modelling pipeline in PyTorch on Ubuntu spanning more than 1,000 lines of code."
+    ],
+    "link": {
+      "label": "View my LinkedIn experience ↗",
+      "href": "https://www.linkedin.com/in/somil-singh/details/experience/"
+    }
+  },
+  {
+    "role": "Computer Vision Research Intern",
+    "name": "Samsung R&D Institute India",
+    "tag": "May 2023 to October 2023 · Internship",
+    "points": [
+      "Led a team of four to build a deep neural network pipeline for video frame interpolation and smoother slow motion playback.",
+      "Benchmarked on Vimeo90K, improving PSNR and SSIM over DAIN and SepConv by 8.5% with CUDA optimised inference.",
+      "Coordinated task delegation and communication with the company as the student team representative."
+    ],
+    "link": {
+      "label": "View my LinkedIn experience ↗",
+      "href": "https://www.linkedin.com/in/somil-singh/details/experience/"
+    }
+  },
+  {
+    "role": "Data Science Intern",
+    "name": "Solar Secure Solutions",
+    "tag": "January 2023 to March 2023 · Internship",
+    "points": [
+      "Built regression and classification models in Python, improving predictive accuracy by 20% and reducing manual preprocessing effort by 30%.",
+      "Developed data cleaning, feature engineering and visualisation pipelines with Pandas, NumPy, scikit learn and Matplotlib."
+    ],
+    "link": {
+      "label": "View my LinkedIn experience ↗",
+      "href": "https://www.linkedin.com/in/somil-singh/details/experience/"
+    }
+  },
+  {
+    "role": "AI Research Intern",
+    "name": "Wipro PARI",
+    "tag": "November 2022 to March 2023 · Internship",
+    "points": [
+      "Trained a customised Single Shot Detector on the WIRIN dataset for autonomous driving, achieving 55 to 75% mAP on real world traffic data.",
+      "Integrated Feature Pyramid Networks for multi scale feature fusion to improve detection of small and overlapping objects in dense traffic frames."
+    ],
+    "link": {
+      "label": "View my LinkedIn experience ↗",
+      "href": "https://www.linkedin.com/in/somil-singh/details/experience/"
+    }
   }
-},
-{
-  "role": "Machine Learning Researcher",
-  "name": "Strand Life Sciences",
-  "tag": "September 2026 to present · Part time",
-  "points": [
-    "Research deep learning methods and build predictive pipelines for early cancer detection using clinical blood data, with a focus on limited samples and data bias.",
-    "Developed a variational autoencoder to debias tabular cancer data, outperforming the previous model for early detection across 10 cancer types."
-  ],
-  "link": {
-    "label": "View my research experience ↗",
-    "href": "https://www.linkedin.com/in/somil-singh/details/experience/"
-  }
-},
-  {
-    role: "Computer Vision Research Assistant",
-    name: "IISc Bangalore — Visual AI & Learning Lab (VAL)",
-    tag: "Sep 2026 — Present · Jul 2023 — Dec 2023",
-    points: [
-      "Neural Radiance Fields with plenoptic functions modelling 7D scene representations for human pose estimation — +25% reconstruction fidelity, validated on Blender, LLFF and DTU.",
-      "SfM/SLAM camera calibration for 3D reconstruction with differentiable ray tracing at 12 fps real time inference; volumetric rendering and lightfield pipelines (1000+ LoC, PyTorch/Ubuntu).",
-      "Reduced mean joint position error 18% on out of distribution data using Gaussian splatting, supersampling and custom BVH acceleration structures.",
-    ],
-    link: { label: "val.cds.iisc.ac.in ↗", href: "https://val.cds.iisc.ac.in/" },
-  },
-  {
-    role: "Full Stack AI Engineer",
-    name: "Oracle — Primavera Cloud",
-    tag: "Jan 2024 — Present",
-    points: [
-      "Engineered a multi agent LLM ecosystem (MCP, PL/SQL DB, Jira, codebase) that autonomously triages 150–200 bugs per week — resolution time from 45 min to under 2 min, 120+ engineering hours saved monthly.",
-      "Built RAG pipelines over a 100k+ vector knowledge base processing 500+ RFP documents daily with LangChain and Oracle Vector 23ai — sub-1.5s retrieval, +35% throughput.",
-      "Drove organisation wide adoption of agentic tooling (Cline, Kilo Code, Codex), turning the enterprise SDLC into model agnostic, OS independent AI infrastructure — $1.1M projected savings.",
-      "Owned 19 full stack features across React and Java/Spring (+28% responsiveness); resolved 40+ high priority bugs with a zero defect post fix record.",
-    ],
-    link: { label: "oracle.com ↗", href: "https://www.oracle.com" },
-  },
-  {
-    role: "Founder — BehaviorAI · Winner",
-    name: "Softway LoveXAI Hackathon",
-    tag: "Jun 2026",
-    points: [
-      "Built a functional AI behavioural change product in a two hour sprint, scoped for 10,000 employees.",
-      "Won the hackathon and secured corporate interest for enterprise rollout after a live executive defence.",
-    ],
-    link: {
-      label: "github.com/somilsin/Artificial-Intelligence/tree/main/behaviorai-lovexai ↗",
-      href: "https://github.com/somilsin/Artificial-Intelligence/tree/main/behaviorai-lovexai",
-    },
-  },
-  {
-    role: "Deep Learning Research Assistant",
-    name: "Wipro PARI — Autonomous Driving",
-    tag: "Nov 2022 — Mar 2023",
-    points: [
-      "Trained a customised Single Shot Detector with Feature Pyramid Networks for multi scale perception in dense driving scenes — 55–75% mAP on the real world WIRIN traffic dataset.",
-    ],
-    link: {
-      label: "github.com/somilsin/Computer-Vision/tree/main/Object-Detection-using-SSD ↗",
-      href: "https://github.com/somilsin/Computer-Vision/tree/main/Object-Detection-using-SSD",
-    },
-  },
 ];
 
 type WorkItem = {
@@ -144,144 +221,195 @@ type WorkItem = {
 
 const WORK: WorkItem[] = [
   {
-    n: "01",
-    title: "Object Detection, Classification & Tracking of Everyday Common Objects",
-    meta: "Published · IJISRT Vol. 8 Issue 8, Aug 2023 · ISSN 2456-2165",
-    body: "Coauthored a paper on YOLOv4 object detection and video processing with TensorFlow and OpenCV. The implementation includes class filtering, object counting and periodic cropping. The paper reports variable detection performance and identifies occlusion handling as a limitation.",
-    href: "https://doi.org/10.5281/zenodo.8330641",
-    hrefLabel: "doi.org/10.5281/zenodo.8330641 ↗",
-    secondary: {
-      href: "https://github.com/somilsin/Computer-Vision/tree/main/Object-Tracking-with-Boundary-edge-detection-using-yolov4",
-      label: "github.com/somilsin/Computer-Vision/tree/main/Object-Tracking-with-Boundary-edge-detection-using-yolov4 ↗",
-    },
+    "n": "01",
+    "title": "Object Detection, Classification & Tracking of Everyday Common Objects",
+    "meta": "Published · IJISRT Vol. 8 Issue 8, Aug 2023",
+    "body": "Coauthored a paper on YOLOv4 object detection and video processing with TensorFlow and OpenCV. The implementation includes class filtering, object counting and periodic cropping. The paper reports variable detection performance and identifies occlusion handling as a limitation.",
+    "href": "https://doi.org/10.5281/zenodo.8330641",
+    "hrefLabel": "doi.org/10.5281/zenodo.8330641 ↗",
+    "secondary": {
+      "href": "https://github.com/somilsin/Computer-Vision/tree/main/Object-Tracking-with-Boundary-edge-detection-using-yolov4",
+      "label": "Explore the YOLOv4 project on GitHub ↗"
+    }
   },
   {
-    n: "02",
-    title: "Deep Learning & Computer Vision",
-    meta: "Course adaptations and original experiments · Python and TensorFlow",
-    body: "My learning notebooks cover digit classifiers and facial detection with a debiasing VAE. Recorded local runs include 97.38% test accuracy for the fully connected digit model and 99.76% accuracy on sampled training data for the CNN. I also built nnkit with NumPy and SciPy and checked its backward passes using finite differences.",
-    href: "https://github.com/somilsin/Machine-Learning/tree/main/Deep-Learning_Computer-Vision",
-    hrefLabel: "github.com/somilsin/Machine-Learning/tree/main/Deep-Learning_Computer-Vision ↗",
+    "n": "02",
+    "title": "Deep Learning and Computer Vision Experiments",
+    "meta": "Course adaptations and original experiments · Python and TensorFlow",
+    "body": "I adapted MIT Introduction to Deep Learning exercises to study digit classification and face classification with adaptive sampling. My recorded runs include 97.38% test accuracy for digit classification and 99.76% accuracy on sampled training data in a separate CNN run. I also maintain a NumPy and SciPy neural network engine with explicit gradients and finite difference checks. I retain the course credit and distinguish training measurements from independent evaluation.",
+    "href": "https://github.com/somilsin/Machine-Learning/tree/main/Deep-Learning_Computer-Vision",
+    "hrefLabel": "Explore deep learning and vision on GitHub ↗"
   },
   {
-    n: "03",
-    title: "Transformers & Large Language Models",
-    meta: "Sequence modelling · LSTM and LoRA experiments",
-    body: "I explore character level music generation with an RNN/LSTM and language model adaptation with LoRA. The latest READMEs include generated text and audio, execution notes and clearly labelled reduced runs, including a 600 step music experiment and a 20 step LFM2 350M adaptation.",
-    href: "https://github.com/somilsin/Machine-Learning/tree/main/Transformers_Large-Language-Models",
-    hrefLabel: "github.com/somilsin/Machine-Learning/tree/main/Transformers_Large-Language-Models ↗",
+    "n": "03",
+    "title": "Transformers and Large Language Models Experiments",
+    "meta": "Sequence modelling · LSTM and LoRA experiments",
+    "body": "I explore character level music generation with an RNN/LSTM and language model adaptation with LoRA. The latest READMEs include generated text and audio, execution notes and clearly labelled reduced runs, including a 600 step music experiment and a 20 step LFM2 350M adaptation.",
+    "href": "https://github.com/somilsin/Machine-Learning/tree/main/Transformers_Large-Language-Models",
+    "hrefLabel": "Explore transformers and language models on GitHub ↗"
   },
   {
-    n: "04",
-    title: "BehaviorAI",
-    meta: "Top 5 winner · Softway LoveXAI Hackathon 2026",
-    body: "A browser prototype built with Claude during the Softway LoveXAI Hackathon. An Analyst and a Strategist work sequentially to turn workplace survey evidence into a behaviour change plan. A hackathon winner, with a proposed enterprise coaching extension.",
-    href: "https://github.com/somilsin/Artificial-Intelligence/tree/main/behaviorai-lovexai",
-    hrefLabel: "github.com/somilsin/Artificial-Intelligence/tree/main/behaviorai-lovexai ↗",
+    "n": "04",
+    "title": "BehaviorAI",
+    "meta": "Top 5 winner · Softway LoveXAI Hackathon 2026",
+    "body": "I built BehaviorAI at the Softway LoveXAI Hackathon and was selected as one of five winners. An Evidence Analyst and a Coaching Design Strategist use employee evidence to produce a behaviour change plan. I built the interface with HTML, CSS and JavaScript and connected the two agents to the Claude API. The project includes example evidence and a live browser demo.",
+    "href": "https://github.com/somilsin/Artificial-Intelligence/tree/main/behaviorai-lovexai",
+    "hrefLabel": "Explore BehaviorAI on GitHub ↗",
+    "secondary": {
+      "href": "https://somilsin.github.io/Artificial-Intelligence/behaviorai-lovexai/",
+      "label": "Explore the live demo ↗"
+    }
   },
   {
-    n: "05",
-    title: "Indian ANPR",
-    meta: "OCR · MySQL · Twilio",
-    body: "Automatic number plate recognition for Indian vehicles — plate extraction with pytesseract, owner, model and registration validity checks against a MySQL database, and Twilio SMS alerts for expired or invalid registrations.",
-    href: "https://github.com/somilsin/Computer-Vision/tree/main/Indian-ANPR",
-    hrefLabel: "github.com/somilsin/Computer-Vision/tree/main/Indian-ANPR ↗",
+    "n": "05",
+    "title": "Indian ANPR",
+    "meta": "OCR · MySQL · Twilio",
+    "body": "Automatic number plate recognition for Indian vehicles · plate extraction with pytesseract, owner, model and registration validity checks against a MySQL database and Twilio SMS alerts for expired or invalid registrations.",
+    "href": "https://github.com/somilsin/Computer-Vision/tree/main/Indian-ANPR",
+    "hrefLabel": "Explore Indian ANPR on GitHub ↗"
   },
   {
-    n: "06",
-    title: "Object Detection using SSD",
-    meta: "Wipro PARI · WIRIN dataset",
-    body: "An image inference notebook for exploring Single Shot Detector object detection, with example images, model configuration and a TensorFlow graph conversion helper. This is part of my computer vision learning and autonomous driving research background.",
-    href: "https://github.com/somilsin/Computer-Vision/tree/main/Object-Detection-using-SSD",
-    hrefLabel: "github.com/somilsin/Computer-Vision/tree/main/Object-Detection-using-SSD ↗",
+    "n": "06",
+    "title": "Object Detection using SSD",
+    "meta": "COCO class labels · Image inference notebook",
+    "body": "An image inference notebook for exploring Single Shot Detector object detection, with example images, model configuration and a TensorFlow graph conversion helper. This is part of my computer vision learning and autonomous driving research background.",
+    "href": "https://github.com/somilsin/Computer-Vision/tree/main/Object-Detection-using-SSD",
+    "hrefLabel": "Explore SSD on GitHub ↗"
   },
   {
-    n: "07",
-    title: "Learning Archive",
-    meta: "Jupyter · self-directed",
-    body: "A curated archive of practice projects and academic explorations — continuous experimentation across programming and computer science.",
-    href: "https://github.com/somilsin/Learning-Archive",
-    hrefLabel: "github.com/somilsin/Learning-Archive ↗",
+    "n": "07",
+    "title": "Learning Archive",
+    "meta": "Jupyter · self directed",
+    "body": "A curated archive of practice projects and academic explorations · continuous experimentation across programming and computer science.",
+    "href": "https://github.com/somilsin/Learning-Archive",
+    "hrefLabel": "Explore the learning archive on GitHub ↗"
   },
   {
-    n: "08",
-    title: "Inside AI",
-    meta: "Public AI learning and research · October 2026",
-    body: "My public learning initiative. Published Parts 01 to 04 explain VAE and VQ VAE through colourful diagrams, maths, runnable code and recorded outputs. Sourced world AI updates and a completed eight minute VAE explainer extend the written notes.",
-    href: "https://somilsin.github.io/Artificial-Intelligence/Inside-AI/",
-    hrefLabel: "Visit Inside AI ↗",
-    secondary: {
-      href: "https://www.linkedin.com/newsletters/7511777490416250880/",
-      label: "Inside AI newsletter ↗",
-    },
+    "n": "08",
+    "title": "Inside AI",
+    "meta": "Public AI learning and research · October 2026",
+    "body": "My public learning initiative. Published Parts 01 to 04 explain VAE and VQ VAE through colourful diagrams, maths, runnable code and recorded outputs. Sourced world AI updates and a completed eight minute VAE explainer extend the written notes.",
+    "href": "https://somilsin.github.io/Artificial-Intelligence/Inside-AI/",
+    "hrefLabel": "Visit Inside AI ↗",
+    "secondary": {
+      "href": "https://www.linkedin.com/newsletters/7511777490416250880/",
+      "label": "Inside AI newsletter ↗"
+    }
   },
+  {
+    "n": "09",
+    "title": "TensorTonic Machine Learning Solutions",
+    "meta": "May 2026 to present · Probability and linear algebra",
+    "body": "I practise core machine learning mathematics through small Python implementations of dot products, cosine similarity, matrix transpose, expected value, Bernoulli probability and sample statistics. I keep each problem statement beside its implementation with source credit.",
+    "href": "https://github.com/somilsin/Machine-Learning/tree/main/TensorTonic-Solutions",
+    "hrefLabel": "Explore TensorTonic solutions on GitHub ↗"
+  },
+  {
+    "n": "10",
+    "title": "Cybersecurity Reconnaissance Tools",
+    "meta": "May 2023 to August 2023 · Networking and security practice",
+    "body": "I explored remote operating system discovery and open port detection through a Python reconnaissance toolkit with a SQLite port mapping database. I keep it in my Learning Archive as a record of my networking and security practice.",
+    "href": "https://github.com/somilsin/Learning-Archive/tree/main/Cybersecurity-Reconnaissance-Tools",
+    "hrefLabel": "Explore reconnaissance tools on GitHub ↗"
+  },
+  {
+    "n": "11",
+    "title": "Ivy | Framework Codebase Study",
+    "meta": "January 2021 to December 2021 · Codebase study",
+    "body": "I studied the Ivy codebase to understand framework interoperability and API design. This is a study of an existing open source project and I retain the original attribution and licence.",
+    "href": "https://github.com/somilsin/Learning-Archive/tree/main/ivy",
+    "hrefLabel": "Explore the Ivy codebase study on GitHub ↗"
+  }
 ];
 
 const STACK = [
   {
-    n: "01",
-    title: "3D Perception & Robotics",
-    body: "Neural Radiance Fields, Gaussian splatting, SLAM/SfM, camera calibration, differentiable ray tracing, volumetric rendering, BVH acceleration.",
+    "n": "01",
+    "title": "3D Perception & Robotics",
+    "body": "Neural Radiance Fields, Gaussian splatting, SLAM/SfM, camera calibration, differentiable ray tracing, volumetric rendering, BVH acceleration."
   },
   {
-    n: "02",
-    title: "Vision & Multimodal Models",
-    body: "CNNs, Vision Transformers (ViT), Vision-Language Models, Vision-Language-Action models, diffusion models, world models (JEPA).",
+    "n": "02",
+    "title": "Vision & Multimodal Models",
+    "body": "CNNs, Vision Transformers (ViT), Vision Language Models, Vision Language Action models, diffusion models, world models (JEPA)."
   },
   {
-    n: "03",
-    title: "Agent & LLM Infrastructure",
-    body: "Multi-agent orchestration over MCP, agent evals and harnesses, fine-tuning, pre/post-training, RAG, LangChain, LlamaIndex, Vector 23ai.",
+    "n": "03",
+    "title": "Agent & LLM Infrastructure",
+    "body": "Multi agent orchestration over MCP, agent evals and harnesses, fine tuning, pre/post training, RAG, LangChain, LlamaIndex, Vector 23ai."
   },
   {
-    n: "04",
-    title: "Systems & AIOps",
-    body: "Python, Java, JavaScript, C, MATLAB · PyTorch, TensorFlow, HuggingFace, CUDA · Spring, Hibernate, Docker, Redis, CI/CD, quantisation and inference optimisation.",
-  },
+    "n": "04",
+    "title": "Systems & AIOps",
+    "body": "Python, Java, JavaScript, C, MATLAB · PyTorch, TensorFlow, HuggingFace, CUDA · Spring, Hibernate, Docker, Redis, CI/CD, quantisation and inference optimisation."
+  }
 ];
 
 const CREDENTIALS = [
   {
-    title: "B.E. Computer Science & Engineering",
-    meta: "Rashtreeya Vidyalaya College of Engineering · Dec 2020 — Jun 2024",
+    "title": "Bachelor of Engineering, Computer Science",
+    "meta": "RV College of Engineering · First Class with Distinction · Scholaro GPA 3.74/4.0"
   },
   {
-    title: "High School Diploma — 96.8% aggregate",
-    meta: "National Public School, Indiranagar · Sep 2016 — Jun 2020",
+    "title": "High School Diploma · 96.8%",
+    "meta": "National Public School, Indiranagar · CBSE 10th boards"
   },
   {
-    title: "NTSE Scholar — All India Rank within Top 800",
-    meta: "National Talent Search Examination",
+    "title": "National Talent Search Examination (NTSE) Scholar | Top 800 All India Rank",
+    "meta": "National Talent Search Examination"
   },
   {
-    title: "Winner — Softway LoveXAI Hackathon 2026",
-    meta: "Solo entry · BehaviorAI",
+    "title": "Winner · Softway LoveXAI Hackathon 2026",
+    "meta": "Solo entry · BehaviorAI"
   },
   {
-    title: "Published author — IJISRT 2023",
-    meta: "Object Detection, Classification and Tracking of Everyday Common Objects",
+    "title": "Published author · IJISRT 2023",
+    "meta": "Object Detection, Classification and Tracking of Everyday Common Objects"
   },
-{
-  "title": "Best All Rounder Student Award",
-  "meta": "Campion School, Mumbai · 2015 and 2016"
-},
-{
-  "title": "FIDE rated chess player · 8th place at state level",
-  "meta": "Maharashtra State Championship · More than 25 chess accolades"
-},
-{
-  "title": "MaRRS Spelling Bee · State level finalist",
-  "meta": "Qualified for the final round"
-},
-{
-  "title": "District level badminton · 4th place",
-  "meta": "Mumbai DSO competition · Campion School"
-},
-{
-  "title": "Sports and co curricular distinctions",
-  "meta": "State level football and basketball · District level cricket, tennis and athletics"
-},
-
+  {
+    "title": "Best All Rounder Student Award (2015, 2016)",
+    "meta": "Campion School, Mumbai · 2015 and 2016"
+  },
+  {
+    "title": "FIDE Rated Chess Player | 8th Place, Maharashtra State Championship",
+    "meta": "Maharashtra State Championship · More than 25 chess accolades"
+  },
+  {
+    "title": "MaRRS Spelling Bee | State Level Finalist",
+    "meta": "Qualified for the final round"
+  },
+  {
+    "title": "District Level Badminton | 4th Place, Mumbai DSO Competition",
+    "meta": "Mumbai DSO competition · Campion School"
+  },
+  {
+    "title": "Sports and Co Curricular Distinctions",
+    "meta": "State level football and basketball · District level cricket, tennis and athletics"
+  },
+  {
+    "title": "Oracle Cloud Infrastructure 2025 Certified Generative AI Professional",
+    "meta": "Oracle · Issued April 2025"
+  },
+  {
+    "title": "Oracle Cloud Infrastructure 2025 Certified Foundations Associate",
+    "meta": "Oracle · Issued March 2025 · Expires March 2027"
+  },
+  {
+    "title": "GRE · 335/340",
+    "meta": "December 2025 · Quantitative 166 · Verbal 169"
+  },
+  {
+    "title": "TOEFL iBT · 116/120",
+    "meta": "August 2025 · C2 level proficiency"
+  },
+  {
+    "title": "Team Antariksh · Core Electronics Engineer",
+    "meta": "March 2022 to November 2022 · RVSAT1 payload circuitry"
+  },
+  {
+    "title": "National Service Scheme · Design Team Member",
+    "meta": "November 2022 to June 2024 · Innovation with a purpose"
+  }
 ];
 
 function useActiveSection() {
@@ -399,7 +527,7 @@ function Index() {
 
       {/* HERO */}
       <section className="relative flex min-h-screen items-center overflow-hidden pt-32">
-        {/* Particle portrait — full-viewport-bleed. Particles fly across the
+        {/* Particle portrait · full-viewport-bleed. Particles fly across the
             entire width and pass behind the left-anchored text column. */}
         <div className="pointer-events-none absolute inset-0 z-0">
           <ParticleHead />
@@ -408,7 +536,7 @@ function Index() {
         <div className="relative z-10 grid w-full grid-cols-1 gap-16 px-6 md:grid-cols-12 md:px-12">
           <div className="md:col-span-6 lg:col-span-5 xl:col-span-4">
             <p className="reveal serif-italic-accent text-lg md:text-xl">
-              AI &amp; Computer Vision Engineer · Founder of Inside AI.
+              Founder of Inside AI · Cloud and AI at Oracle.
             </p>
             <h1
               className="reveal serif-display mt-8 text-[3.25rem] leading-[0.98] tracking-[-0.015em] md:mt-10 md:text-[5.5rem] lg:text-[6.25rem]"
@@ -420,10 +548,10 @@ function Index() {
               className="reveal prose-editorial mt-10 max-w-[26rem] border-l border-[color:var(--color-border)] pl-6"
               data-reveal-delay="160"
             >
-              I build AI systems at Oracle, research 3D perception at IISc VAL and explore
-              early cancer detection at Strand Life Sciences. I am also the founder of Inside AI,
+              I love exploring AI and the universe and using what I learn to solve complex problems.
+              That curiosity has taken me from AI engineering at Oracle to NeRF research at IISc
+              and early cancer detection at Strand Life Sciences. I am also the founder of Inside AI,
               where I share visual study notes, code and what I learn along the way.
-              Coauthor of a computer vision paper in IJISRT and a Softway LoveXAI hackathon winner.
             </div>
 
             <div className="reveal mt-10 flex flex-col gap-3" data-reveal-delay="240">
@@ -470,7 +598,7 @@ function Index() {
               className="reveal mt-10 text-sm text-[color:var(--color-foreground)]/60"
               data-reveal-delay="400"
             >
-              Bangalore, India · +91 991 690 6693
+              Bengaluru, India · +91 991 690 6693
             </p>
           </div>
           <div className="hidden md:col-span-6 md:block lg:col-span-7 xl:col-span-8" />
@@ -510,8 +638,8 @@ function Index() {
             in public.
           </h2>
           <p className="reveal prose-editorial mt-6 max-w-xl" data-reveal-delay="100">
-            I work across 3D perception at IISc VAL, AI infrastructure at Oracle and early cancer
-            detection at Strand. Inside AI is where I turn that curiosity into shared learning.
+            My work spans AI infrastructure at Oracle, early cancer detection at Strand and earlier
+            research in 3D perception at IISc. Inside AI is where I turn that curiosity into shared learning.
           </p>
 
           <div className="mt-16 space-y-14">
@@ -530,9 +658,10 @@ function Index() {
                     {c.points.map((p) => (
                       <li
                         key={p}
-                        className="border-l border-[color:var(--color-border)] pl-5 text-[15px] leading-relaxed text-[color:var(--color-foreground)]/80"
+                        className="flex gap-3 border-l border-[color:var(--color-border)] pl-5 text-[15px] leading-relaxed text-[color:var(--color-foreground)]/80"
                       >
-                        {p}
+                        <span aria-hidden="true" className="text-[color:var(--color-primary)]">→</span>
+                        <span>{p}</span>
                       </li>
                     ))}
                   </ul>

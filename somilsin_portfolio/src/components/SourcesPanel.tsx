@@ -11,7 +11,7 @@ import {
 } from "@/lib/sources";
 
 function fmt(iso?: string) {
-  if (!iso) return "—";
+  if (!iso) return "Unavailable";
   return new Date(iso).toLocaleDateString("en-GB", {
     day: "2-digit",
     month: "short",
@@ -151,7 +151,7 @@ export default function SourcesPanel() {
             {state === "loading"
               ? "Contacting api.github.com…"
               : state === "error"
-                ? `Failed (attempt ${attempts}) — ${error}. Claims below still show cached evidence links.`
+                ? `Failed (attempt ${attempts}) · ${error}. Claims below still show cached evidence links.`
                 : checkedAt
                   ? `Repository metadata refreshed ${checkedAt} · ${Object.keys(facts).length} repos`
                   : "Not yet verified"}
@@ -247,7 +247,7 @@ export default function SourcesPanel() {
                     className="block break-all eyebrow text-[color:var(--color-primary)] transition-opacity hover:opacity-70"
                   >
                     {s.repo
-                      ? `${s.repoLabel ? `${s.repoLabel} — ` : ""}${s.repo}${s.repoPath ?? ""}`
+                      ? `${s.repoLabel ?? "Source repository"} on GitHub`
                       : s.external?.label}{" "}
                     ↗
                   </a>
@@ -255,11 +255,11 @@ export default function SourcesPanel() {
                 {s.repo && (
                   <p className="mt-2 text-xs text-[color:var(--color-foreground)]/55">
                     {fact
-                      ? `${fact.language ?? "—"} · ★ ${fact.stargazers_count} · last push ${fmt(fact.pushed_at)}`
+                      ? `${fact.language ?? "Unavailable"} · ★ ${fact.stargazers_count} · last push ${fmt(fact.pushed_at)}`
                       : state === "loading"
                         ? "Fetching live repo facts…"
                         : state === "error"
-                          ? "Live facts unavailable — retry above"
+                          ? "Live facts unavailable · retry above"
                           : "No live facts returned"}
                   </p>
                 )}

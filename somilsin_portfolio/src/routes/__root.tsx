@@ -77,34 +77,34 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   head: () => ({
     meta: [
       { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Somil Singh — Computer Vision, Agentic Systems & World Models" },
+      { name: "viewport", content: "width=device width, initial scale=1" },
+      { title: "Somil Singh · Computer Vision, Agentic Systems & World Models" },
       {
         name: "description",
         content:
-          "Somil Singh · AI engineering at Oracle, 3D perception at IISc VAL and machine learning at Strand Life Sciences. Founder of Inside AI.",
+          "Somil Singh · AI engineering at Oracle, machine learning at Strand Life Sciences and earlier 3D perception research at IISc. Founder of Inside AI.",
       },
       { name: "author", content: "Somil Singh" },
       {
         property: "og:title",
-        content: "Somil Singh — Computer Vision, Agentic Systems & World Models",
+        content: "Somil Singh · Computer Vision, Agentic Systems & World Models",
       },
       {
         property: "og:description",
         content:
-          "Somil Singh · AI engineering at Oracle, 3D perception at IISc VAL and machine learning at Strand Life Sciences. Founder of Inside AI.",
+          "Somil Singh · AI engineering at Oracle, machine learning at Strand Life Sciences and earlier 3D perception research at IISc. Founder of Inside AI.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@somilsin" },
       {
         name: "twitter:title",
-        content: "Somil Singh — Computer Vision, Agentic Systems & World Models",
+        content: "Somil Singh · Computer Vision, Agentic Systems & World Models",
       },
       {
         name: "twitter:description",
         content:
-          "Portfolio of Somil Singh — Full-Stack AI-ML Developer at Oracle. NeRF, agentic multi-agent systems, MCP, RAG, and end-to-end computer vision.",
+          "Portfolio of Somil Singh. Founder of Inside AI, AI engineer at Oracle and researcher in computer vision and early cancer detection.",
       },
       {
         property: "og:image",

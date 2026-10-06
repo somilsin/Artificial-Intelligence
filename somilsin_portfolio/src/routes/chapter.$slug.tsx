@@ -20,7 +20,7 @@ export const Route = createFileRoute("/chapter/$slug")({
     const c = loaderData.chapter;
     return {
       meta: [
-        { title: `${c.subtitle}: ${c.title} — Somil Singh` },
+        { title: `${c.subtitle}: ${c.title} · Somil Singh` },
         { name: "description", content: c.blurb },
         { property: "og:title", content: `${c.subtitle}: ${c.title}` },
         { property: "og:description", content: c.blurb },

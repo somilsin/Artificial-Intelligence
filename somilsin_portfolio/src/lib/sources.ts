@@ -17,6 +17,37 @@ export type SourceRef = {
 export const GITHUB_USER = "somilsin";
 
 export const SOURCES: SourceRef[] = [
+  {
+    claim: "My professional timeline follows the roles and dates on my LinkedIn profile, including Oracle, Strand, IISc, Samsung, Solar Secure, Wipro and my founder experience.",
+    evidenceNote: "Role details were checked against my live LinkedIn profile on 6 October 2026. Professional performance figures are profile statements rather than public benchmarks.",
+    section: "Experience",
+    external: { label: "My LinkedIn experience", href: "https://www.linkedin.com/in/somil-singh/details/experience/" },
+    cv: { label: "Professional timeline", anchor: "#experience" },
+  },
+  {
+    claim: "TensorTonic solutions cover core probability, vector operations and sample statistics with problem notes and source credit.",
+    section: "Work",
+    repo: "somilsin/Machine-Learning",
+    repoPath: "/tree/main/TensorTonic-Solutions",
+    repoLabel: "TensorTonic solutions",
+    cv: { label: "Machine learning practice", anchor: "#work" },
+  },
+  {
+    claim: "My cybersecurity reconnaissance toolkit is a record of Python networking practice with a SQLite port mapping database.",
+    section: "Work",
+    repo: "somilsin/Learning-Archive",
+    repoPath: "/tree/main/Cybersecurity-Reconnaissance-Tools",
+    repoLabel: "Reconnaissance tools",
+    cv: { label: "Networking and security practice", anchor: "#work" },
+  },
+  {
+    claim: "Ivy is a study of an existing open source codebase for framework interoperability and API design, with original attribution and licence retained.",
+    section: "Work",
+    repo: "somilsin/Learning-Archive",
+    repoPath: "/tree/main/ivy",
+    repoLabel: "Ivy codebase study",
+    cv: { label: "Framework codebase study", anchor: "#work" },
+  },
 {
   "claim": "Founder of Inside AI. Four published articles introduce VAE and VQ VAE through visual notes and code.",
   "section": "Inside AI",
@@ -69,53 +100,53 @@ export const SOURCES: SourceRef[] = [
   {
     claim:
       "NeRF with plenoptic 7D scene representations, +25% reconstruction fidelity (Blender, LLFF, DTU) at IISc VAL.",
-    evidenceNote: "Professional experience as described in my CV. The organisation link provides context.",
+    evidenceNote: "Professional experience as described on my LinkedIn profile. The organisation link provides context.",
     section: "Experience",
     external: { label: "IISc Visual AI & Learning Lab", href: "https://val.cds.iisc.ac.in/" },
-    cv: { label: "CV — Experience § IISc Bangalore, VAL", anchor: "#experience" },
+    cv: { label: "CV · Experience § IISc Bangalore, VAL", anchor: "#experience" },
   },
   {
     claim:
-      "Reduced mean joint-position error 18% using Gaussian splatting, supersampling and custom BVH.",
-    evidenceNote: "Professional experience as described in my CV. The organisation link provides context.",
+      "Reduced mean joint position error 18% using Gaussian splatting, supersampling and custom BVH.",
+    evidenceNote: "Professional experience as described on my LinkedIn profile. The organisation link provides context.",
     section: "Experience",
     external: { label: "IISc Visual AI & Learning Lab", href: "https://val.cds.iisc.ac.in/" },
-    cv: { label: "CV — Experience § IISc Bangalore, VAL", anchor: "#experience" },
+    cv: { label: "CV · Experience § IISc Bangalore, VAL", anchor: "#experience" },
   },
   {
-    claim: "Multi-agent LLM ecosystem triaging 150–200 bugs/week; 45 min → under 2 min resolution.",
-    evidenceNote: "Professional result reported in my CV; no public benchmark is linked.",
+    claim: "Multi agent LLM ecosystem triaging 150 to 200 bugs/week; 45 minutes to 2 minutes resolution.",
+    evidenceNote: "Professional result reported on my LinkedIn profile. No public benchmark is linked.",
     section: "Experience",
     external: {
       label: "Oracle Primavera Cloud",
       href: "https://www.oracle.com/construction-engineering/primavera-cloud/",
     },
-    cv: { label: "CV — Experience § Oracle, Primavera Cloud", anchor: "#experience" },
+    cv: { label: "CV · Experience § Oracle, Primavera Cloud", anchor: "#experience" },
   },
   {
-    claim: "RAG over a 100k+ vector knowledge base, 500+ RFP documents/day, sub-1.5s retrieval.",
-    evidenceNote: "Professional experience as described in my CV. The organisation link provides context.",
+    claim: "RAG over a 100k+ vector knowledge base, 500+ RFP documents/day, under 1.5 seconds retrieval.",
+    evidenceNote: "Professional experience as described on my LinkedIn profile. The organisation link provides context.",
     section: "Experience",
     external: {
       label: "Oracle Vector 23ai",
       href: "https://www.oracle.com/database/ai-vector-search/",
     },
-    cv: { label: "CV — Experience § Oracle, Primavera Cloud", anchor: "#experience" },
+    cv: { label: "CV · Experience § Oracle, Primavera Cloud", anchor: "#experience" },
   },
   {
-    claim: "$1.1M projected savings from org-wide agentic SDLC adoption.",
-    evidenceNote: "Professional result reported in my CV; no public benchmark is linked.",
+    claim: "$1.1M projected savings from org wide agentic SDLC adoption.",
+    evidenceNote: "Professional result reported on my LinkedIn profile. No public benchmark is linked.",
     section: "Experience",
-    cv: { label: "CV — Experience § Oracle, Primavera Cloud", anchor: "#experience" },
+    cv: { label: "CV · Experience § Oracle, Primavera Cloud", anchor: "#experience" },
   },
   {
     claim:
-      "BehaviorAI — top 5 winner of 1,000+ applicants, Softway LoveXAI Hackathon 2026, built solo in a 2-hour sprint.",
+      "BehaviorAI · top 5 winner of 1,000+ applicants, Softway LoveXAI Hackathon 2026, built solo in a 2 hour sprint.",
     section: "Work",
     repo: "somilsin/Artificial-Intelligence",
     repoPath: "/tree/main/behaviorai-lovexai",
     repoLabel: "Source repository",
-    cv: { label: "CV — Awards § LoveXAI Hackathon", anchor: "#credentials" },
+    cv: { label: "CV · Awards § LoveXAI Hackathon", anchor: "#credentials" },
   },
   {
     claim:
@@ -125,7 +156,7 @@ export const SOURCES: SourceRef[] = [
       label: "doi.org/10.5281/zenodo.8330641",
       href: "https://doi.org/10.5281/zenodo.8330641",
     },
-    cv: { label: "CV — Publications § IJISRT Vol. 8 Issue 8", anchor: "#credentials" },
+    cv: { label: "CV · Publications § IJISRT Vol. 8 Issue 8", anchor: "#credentials" },
   },
   {
     claim:
@@ -134,7 +165,7 @@ export const SOURCES: SourceRef[] = [
     repo: "somilsin/Machine-Learning",
     repoPath: "/tree/main/Deep-Learning_Computer-Vision",
     repoLabel: "Source repository",
-    cv: { label: "CV — Projects § Deep Learning & Computer Vision", anchor: "#work" },
+    cv: { label: "CV · Projects § Deep Learning & Computer Vision", anchor: "#work" },
   },
   {
     claim:
@@ -143,39 +174,39 @@ export const SOURCES: SourceRef[] = [
     repo: "somilsin/Machine-Learning",
     repoPath: "/tree/main/Transformers_Large-Language-Models",
     repoLabel: "Source repository",
-    cv: { label: "CV — Projects § Transformers & LLMs", anchor: "#work" },
+    cv: { label: "CV · Projects § Transformers & LLMs", anchor: "#work" },
   },
   {
     claim:
-      "Indian ANPR — plate recognition with pytesseract, MySQL registration checks, Twilio SMS alerts for invalid registrations.",
+      "Indian ANPR · plate recognition with pytesseract, MySQL registration checks, Twilio SMS alerts for invalid registrations.",
     section: "Work",
     repo: "somilsin/Computer-Vision",
     repoPath: "/tree/main/Indian-ANPR",
     repoLabel: "Source repository",
-    cv: { label: "CV — Projects § Indian ANPR", anchor: "#work" },
+    cv: { label: "CV · Projects § Indian ANPR", anchor: "#work" },
   },
   {
     claim:
-      "Customised SSD + FPN for autonomous driving — 55–75% mAP on the WIRIN dataset (Wipro PARI).",
-    evidenceNote: "Professional experience as described in my CV. The organisation link provides context.",
+      "Customised SSD + FPN for autonomous driving · 55 to 75% mAP on the WIRIN dataset (Wipro PARI).",
+    evidenceNote: "Professional experience as described on my LinkedIn profile. The organisation link provides context.",
     section: "Experience",
     repo: "somilsin/Computer-Vision",
     repoPath: "/tree/main/Object-Detection-using-SSD",
     repoLabel: "Source repository",
-    cv: { label: "CV — Experience § Wipro PARI", anchor: "#experience" },
+    cv: { label: "CV · Experience § Wipro PARI", anchor: "#experience" },
   },
   {
-    claim: "Continuous self-directed ML practice and academic explorations.",
+    claim: "Continuous self directed ML practice and academic explorations.",
     section: "Stack",
     repo: "somilsin/Learning-Archive",
     repoLabel: "Source repository",
-    cv: { label: "CV — Skills § Machine Learning", anchor: "#stack" },
+    cv: { label: "CV · Skills § Machine Learning", anchor: "#stack" },
   },
   {
-    claim: "B.E. Computer Science & Engineering, RVCE (Dec 2020 — Jun 2024).",
+    claim: "B.E. Computer Science & Engineering, RVCE (Dec 2020 · Jun 2024).",
     section: "Credentials",
     external: { label: "rvce.edu.in", href: "https://www.rvce.edu.in/" },
-    cv: { label: "CV — Education § RVCE", anchor: "#credentials" },
+    cv: { label: "CV · Education § RVCE", anchor: "#credentials" },
   },
 ];
 
@@ -270,11 +301,11 @@ export async function fetchRepoFacts(signal?: AbortSignal): Promise<Record<strin
   if (!res.ok) {
     const hint =
       res.status === 403 || res.status === 429
-        ? "GitHub rate limit reached — wait a minute and retry."
+        ? "GitHub rate limit reached · wait a minute and retry."
         : res.status === 404
           ? "GitHub user not found."
           : "GitHub is unreachable right now.";
-    throw new Error(`${res.status} — ${hint}`);
+    throw new Error(`${res.status} · ${hint}`);
   }
   const list = (await res.json()) as RepoFacts[];
   const map: Record<string, RepoFacts> = {};

@@ -1,8 +1,9 @@
 export type SourceRef = {
   /** The exact claim made elsewhere on the page. */
   claim: string;
+  evidenceNote?: string;
   /** Where on the page the claim appears. */
-  section: "Hero" | "Metrics" | "Experience" | "Work" | "Stack" | "Credentials";
+  section: "Hero" | "Metrics" | "Experience" | "Work" | "Stack" | "Credentials" | "Inside AI";
   /** GitHub evidence: full repo name (owner/repo) and optional PR / file path. */
   repo?: string;
   repoPath?: string;
@@ -16,9 +17,59 @@ export type SourceRef = {
 export const GITHUB_USER = "somilsin";
 
 export const SOURCES: SourceRef[] = [
+{
+  "claim": "Founder of Inside AI. Four published articles introduce VAE and VQ VAE through visual notes and code.",
+  "section": "Inside AI",
+  "repo": "somilsin/Artificial-Intelligence",
+  "repoPath": "/tree/main/Inside-AI",
+  "repoLabel": "Inside AI source",
+  "cv": {
+    "label": "Inside AI trailer and published reading",
+    "anchor": "#inside-ai"
+  }
+},
+{
+  "claim": "Part 04: The VQ VAE gradient trick, published 5 October 2026.",
+  "section": "Inside AI",
+  "external": {
+    "label": "Read the published Part 04 article",
+    "href": "https://medium.com/@thesomilsinghofficial/the-vq-vae-gradient-trick-what-learns-when-a-code-is-selected-b7f4a54db78d"
+  },
+  "cv": {
+    "label": "Inside AI articles",
+    "anchor": "#inside-ai"
+  }
+},
+{
+  "claim": "Machine Learning Researcher at Strand Life Sciences, September 2026 to present, part time.",
+  "section": "Experience",
+  "evidenceNote": "Professional role and research outcomes as described in my profile. Private clinical data and benchmarks are not published here.",
+  "external": {
+    "label": "My LinkedIn experience",
+    "href": "https://www.linkedin.com/in/somil-singh/details/experience/"
+  },
+  "cv": {
+    "label": "Experience · Strand Life Sciences",
+    "anchor": "#experience"
+  }
+},
+{
+  "claim": "Best All Rounder Student Award in 2015 and 2016, chess, spelling bee and sports distinctions.",
+  "section": "Credentials",
+  "evidenceNote": "Personal honours as listed on my public profile.",
+  "external": {
+    "label": "My LinkedIn honours",
+    "href": "https://www.linkedin.com/in/somil-singh/details/honors/"
+  },
+  "cv": {
+    "label": "Education and recognition",
+    "anchor": "#credentials"
+  }
+},
   {
     claim:
       "NeRF with plenoptic 7D scene representations, +25% reconstruction fidelity (Blender, LLFF, DTU) at IISc VAL.",
+    evidenceNote: "Professional experience as described in my CV. The organisation link provides context.",
     section: "Experience",
     external: { label: "IISc Visual AI & Learning Lab", href: "https://val.cds.iisc.ac.in/" },
     cv: { label: "CV — Experience § IISc Bangalore, VAL", anchor: "#experience" },
@@ -26,13 +77,15 @@ export const SOURCES: SourceRef[] = [
   {
     claim:
       "Reduced mean joint-position error 18% using Gaussian splatting, supersampling and custom BVH.",
+    evidenceNote: "Professional experience as described in my CV. The organisation link provides context.",
     section: "Experience",
     external: { label: "IISc Visual AI & Learning Lab", href: "https://val.cds.iisc.ac.in/" },
     cv: { label: "CV — Experience § IISc Bangalore, VAL", anchor: "#experience" },
   },
   {
     claim: "Multi-agent LLM ecosystem triaging 150–200 bugs/week; 45 min → under 2 min resolution.",
-    section: "Metrics",
+    evidenceNote: "Professional result reported in my CV; no public benchmark is linked.",
+    section: "Experience",
     external: {
       label: "Oracle Primavera Cloud",
       href: "https://www.oracle.com/construction-engineering/primavera-cloud/",
@@ -41,6 +94,7 @@ export const SOURCES: SourceRef[] = [
   },
   {
     claim: "RAG over a 100k+ vector knowledge base, 500+ RFP documents/day, sub-1.5s retrieval.",
+    evidenceNote: "Professional experience as described in my CV. The organisation link provides context.",
     section: "Experience",
     external: {
       label: "Oracle Vector 23ai",
@@ -50,20 +104,22 @@ export const SOURCES: SourceRef[] = [
   },
   {
     claim: "$1.1M projected savings from org-wide agentic SDLC adoption.",
-    section: "Metrics",
+    evidenceNote: "Professional result reported in my CV; no public benchmark is linked.",
+    section: "Experience",
     cv: { label: "CV — Experience § Oracle, Primavera Cloud", anchor: "#experience" },
   },
   {
     claim:
       "BehaviorAI — top 5 winner of 1,000+ applicants, Softway LoveXAI Hackathon 2026, built solo in a 2-hour sprint.",
     section: "Work",
-    repo: "somilsin/behaviorai-lovexai",
+    repo: "somilsin/Artificial-Intelligence",
+    repoPath: "/tree/main/behaviorai-lovexai",
     repoLabel: "Source repository",
     cv: { label: "CV — Awards § LoveXAI Hackathon", anchor: "#credentials" },
   },
   {
     claim:
-      "Published: object detection, classification and tracking at sub-30ms latency (YOLOv4, TensorFlow, OpenCV).",
+      "Coauthored object detection, classification and tracking research using YOLOv4, TensorFlow and OpenCV. The paper identifies occlusion handling as a limitation.",
     section: "Work",
     external: {
       label: "doi.org/10.5281/zenodo.8330641",
@@ -73,17 +129,19 @@ export const SOURCES: SourceRef[] = [
   },
   {
     claim:
-      "Deep learning and computer vision implemented from scratch (CNNs, DB-VAE facial detection debiasing, nnkit engine with no autograd).",
+      "Digit classification and debiasing VAE notebooks, with recorded runs and a NumPy/SciPy nnkit engine using explicit backward passes.",
     section: "Work",
-    repo: "somilsin/Deep-Learning_Computer-Vision",
+    repo: "somilsin/Machine-Learning",
+    repoPath: "/tree/main/Deep-Learning_Computer-Vision",
     repoLabel: "Source repository",
     cv: { label: "CV — Projects § Deep Learning & Computer Vision", anchor: "#work" },
   },
   {
     claim:
-      "Transformers and LLMs implemented from scratch (RNN/LSTM music generation, LoRA fine-tuning with LLM-as-a-judge evaluation).",
+      "Recorded LSTM music generation and LoRA adaptation experiments with clearly labelled reduced local runs.",
     section: "Work",
-    repo: "somilsin/Transformers_Large-Language-Models",
+    repo: "somilsin/Machine-Learning",
+    repoPath: "/tree/main/Transformers_Large-Language-Models",
     repoLabel: "Source repository",
     cv: { label: "CV — Projects § Transformers & LLMs", anchor: "#work" },
   },
@@ -91,15 +149,18 @@ export const SOURCES: SourceRef[] = [
     claim:
       "Indian ANPR — plate recognition with pytesseract, MySQL registration checks, Twilio SMS alerts for invalid registrations.",
     section: "Work",
-    repo: "somilsin/Indian-ANPR",
+    repo: "somilsin/Computer-Vision",
+    repoPath: "/tree/main/Indian-ANPR",
     repoLabel: "Source repository",
     cv: { label: "CV — Projects § Indian ANPR", anchor: "#work" },
   },
   {
     claim:
       "Customised SSD + FPN for autonomous driving — 55–75% mAP on the WIRIN dataset (Wipro PARI).",
+    evidenceNote: "Professional experience as described in my CV. The organisation link provides context.",
     section: "Experience",
-    repo: "somilsin/Object-Detection-using-SSD",
+    repo: "somilsin/Computer-Vision",
+    repoPath: "/tree/main/Object-Detection-using-SSD",
     repoLabel: "Source repository",
     cv: { label: "CV — Experience § Wipro PARI", anchor: "#experience" },
   },
@@ -154,6 +215,7 @@ export type ExportRow = {
   evidence_type: string;
   evidence_label: string;
   evidence_url: string;
+  evidence_note: string;
   cv_section: string;
   cv_anchor: string;
   tags: string;
@@ -172,8 +234,9 @@ export function buildExportRows(origin = ""): ExportRow[] {
           : "cv-only",
     evidence_label: s.repoLabel ?? s.external?.label ?? "CV only",
     evidence_url: evidenceUrl(s) ?? "",
+    evidence_note: s.evidenceNote ?? "Public project or publication reference",
     cv_section: s.cv.label,
-    cv_anchor: `${origin}/${s.cv.anchor}`.replace(/([^:])\/\/+/g, "$1/"),
+    cv_anchor: `${origin}${s.cv.anchor}`.replace(/([^:])\/\/+/g, "$1/"),
     tags: tagsFor(s).join("|"),
   }));
 }

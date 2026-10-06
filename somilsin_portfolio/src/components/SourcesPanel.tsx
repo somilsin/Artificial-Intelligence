@@ -82,7 +82,7 @@ export default function SourcesPanel() {
   }, [query, activeTags]);
 
   const exportRows = () =>
-    buildExportRows(typeof window !== "undefined" ? window.location.origin : "");
+    buildExportRows(typeof window !== "undefined" ? `${window.location.origin}${window.location.pathname}` : "");
 
   const btn =
     "inline-flex items-center gap-3 rounded-sm border border-[color:var(--color-foreground)]/25 px-5 py-3 eyebrow transition-all hover:border-[color:var(--color-primary)] hover:text-[color:var(--color-primary)] disabled:opacity-50";
@@ -92,11 +92,12 @@ export default function SourcesPanel() {
       <div className="flex flex-wrap items-end justify-between gap-6">
         <div>
           <h2 className="reveal serif-display max-w-4xl text-4xl leading-[1.02] md:text-6xl lg:text-7xl">
-            Every claim, <em className="text-[color:var(--color-primary)]">sourced</em>.
+            Explore the <em className="text-[color:var(--color-primary)]">sources</em>.
           </h2>
           <p className="reveal prose-editorial mt-6 max-w-xl" data-reveal-delay="100">
-            Each statement on this page maps to a public repository, a DOI, or the exact CV section
-            it comes from. Repository facts below are fetched live from the GitHub API.
+            Public code and publication links sit alongside my professional experience and profile
+            references. Employer pages provide context for my CV, while repository facts below
+            are fetched live from GitHub.
           </p>
         </div>
 
@@ -152,7 +153,7 @@ export default function SourcesPanel() {
               : state === "error"
                 ? `Failed (attempt ${attempts}) — ${error}. Claims below still show cached evidence links.`
                 : checkedAt
-                  ? `Verified ${checkedAt} · ${Object.keys(facts).length} repos`
+                  ? `Repository metadata refreshed ${checkedAt} · ${Object.keys(facts).length} repos`
                   : "Not yet verified"}
           </p>
         </div>
@@ -225,6 +226,7 @@ export default function SourcesPanel() {
                 <p className="max-w-2xl text-[15px] leading-relaxed text-[color:var(--color-foreground)]/85">
                   {s.claim}
                 </p>
+                {s.evidenceNote && <p className="mt-3 max-w-2xl text-xs leading-relaxed text-[color:var(--color-foreground)]/55">{s.evidenceNote}</p>}
                 <div className="mt-3 flex flex-wrap gap-2">
                   {tagsFor(s).map((t) => (
                     <span

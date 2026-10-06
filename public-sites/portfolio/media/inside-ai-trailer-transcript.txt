@@ -1,0 +1,11 @@
+Inside AI. By Somil Singh.
+
+00:00 What happens inside a model? Let’s make the hidden parts visible. Intuition to mechanism to code.
+
+00:08 From pixels to a latent space. VAE: encode a distribution, then decode a sample. Visual explanations. Maths with a purpose.
+
+00:16 A dictionary the model learns. VQ VAE: choose the nearest code, then reconstruct. Follow the codebook. Trace the gradients.
+
+00:24 Inside AI. Learn it. Build it. Explain it. Visual notes. Runnable code. Real output. Come learn with me. Find the links below.
+
+Original teaching schematics and original instrumental soundtrack. No spoken narration.

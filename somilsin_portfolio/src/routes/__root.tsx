@@ -82,7 +82,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "description",
         content:
-          "Portfolio of Somil Singh — Full-Stack AI-ML Developer at Oracle. NeRF, agentic multi-agent systems, MCP, RAG, and end-to-end computer vision.",
+          "Somil Singh · AI engineering at Oracle, 3D perception at IISc VAL and machine learning at Strand Life Sciences. Founder of Inside AI.",
       },
       { name: "author", content: "Somil Singh" },
       {
@@ -92,7 +92,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         property: "og:description",
         content:
-          "Portfolio of Somil Singh — Full-Stack AI-ML Developer at Oracle. NeRF, agentic multi-agent systems, MCP, RAG, and end-to-end computer vision.",
+          "Somil Singh · AI engineering at Oracle, 3D perception at IISc VAL and machine learning at Strand Life Sciences. Founder of Inside AI.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

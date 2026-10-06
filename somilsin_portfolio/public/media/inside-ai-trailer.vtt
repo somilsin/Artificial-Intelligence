@@ -1,0 +1,13 @@
+WEBVTT
+
+00:00.000 --> 00:08.000
+[Instrumental music] What happens inside a model? Let’s make the hidden parts visible.
+
+00:08.000 --> 00:16.000
+VAE: From pixels to a latent space. Encode a distribution, then decode a sample.
+
+00:16.000 --> 00:24.000
+VQ VAE: A dictionary the model learns. Choose the nearest code, then reconstruct.
+
+00:24.000 --> 00:32.000
+Inside AI. Learn it. Build it. Explain it. Visual notes, runnable code and real output.

@@ -1,0 +1,150 @@
+<h1>How a GAN learns to turn noise into samples</h1>
+<p>A generator has no paired target, so where does its learning signal come from?</p>
+<p>Somil Singh · Inside AI</p>
+<p><strong>Deep Learning Models · Part 05</strong></p>
+<p>An autoencoder starts with an image and tries to reconstruct it. A GAN can start with random noise and produce a new sample without being given the correct answer for that particular noise draw.</p>
+<p><strong>If there is no paired target, what tells the generator how to improve?</strong></p>
+<p>A second network learns to distinguish real data from generated samples. Its feedback gives the generator a direction to follow. The useful part is understanding which network learns at each step and where the gradient travels.</p>
+<p>These are my visual notes for Part 05 of Inside AI: Deep Learning Models. We will trace the two updates, then inspect a small four cluster experiment. <a href="https://medium.com/@thesomilsinghofficial/the-vq-vae-gradient-trick-what-learns-when-a-code-is-selected-b7f4a54db78d">Part 04</a> followed gradients through a discrete code choice. Here the learning signal comes from a changing critic.</p>
+<figure><img src="https://miro.medium.com/v2/resize:fit:700/1*mP5LARxB_RrMtsp4ds2IIA.png" alt="Two panels contrast input reconstruction with GAN generation from noise and discriminator feedback."></figure>
+<p><em>Figure 1. Two learning routes. This is a schematic, not output from a trained model.</em></p>
+<h3>1. The hidden code is a random starting point</h3>
+<p>Imagine a page with four small clouds of points, one near each corner. We want a program that can draw new points with the same pattern.</p>
+<p>An ordinary reconstruction task would start from a real point. A GAN instead samples a hidden input <strong>z</strong> from a noise distribution, often a standard normal. It transforms that input into a generated point <strong>G(z)</strong>.</p>
+<p>The generator G is a neural network with learned parameters. Different noise inputs can produce different samples, but a coordinate of z is not guaranteed to control a meaningful property such as colour or position.</p>
+<p>The resulting distribution is <strong>implicit</strong>: we can draw noise and run G to sample it. We do not need a tractable formula for the density of each output. A basic GAN also has no encoder that sends an input back to its code.</p>
+<h3>2. A second network supplies the feedback</h3>
+<p>The <strong>discriminator D</strong> sees both real samples x and generated samples G(z). It learns a binary classification task: did this input come from the data or the generator?</p>
+<figure><img src="https://miro.medium.com/v2/resize:fit:700/1*b-_OXZ5thPCJIm5Zd46VdQ.png" alt="Noise passes through G to D while real samples reach D by a separate route."></figure>
+<p><em>Figure 2. The generator makes samples and the discriminator learns to separate their sources. Schematic.</em></p>
+<p>When the discriminator detects a difference, its gradient can tell the generator how to change its output. Both networks keep changing, so the feedback is a moving target rather than a fixed reconstruction error.</p>
+<p>D(x) is a probability under this training setup. It is not a universal realism score for every possible input. A classifier that is uncertain because it learned poorly is different from one that cannot distinguish genuinely matched distributions.</p>
+<h3>3. The losses give the networks different jobs</h3>
+<p>The <a href="https://arxiv.org/abs/1406.2661">original GAN paper</a> describes a minimax game. D tries to separate the sources while G tries to defeat that distinction.</p>
+<pre><code class="language-text">min_G max_D E_real[log D(x)] + E_z[log(1 - D(G(z)))]</code></pre>
+<p>For D, our code minimizes the negative of those two terms. Real samples receive label one and generated samples label zero. This rewards correct source classification.</p>
+<p>For G, we use the paper&#x27;s common <strong>non saturating</strong> alternative: minimize the negative log probability that D assigns to a generated sample being real.</p>
+<pre><code class="language-text">L_G = -E_z[log D(G(z))]</code></pre>
+<figure><img src="https://miro.medium.com/v2/resize:fit:700/1*5EzSyTnc0E6yVO7oAzx7vw.png" alt="Discriminator loss contrasts real and fake labels while generator loss uses real labels for generated samples."></figure>
+<p><em>Figure 3. Two minimization objectives with different jobs. D loss adds two batch means; G uses one. Schematic.</em></p>
+<p>The generator uses label one during its update, but that does not give it a paired real target. It is being asked to change a classifier&#x27;s response to its own generated sample.</p>
+<p>Our D returns <strong>logits</strong>, the values before a sigmoid. <a href="https://docs.pytorch.org/docs/2.14/generated/torch.nn.BCEWithLogitsLoss.html">PyTorch&#x27;s BCEWithLogitsLoss documentation</a> describes the combined stable calculation. Do not apply another sigmoid before this loss.</p>
+<p>These objectives provide a training signal. Neither loss is a certificate that the samples have enough fidelity or diversity.</p>
+<h3>4. The gradient must reach the right network</h3>
+<p>For the D update, generate a fake batch and <strong>detach it</strong>. D learns to classify that batch without accumulating gradients in G through the fake branch.</p>
+<p>For the G update, produce a fresh fake batch. Freeze D&#x27;s parameters but keep its computation differentiable with respect to the generated input. The gradient still travels through D, through the sample and back into G.</p>
+<figure><img src="https://miro.medium.com/v2/resize:fit:700/1*PO9OdDXTWTj61WOXIdRvfg.png" alt="The D update stops at detached generator output while the G update passes through frozen D to G."></figure>
+<p><em>Figure 4. Frozen parameters do not mean a stopped input gradient. Values are an analytical example, not a new training experiment.</em></p>
+<p>Take a generated sample with D(G(z)) = 0.1. The generator loss is −log(0.1), about <strong>2.303</strong>. With respect to D&#x27;s input logit, the non saturating loss has derivative <strong>0.1 − 1 = −0.9</strong>. The original minimax generator term has derivative <strong>−0.1</strong> at that same probability.</p>
+<p>That comparison explains why the alternative can supply a stronger early signal. The complete gradient still depends on the discriminator and generator Jacobians, so it does not guarantee stable training.</p>
+<p><strong>An easy mistake:</strong> putting D&#x27;s forward pass inside no_grad during G training breaks the path G needs. Freezing D&#x27;s parameters and disabling differentiation through the whole computation are different operations. Clear each optimizer&#x27;s gradients before its backward pass because PyTorch accumulates them.</p>
+<h3>5. Training and generation take different routes</h3>
+<figure><img src="https://miro.medium.com/v2/resize:fit:700/1*EHj9hoGR_wWLGmld3G1eEQ.png" alt="Training alternates discriminator and generator updates; generation samples fresh noise and uses only trained G."></figure>
+<p><em>Figure 5. The generator stays. The discriminator is a training companion rather than a required sampling component. Schematic.</em></p>
+<p>During training, we draw real data and noise, update D, then draw fresh noise and update G through D. This example performs one update of each per iteration. Other update ratios change the dynamics.</p>
+<p>During generation, sample new noise and run the trained generator. No real input, encoder or discriminator call is required for this basic sampling route.</p>
+<p>That resolves the opening puzzle: G can learn without a paired target because D supplies differentiable feedback during training. Once G has learned, the noise prior supplies new starting points.</p>
+<h3>6. Good looking losses can hide missing samples</h3>
+<p><strong>Many noise inputs produce similar outputs.</strong> This can be mode collapse: the generator misses regions of the data distribution. Compare sample diversity and coverage rather than trusting a single loss.</p>
+<p><strong>Generated points fall between the real clusters.</strong> Balanced nearest centre counts can hide this. Every point has a nearest centre even when it is far from all four. Check distances and the scatter plot too.</p>
+<p><strong>Updates swing back and forth.</strong> The networks are changing one another&#x27;s learning problem. Inspect samples over time, learning rates and update balance. One falling curve is not a reliable quality ranking.</p>
+<p>Loss reductions matter. Our D loss adds a real batch mean and a fake batch mean. If the distributions matched perfectly with D = 0.5, that convention would give <strong>2 log 2 ≈ 1.386</strong> for D and <strong>log 2 ≈ 0.693</strong> for G. Averaging the two D terms changes its numerical reference value. Losses near these values do not by themselves establish the ideal state.</p>
+<p>These are checks rather than complete diagnoses. Data, architecture, capacity and optimization also matter. A small point experiment does not establish performance on unseen images.</p>
+<h3>Keep these three ideas</h3>
+<ol><li><strong>G makes samples.</strong> It maps noise to outputs without a paired real target for each noise draw.</li><li><strong>D supplies a training signal.</strong> Freeze its parameters during the G update while preserving its input gradient.</li><li><strong>Sampling and evaluation are separate.</strong> G alone generates; samples and coverage reveal things losses can hide.</li></ol>
+<h3>7. A small GAN you can actually inspect</h3>
+<p>The real distribution has four equally likely Gaussian clusters centered at (−1, −1), (−1, 1), (1, −1) and (1, 1). Each coordinate has standard deviation 0.12 within a cluster. Two dimensional data makes missing regions and unwanted bridges visible without a downloaded dataset or GPU.</p>
+<p>Install PyTorch and Matplotlib with <code>pip install torch matplotlib</code>. Save the three blocks in order as one Python script and run it. Both networks have two hidden layers of width 64. The script trains for 3001 iterations using batches of 128, Adam learning rate 0.0005 and betas (0.5, 0.999). These are the settings of this toy check, not a universal recipe.</p>
+<p><strong>Step 1. Build the data source and both networks.</strong> Sample a real cluster uniformly, then add Gaussian noise. The discriminator&#x27;s last layer returns one logit rather than a sigmoid probability.</p>
+<pre><code class="language-python">&quot;&quot;&quot;A small non saturating GAN on a four mode 2D mixture.&quot;&quot;&quot;
+from pathlib import Path
+import platform
+import torch
+from torch import nn
+from torch.nn import functional as F
+import matplotlib
+matplotlib.use(&quot;Agg&quot;)
+import matplotlib.pyplot as plt
+
+torch.manual_seed(7)
+torch.set_num_threads(1)
+out = Path(__file__).resolve().parent / &quot;images&quot;
+out.mkdir(exist_ok=True)
+print(f&quot;Python {platform.python_version()} | PyTorch {torch.__version__} | CPU | seed 7&quot;)
+centers = torch.tensor([[-1.0, -1.0], [-1.0, 1.0], [1.0, -1.0], [1.0, 1.0]])
+def real_batch(n):
+    return centers[torch.randint(4, (n,))] + 0.12 * torch.randn(n, 2)
+generator = nn.Sequential(nn.Linear(2, 64), nn.LeakyReLU(0.2), nn.Linear(64, 64), nn.LeakyReLU(0.2), nn.Linear(64, 2))
+discriminator = nn.Sequential(nn.Linear(2, 64), nn.LeakyReLU(0.2), nn.Linear(64, 64), nn.LeakyReLU(0.2), nn.Linear(64, 1))
+g_opt = torch.optim.Adam(generator.parameters(), lr=0.0005, betas=(0.5, 0.999))
+d_opt = torch.optim.Adam(discriminator.parameters(), lr=0.0005, betas=(0.5, 0.999))</code></pre>
+<p><strong>Step 2. Alternate the updates.</strong> Detach generated samples for D. For G, freeze D&#x27;s parameters while keeping its input path active. Each printed loss uses that update&#x27;s sampled batch, with the D update preceding the G update.</p>
+<pre><code class="language-python">history = []
+for step in range(3001):
+    real = real_batch(128)
+    fake = generator(torch.randn(128, 2)).detach()
+    d_loss = (F.binary_cross_entropy_with_logits(discriminator(real), torch.ones(128, 1))
+              + F.binary_cross_entropy_with_logits(discriminator(fake), torch.zeros(128, 1)))
+    d_opt.zero_grad()
+    d_loss.backward()
+    d_opt.step()
+    for parameter in discriminator.parameters():
+        parameter.requires_grad_(False)
+    fake = generator(torch.randn(128, 2))
+    g_loss = F.binary_cross_entropy_with_logits(discriminator(fake), torch.ones(128, 1))
+    g_opt.zero_grad()
+    g_loss.backward()
+    g_opt.step()
+    for parameter in discriminator.parameters():
+        parameter.requires_grad_(True)
+    history.append((d_loss.item(), g_loss.item()))
+    if step in (0, 1500, 3000):
+        print(f&quot;Step {step:4d} | D loss {d_loss.item():.4f} | G loss {g_loss.item():.4f}&quot;)</code></pre>
+<p><strong>Step 3. Generate and inspect coverage.</strong> Use G alone to draw 2000 new points. Count their nearest centres, then count only points within radius 0.4. Save the sample plot and loss history for inspection.</p>
+<pre><code class="language-python">with torch.no_grad():
+    real = real_batch(2000)
+    generated = generator(torch.randn(2000, 2))
+    distances = (generated[:, None] - centers[None]).square().sum(-1).sqrt()
+    nearest_distance, mode = distances.min(1)
+    counts = torch.bincount(mode, minlength=4)
+    valid = nearest_distance &lt; 0.4
+    valid_counts = torch.bincount(mode[valid], minlength=4)
+print(&quot;Nearest mode counts:&quot;, counts.tolist())
+print(&quot;Counts within radius 0.4:&quot;, valid_counts.tolist())
+print(f&quot;Fraction within radius 0.4: {valid.float().mean().item():.3f}&quot;)
+assert torch.isfinite(generated).all()
+torch.save({&quot;real&quot;: real, &quot;generated&quot;: generated, &quot;history&quot;: history}, out.parent / &quot;result.pt&quot;)
+fig, axes = plt.subplots(1, 2, figsize=(10, 4.5))
+for ax, points, title, color in zip(axes, [real, generated], [&quot;Real samples&quot;, &quot;Actual GAN samples&quot;], [&quot;#168a87&quot;, &quot;#d77d42&quot;]):
+    ax.scatter(points[:, 0], points[:, 1], s=4, alpha=0.35, c=color)
+    ax.set(xlim=(-2, 2), ylim=(-2, 2), title=title, xlabel=&quot;Coordinate 1&quot;, ylabel=&quot;Coordinate 2&quot;)
+    ax.set_aspect(&quot;equal&quot;)
+fig.tight_layout()
+fig.savefig(out / &quot;actual-output.png&quot;, dpi=180)
+plt.close(fig)
+fig, ax = plt.subplots(figsize=(8, 4.5))
+smooth = torch.tensor(history).unfold(0, 100, 100).mean(-1).numpy()
+ax.plot(torch.arange(len(smooth)).numpy() * 100, smooth[:, 0], label=&quot;D loss&quot;, color=&quot;#168a87&quot;)
+ax.plot(torch.arange(len(smooth)).numpy() * 100, smooth[:, 1], label=&quot;G loss&quot;, color=&quot;#d77d42&quot;)
+ax.set(xlabel=&quot;Training step&quot;, ylabel=&quot;Mean loss over 100 steps&quot;, title=&quot;Actual training losses are diagnostics, not quality scores&quot;)
+ax.legend(frameon=False)
+fig.tight_layout()
+fig.savefig(out / &quot;actual-losses.png&quot;, dpi=180)
+plt.close(fig)</code></pre>
+<p><strong>Recorded output from 2 October 2026:</strong> Python 3.12.14, PyTorch 2.14.1+cpu, CPU and seed 7. This is the archived successful run, not a fresh training run on 6 October. Values can vary with software versions or hardware.</p>
+<pre><code class="language-text">Python 3.12.14 | PyTorch 2.14.1+cpu | CPU | seed 7
+Step    0 | D loss 1.3789 | G loss 0.7235
+Step 1500 | D loss 1.3359 | G loss 0.7461
+Step 3000 | D loss 1.3790 | G loss 0.7290
+Nearest mode counts: [526, 494, 482, 498]
+Counts within radius 0.4: [505, 465, 465, 468]
+Fraction within radius 0.4: 0.951</code></pre>
+<figure><img src="https://miro.medium.com/v2/resize:fit:700/1*HhAZEFCDCg5aW4NEG_jYkA.png" alt="Recorded scatter plots show real samples in four clusters and generated samples with thin bridges between clusters."></figure>
+<p><em>Figure 6. Actual output from the recorded 2 October 2026 run: 2000 real and 2000 generated points. Axes are data coordinates, not latent coordinates.</em></p>
+<p>In that run, <strong>1903 of 2000 generated points</strong>, or <strong>95.15 percent</strong>, fell within the chosen radius. The printed fraction rounds to 0.951. Close counts cover all four centres but are not perfectly balanced. Thin bridges remain between clusters in the generated plot.</p>
+<p>Radius 0.4 is a teaching diagnostic chosen for clusters with standard deviation 0.12, not a standard generative modelling metric. It tests neither the exact within cluster distribution nor unseen image quality. One seed and one tiny distribution do not establish reliability. The finite output assertion is only a numerical sanity check.</p>
+<p>The operation to remember is <strong>generator(torch.randn(2000, 2))</strong>. Fresh noise goes in and a learned sample comes out; the training critic is absent from that line.</p>
+<p>Next in Deep Learning Models: why does the ideal discriminator estimate a density ratio and why do generator objectives produce different gradients? Part 06 will connect that mathematics to this update loop. It is not published yet. For a contrasting generation route, <a href="https://medium.com/@thesomilsinghofficial/how-vaes-learn-to-generate-new-images-9ebfd7a6a508">Part 01</a> starts with a VAE prior and decoder.</p>
+<p>I’m sharing these study notes as I upskill in AI, machine learning, deep learning, computer vision and robotics. Come learn alongside me and connect the equations to foundations for projects and interview preparation ❤️</p>
+<p>Follow me on all my socials to stay up to date with every post and the fun. Find me on <a href="https://medium.com/@thesomilsinghofficial">Medium</a> and/or <a href="https://thesomilsingh.substack.com/">Substack</a>. For my other links, check out my pinned post on <a href="https://x.com/Skywalkerlyzv">X</a>.</p>
+<p>If something clicked, share it with someone who is learning, support the notes with a clap or leave a question. Which failure would you check first if the losses looked reasonable but one cluster was missing?</p>

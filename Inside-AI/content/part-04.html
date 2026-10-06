@@ -1,0 +1,126 @@
+<h1>The VQ VAE gradient trick: what learns when a code is selected?</h1>
+<p>How can an encoder learn when its nearest code choice has no useful ordinary gradient?</p>
+<p>Somil Singh · Inside AI</p>
+<p><strong>Deep Learning Models · Part 04</strong></p>
+<p>An encoder can choose a dictionary entry with one short line. Learning from that choice is the interesting part.</p>
+<p>If the selected entry stays the same while the encoder moves a little, what tells the encoder where to move next?</p>
+<p>The missing mechanism is a deliberately chosen backward path. In these visual notes we will calculate one code choice, trace the three learning signals and check the numbers with real tensors. <a href="https://thesomilsingh.substack.com/p/how-a-vq-vae-turns-an-image-into">Part 03</a> explains the complete VQ VAE and its tiny generation example; this companion makes its gradient paths visible. ❤️</p>
+<figure><img src="https://miro.medium.com/v2/resize:fit:700/1*HR-LwLhBP2Okv023X_1Ppg.png" alt="A continuous encoder vector selects a discrete code while a surrogate sends learning information back" style="width:100%"></figure>
+<p><em>Figure 1. Teaching schematic: nearest selection determines the forward value; a chosen surrogate carries the reconstruction gradient back. This is not measured model output.</em></p>
+<h4>1. An index chooses a vector</h4>
+<p>Imagine a paint chart with a small set of colours. You can describe a colour precisely but the chart gives you only a few available choices. Picking the nearest swatch replaces your description with one available entry.</p>
+<p>Vector quantization does that with numerical vectors. The encoder produces zₑ(x). A learned dictionary E contains K vectors eⱼ, each with D coordinates. The nearest entry supplies the decoder input zq. Its integer index k and its continuous vector eₖ are different objects.</p>
+<pre><code>k(x) = argminⱼ ||zₑ(x) − eⱼ||²
+zq(x) = eₖ(x)</code></pre>
+<p>An image model can make this choice at each position of a latent grid. Our check uses a single vector so that every number and gradient can be inspected. It does not test image quality or spatial dependencies.</p>
+<h4>2. Nearest selection has regions and boundaries</h4>
+<p>Take zₑ = (0.3, 0.4) and dictionary entries e₀ = (0, 0), e₁ = (1, 1) and e₂ = (−1, 1). Their squared distances are 0.25, 0.85 and 2.05. Entry zero wins and the decoder receives (0, 0).</p>
+<figure><img src="https://miro.medium.com/v2/resize:fit:700/1*x9ZsJsktk9hixx9iyCwGWQ.png" alt="Three dictionary entries and the encoder vector with exact squared distances" style="width:100%"></figure>
+<p><em>Figure 2. Calculated assignment example. Distances are computed from the displayed vectors, not learned from an image dataset.</em></p>
+<p>Within a region around an entry, small changes to the encoder vector leave the selected vector unchanged. At a boundary the selection can jump. The true local derivative is zero inside a region and is not ordinarily defined at the jump. It cannot supply the encoder with the useful reconstruction signal we want.</p>
+<p>The decoder learns how to use its vector input. The encoder needs feedback about how that input should change. The codebook needs its own rule for moving the selected entry. A single nearest choice does not settle all three jobs.</p>
+<h4>3. Three costs keep the learning jobs separate</h4>
+<p>For gradient based codebook updates, the representation objective is:</p>
+<pre><code>L = Lrec + ||stopgrad(zₑ) − zq||²
+         + β ||zₑ − stopgrad(zq)||²</code></pre>
+<figure><img src="https://miro.medium.com/v2/resize:fit:700/1*T6Ohc9s7ZtaNiXRywhHhcg.png" alt="The representation objective with separate reconstruction, codebook and commitment jobs" style="width:100%"></figure>
+<p><em>Figure 3. Objective schematic for gradient based codebook updates. Colours identify the jobs; text also names their destinations.</em></p>
+<p><strong>Reconstruction</strong> asks whether the decoder explains the input. It trains the decoder and reaches the encoder through the surrogate introduced next. It does not train the selected embedding through that surrogate expression.</p>
+<p><strong>Codebook alignment</strong> pulls the selected entry toward the encoder output. Stop gradient treats the encoder output as a fixed target for this cost. In our example its gradient at entry zero is 2(zq − zₑ) = (−0.6, −0.8). Gradient descent subtracts that vector and moves the entry toward (0.3, 0.4).</p>
+<p><strong>Commitment</strong> pulls the encoder output toward its selected entry. At β = 0.25 its encoder gradient is 2β(zₑ − zq) = (0.15, 0.2). The dictionary is a fixed target in this branch. This limits drift but cannot guarantee useful representations or prevent every unused code.</p>
+<p>Our squared costs sum coordinates. A full model must also specify its reconstruction and batch reductions. Changing a sum into a mean changes the relative scale of these costs. Exponential moving averages are an alternative codebook update method; do not accidentally add them to the gradient update without defining a deliberate algorithm. The <a href="https://arxiv.org/abs/1711.00937">original VQ VAE paper</a> gives the core objective and the alternative update.</p>
+<h4>4. One value can have a different backward path</h4>
+<p><a href="https://docs.pytorch.org/docs/2.14/generated/torch.Tensor.detach.html">Stop gradient</a> keeps a value while removing that branch from autograd. In PyTorch the detached tensor shares storage, so detach does not make in-place changes harmless.</p>
+<pre><code>z_st = ze + (zq - ze).detach()</code></pre>
+<p>The forward arithmetic gives zq: zₑ + zq − zₑ = zq. In the backward graph only the first zₑ contributes a derivative. Under this surrogate, ∂z_st/∂zₑ = I and this expression gives no reconstruction gradient to zq.</p>
+<figure><img src="https://miro.medium.com/v2/resize:fit:700/1*SrGFJzdn8kDFXXdwA-41jg.png" alt="Forward uses the selected vector while backward follows the encoder branch and stops the correction branch" style="width:100%"></figure>
+<p><em>Figure 4. Surrogate gradient schematic. The stopped correction keeps its forward value. The identity backward path is chosen, not the true derivative of nearest selection.</em></p>
+<p>Let our decoder stand-in be Lrec = ||z_st − (1, 0)||². With z_st = (0, 0), the input gradient is (−2, 0). It reaches zₑ through the surrogate. A real decoder also learns its parameters and supplies its own input derivative instead of this simple quadratic derivative.</p>
+<p>An easy mistake is to say the line makes argmin differentiable. It supplies a useful derivative for learning. The <a href="https://arxiv.org/abs/1308.3432">straight through estimator paper</a> discusses this family of surrogate estimators. Removing a detach changes which parameters a cost trains even when the forward value looks unchanged.</p>
+<h4>5. Representation learning and generation use different routes</h4>
+<p>During training an image goes through the encoder, nearest selection and decoder. The reconstruction target is the image. Once that representation is learned, a prior models the resulting indices.</p>
+<figure><img src="https://miro.medium.com/v2/resize:fit:700/1*oRjn_3Eoqqpe5d_kG-ScOg.png" alt="Training begins with an image and generation begins with a prior sampled index; both use dictionary vectors and the decoder" style="width:100%"></figure>
+<p><em>Figure 5. Two route schematic. Generation needs no input image or encoder. A grid prior must model relevant dependencies between positions.</em></p>
+<p>If q(k|x) puts probability one on the chosen index k* and p(k) is uniform over K entries, then KL(q||p) = −log p(k*) = log K. It is constant for fixed K. M independent uniform positions contribute M log K. This explains why the representation objective above has no changing Gaussian KL cost.</p>
+<p>A nonuniform prior changes the value. With probability 0.8 on the selected entry the same point posterior gives −log(0.8), about 0.223144 nats instead of log(3), about 1.098612 nats.</p>
+<p>For one index, categorical counts can fit its frequency distribution. For a grid, a prior can factor as p(k₁,…,kM) = ∏ₘ p(kₘ|k₁,…,kₘ₋₁). Independent sampling ignores those dependencies. A dictionary says what each code means; a prior says which codes and combinations should occur.</p>
+<h4>6. Usage and gradient checks reveal different failures</h4>
+<p><strong>Many entries stay unused.</strong> Inspect assignment counts and quantization error alongside reconstruction. An unselected entry receives no selected codebook gradient in the method here. Initialization, moving encoder outputs and data all affect usage. Part 03 deliberately used a warm start; its eight used codes do not prove dead codes cannot occur.</p>
+<p><strong>The encoder moves too far from its selected entries.</strong> Check the commitment gradient and its scale relative to reconstruction. A total loss alone can conceal the mismatch. Reductions, dimension and β affect the balance.</p>
+<p><strong>Reconstructions work but prior samples do not.</strong> Check the learned index frequencies and actual decoder outputs from prior samples. Grid dependencies and decoder quality matter. High code entropy is not a semantic quality score.</p>
+<p>Track effective code count exp(−∑ⱼ pⱼ log pⱼ) with the usage histogram. It equals K for equal usage of K codes and approaches one for a single dominant code. It measures usage diversity, not text model perplexity or image realism. These checks are clues rather than complete diagnoses.</p>
+<h4>Keep these three ideas</h4>
+<ol><li>The index selects a continuous dictionary vector. Nearest selection determines the forward value.</li><li>The surrogate carries reconstruction feedback to the encoder; codebook alignment and commitment have separate gradient destinations.</li><li>The prior models index frequencies and dependencies. A learned dictionary alone is not a generation distribution.</li></ol>
+<h4>7. Run a small gradient audit</h4>
+<p>Install PyTorch and Matplotlib with <code>pip install torch matplotlib</code>. Save these three blocks in order as <code>example.py</code> and run <code>python example.py</code>. No downloaded dataset or GPU is needed. This is a gradient check, not another VQ VAE training benchmark.</p>
+<p><strong>Step 1. Set up the three vectors.</strong> We fix seed 7 and prepare an output folder. The computation is deterministic; the seed is recorded for reproducibility.</p>
+<pre><code>&quot;&quot;&quot;Trace the three VQ VAE gradient paths with exact small tensors.&quot;&quot;&quot;
+from pathlib import Path
+import math
+import platform
+import torch
+import matplotlib
+matplotlib.use(&quot;Agg&quot;)
+import matplotlib.pyplot as plt
+
+torch.manual_seed(7)
+torch.set_num_threads(1)
+out = Path(__file__).resolve().parent / &quot;images&quot;
+out.mkdir(exist_ok=True)
+print(f&quot;Python {platform.python_version()} | PyTorch {torch.__version__} | CPU | seed 7&quot;)
+base_ze = torch.tensor([[0.3, 0.4]])
+base_codes = torch.tensor([[0.0, 0.0], [1.0, 1.0], [-1.0, 1.0]])</code></pre>
+<p><strong>Step 2. Give each objective a fresh graph.</strong> We inspect the encoder and dictionary gradients separately. Fresh tensors avoid adding gradients from earlier backward calls. The assertions check that the intended branches are active or absent.</p>
+<pre><code>gradients = []
+for objective in (&quot;reconstruction&quot;, &quot;codebook&quot;, &quot;commitment&quot;):
+    ze = base_ze.clone().requires_grad_()
+    codes = base_codes.clone().requires_grad_()
+    ids = ((ze[:, None] - codes[None]).square().sum(-1)).argmin(1)
+    zq = codes[ids]
+    z_st = ze + (zq - ze).detach()
+    losses = {
+        &quot;reconstruction&quot;: (z_st - torch.tensor([[1.0, 0.0]])).square().sum(),
+        &quot;codebook&quot;: (zq - ze.detach()).square().sum(),
+        &quot;commitment&quot;: 0.25 * (ze - zq.detach()).square().sum(),
+    }
+    losses[objective].backward()
+    encoder_grad = torch.zeros_like(ze) if ze.grad is None else ze.grad
+    code_grad = torch.zeros_like(codes) if codes.grad is None else codes.grad
+    gradients.append([encoder_grad.norm().item(), code_grad.norm().item()])
+    print(f&quot;{objective}: encoder gradient {encoder_grad.tolist()} | code 0 gradient {code_grad[0].tolist()}&quot;)
+    if objective == &quot;reconstruction&quot;:
+        assert ze.grad is not None and codes.grad is None
+    if objective == &quot;codebook&quot;:
+        assert ze.grad is None and codes.grad is not None
+    if objective == &quot;commitment&quot;:
+        assert ze.grad is not None and codes.grad is None</code></pre>
+<p><strong>Step 3. Print the prior check and plot the measured norms.</strong> Zero in the display represents an absent gradient path in this experiment. It does not mean an optimizer silently updated that branch.</p>
+<pre><code>print(&quot;Chosen code: 0 | forward z_st: [[0.0, 0.0]]&quot;)
+print(f&quot;Point posterior KL to uniform prior with K=3: {math.log(3):.6f} nats&quot;)
+print(f&quot;Same chosen code with prior probability 0.8: {-math.log(0.8):.6f} nats&quot;)
+fig, ax = plt.subplots(figsize=(8, 4.5))
+xs = torch.arange(3).numpy()
+ax.bar(xs - 0.18, [g[0] for g in gradients], width=0.36, color=&quot;#168a87&quot;, label=&quot;Encoder gradient norm&quot;)
+ax.bar(xs + 0.18, [g[1] for g in gradients], width=0.36, color=&quot;#d77d42&quot;, label=&quot;Codebook gradient norm&quot;)
+ax.set_xticks(xs, [&quot;Reconstruction&quot;, &quot;Codebook&quot;, &quot;Commitment × 0.25&quot;])
+ax.set(ylabel=&quot;Gradient norm&quot;, title=&quot;Actual gradient routing in this numerical example&quot;)
+ax.legend(frameon=False)
+fig.tight_layout()
+fig.savefig(out / &quot;actual-gradients.png&quot;, dpi=180)
+plt.close(fig)</code></pre>
+<h4>Recorded actual output</h4>
+<p>The following output is from the verified <strong>2 October 2026 CPU run</strong>, using Python 3.12.14, PyTorch 2.14.1+cpu and seed 7. It is preserved historical evidence, not a fresh training result. The code and its small analytical numbers were reviewed for this article on 5 October.</p>
+<pre><code>Python 3.12.14 | PyTorch 2.14.1+cpu | CPU | seed 7
+reconstruction: encoder gradient [[-2.0, 0.0]] | code 0 gradient [0.0, 0.0]
+codebook: encoder gradient [[0.0, 0.0]] | code 0 gradient [-0.6000000238418579, -0.800000011920929]
+commitment: encoder gradient [[0.15000000596046448, 0.20000000298023224]] | code 0 gradient [0.0, 0.0]
+Chosen code: 0 | forward z_st: [[0.0, 0.0]]
+Point posterior KL to uniform prior with K=3: 1.098612 nats
+Same chosen code with prior probability 0.8: 0.223144 nats</code></pre>
+<figure><img src="https://miro.medium.com/v2/resize:fit:700/1*-OMbLTCU0yipDGBB6TN26w.png" alt="Recorded encoder and codebook gradient norms for three independently differentiated costs" style="width:100%"></figure>
+<p><em>Figure 6. Replotted recorded numerical output from 2 October 2026: gradient norms 2/0, 0/1 and 0.25/0. No new PyTorch execution is claimed. Zero denotes an inactive path.</em></p>
+<p>These bars test routing for one two-coordinate example. Their relative heights are not universal: decoder derivatives, reductions, dimension, data and β change the magnitudes. They do not measure image quality or prove a model will train successfully.</p>
+<p>The line to remember is <code>ze + (zq - ze).detach()</code>: selected vector forward, encoder path backward.</p>
+<p><a href="https://thesomilsingh.substack.com/p/how-a-vq-vae-turns-an-image-into">Return to Part 03</a> to connect these paths to the complete implementation. Next we will ask what changes when generation learns through a critic rather than reconstruction through an encoder. Part 05 introduces GANs; it is not public yet.</p>
+<p>If you are building these foundations for projects or interviews, learn alongside me. Follow Inside AI for connected explanations, diagrams and runnable checks. ❤️</p>
+<p>Find these notes on <a href="https://medium.com/@thesomilsinghofficial">Medium</a> and <a href="https://thesomilsingh.substack.com/">Substack</a> with more links on <a href="https://x.com/Skywalkerlyzv">X</a>. Which gradient would appear if you removed one detach? Try predicting it first and share your question or a useful observation.</p>

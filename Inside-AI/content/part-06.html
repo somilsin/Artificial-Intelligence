@@ -1,0 +1,130 @@
+<h1>Why a GAN can reject a fake and still teach almost nothing</h1>
+<p>Two losses want the same outcome. Why does one give a rejected fake almost no gradient?</p>
+<p>Somil Singh · Inside AI</p>
+<p><strong>Deep Learning Models · Part 06</strong></p>
+<p>A discriminator rejects a generated sample with confidence. That sounds like a useful lesson for the generator. But the lesson can arrive as an almost flat gradient.</p>
+<p>The missing detail is the generator objective. Let&#x27;s trace its local signal, derive what an ideal discriminator knows and check the numbers without training another GAN. Before reading on, try a prediction: can the generator learn while the discriminator&#x27;s weights stay fixed?</p>
+<p><a href="https://thesomilsingh.substack.com/p/how-a-gan-learns-to-turn-noise-into">Part 05 explains the GAN training loop and its recorded samples</a>. These foundations unpack the losses behind that example.</p>
+<p><img alt="A rejected fake has two different local gradient strengths" src="https://miro.medium.com/v2/1*dHUQem2Z-zXJvU_QlfOkwA.png"></p>
+<p><em>Figure 1. Schematic preview of the calculated logit derivatives. Neither number is a full network parameter gradient.</em></p>
+<h3>1. A probability is not yet a learning signal</h3>
+<p>Imagine a sample that the discriminator considers clearly generated. Let its raw score be the logit a and write D(x) = sigmoid(a(x)). Negative logits mean low estimated probability of being real. The generator maps noise z to a sample G(z).</p>
+<p>The two distributions matter too: p_data describes real samples and p_g describes generated samples. A discriminator learns from their relative frequencies. It does not receive an independent certificate of beauty or usefulness.</p>
+<p>For a fixed generator and equally weighted real and generated groups, the ideal classifier is D*(x) = p_data(x) / (p_data(x) + p_g(x)). To see why, look at a two outcome example.</p>
+<h3>2. What the ideal discriminator knows</h3>
+<p>Give real outcomes A and B equal mass: p_data = (0.5, 0.5). Let the generator favor A: p_g = (0.9, 0.1).</p>
+<p>At A, generated samples are more common than real ones, so D* = 0.5 / 1.4 = 0.357143. At B they are scarce, so D* = 0.5 / 0.6 = 0.833333. The score reflects a frequency mismatch.</p>
+<p><img alt="Real and generated masses determine the ideal classifier at each outcome" src="https://miro.medium.com/v2/1*C7N-RHQ6socoN0cNlRBuBw.png"></p>
+<p><em>Figure 2. Schematic finite distribution example. The masses are specified inputs, not learned estimates.</em></p>
+<p>We obtain D* by maximizing p log D + q log(1-D) at each location. Its derivative is p/D - q/(1-D). Set that to zero and solve. The second derivative is negative when p and q are positive, so the interior solution is a maximum.</p>
+<p>This needs densities or masses with respect to a common measure and an unrestricted discriminator. Where both masses vanish, the objective leaves D unconstrained. Where just one has mass, the optimum is at a boundary. Unequal class weighting would change the ratio.</p>
+<h3>3. One game gives the generator two choices</h3>
+<p>The original GAN game maximizes this value over D and minimizes it over G:</p>
+<pre><code>V(D,G) = E_data[log D(x)] + E_g[log(1-D(x))]
+min_G max_D V(D,G)
+
+L_minimax(a) = log(1-sigmoid(a)) = -softplus(a)
+L_non_saturating(a) = -log sigmoid(a) = softplus(-a)
+softplus(a) = log(1 + exp(a))</code></pre>
+<p>The discriminator rewards accepting real samples and rejecting generated ones. For the generator, both listed objectives encourage accepting a fake. The non saturating form changes the local gradient strength. Part 05 uses it.</p>
+<p><img alt="The discriminator game and the generator loss choices" src="https://miro.medium.com/v2/1*SOrLnDK5FP_RcFivy-5hkA.png"></p>
+<p><em>Figure 3. Objective schematic. Expectations over real and generated groups have equal weight.</em></p>
+<p>Binary cross entropy with fake target one implements the non saturating generator loss. A stable logit loss is useful for numerical reliability. It cannot repair every optimization failure.</p>
+<p>Part 05 adds a mean over real examples to a mean over fake examples. A single mean over their concatenation is half that value when the batches are equal. Keep the reduction convention explicit before comparing losses.</p>
+<h3>4. Follow the gradient all the way back</h3>
+<p>Differentiate with respect to the fake logit:</p>
+<pre><code>dL_minimax/da = -sigmoid(a)
+dL_non_saturating/da = sigmoid(a) - 1</code></pre>
+<p>At a = -8 the two values are -0.000335 and -0.999665. Gradient descent subtracts the derivative, so both try to increase a. The first gives an almost flat local signal to a confidently rejected fake. At a = 8 their strengths reverse. At a = 0 both equal -0.5.</p>
+<p><img alt="The local derivative multiplies two more derivatives before reaching generator parameters" src="https://miro.medium.com/v2/1*P8wS0DMkEUKHgECbhg0nGQ.png"></p>
+<p><em>Figure 4. Chain rule schematic. Freezing discriminator weights during a generator update still permits differentiation through its input.</em></p>
+<p>The full path is dL/dtheta_G = (dL/da)(da/dx)(dx/dtheta_G). A large first factor cannot guarantee that the other factors are useful. The answer to our opening prediction is yes: G can learn through D while D&#x27;s weights stay fixed. Detaching G(z) during that generator step would break the path. Detaching it for D&#x27;s separate update serves a different purpose.</p>
+<h3>5. The ideal game and the actual training loop</h3>
+<p>Let m = (p_data + p_g)/2. Substituting D* into the original game gives:</p>
+<pre><code>JS(p_data || p_g) = 0.5 KL(p_data || m) + 0.5 KL(p_g || m)
+V(D*,G) = -log 4 + 2 JS(p_data || p_g)</code></pre>
+<p>For our discrete example, substitute D* = p/(p+q). Then log D* = log(p/m) - log 2 and log(1-D*) = log(q/m) - log 2. Sum with weights p and q. Each distribution sums to one, leaving the two KL terms and -2 log 2.</p>
+<p><img alt="Ideal density calculation and finite alternating optimization" src="https://miro.medium.com/v2/1*1XrbzcsXSSkwcjIB0hnNKg.png"></p>
+<p><em>Figure 5. Two routes. The identity uses the optimal D and original minimax value. Finite training usually follows another generator loss.</em></p>
+<p>Matching distributions make JS zero. With natural logarithms JS is at most log 2. This identity does not turn every non saturating generator update against a finite discriminator into an exact JS gradient step. The distinction is part of the result, not a detail to omit.</p>
+<h3>6. Why a familiar loss value can fool us</h3>
+<p>At the ideal matched distribution D* = 0.5. Under the sum of the two group means, the discriminator loss is 2 log 2 and the non saturating generator loss is log 2.</p>
+<p>A finite network can produce similar values because it has failed to distinguish samples. So an uncertain discriminator is not proof of a good generator. Inspect diversity and coverage alongside the losses. Part 05&#x27;s cluster counts ask a narrower, more useful question: where did the generated samples land?</p>
+<p>Oscillation also needs context. Each player&#x27;s objective changes with its opponent. Check samples over time and across seeds. If coverage falls while the loss looks comfortable, do not treat that scalar as a quality certificate.</p>
+<p><strong>Keep these three ideas</strong></p>
+<p>1. The ideal discriminator measures relative density under specified class weighting.<br>2. A rejected fake needs a useful gradient through the whole chain, not just the logit.<br>3. The ideal minimax identity explains an equilibrium. It does not certify a finite training run.</p>
+<h3>7. Check the gradients and identity yourself</h3>
+<p>This example needs only Python 3&#x27;s standard library. Save the three steps in one file and run it with `python example.py`. It uses fixed inputs, so no random seed is needed. No model is trained.</p>
+<p><strong>Step 1. Compare analytic derivatives with central finite differences.</strong></p>
+<p>The stable softplus form avoids computing a large exponential. The tolerance checks derivative agreement at three logits.</p>
+<pre><code>import math
+import platform
+from pathlib import Path
+
+def sigmoid(a):
+    return 1.0 / (1.0 + math.exp(-a))
+
+def softplus(a):
+    return max(a, 0.0) + math.log1p(math.exp(-abs(a)))
+
+print(f&quot;Python {platform.python_version()} | standard library | CPU | deterministic, no seed needed&quot;)
+h = 1e-5
+for a in (-8.0, 0.0, 8.0):
+    minimax = -sigmoid(a)
+    non_saturating = sigmoid(a) - 1.0
+    fd_minimax = (-softplus(a + h) + softplus(a - h)) / (2*h)
+    fd_non = (softplus(-a - h) - softplus(-a + h)) / (2*h)
+    assert abs(minimax - fd_minimax) &lt; 1e-9
+    assert abs(non_saturating - fd_non) &lt; 1e-9
+    print(f&quot;Logit {a:4.0f} | minimax {minimax:.6f} | non saturating {non_saturating:.6f}&quot;)</code></pre>
+<p><strong>Step 2. Derive the ideal classifier for two distributions and check the JS identity.</strong></p>
+<p>All masses here are positive. This simple code does not implement the zero mass conventions needed for arbitrary distributions.</p>
+<pre><code>data = [0.5, 0.5]
+for name, generated in [(&quot;balanced&quot;, [0.5, 0.5]), (&quot;biased&quot;, [0.9, 0.1])]:
+    optimal_d = [p/(p+q) for p, q in zip(data, generated)]
+    mixture = [(p+q)/2 for p, q in zip(data, generated)]
+    js = sum(0.5*(p*math.log(p/m) + q*math.log(q/m))
+             for p, q, m in zip(data, generated, mixture))
+    game = sum(p*math.log(d) + q*math.log(1-d)
+               for p, q, d in zip(data, generated, optimal_d))
+    assert abs(game - (-math.log(4) + 2*js)) &lt; 1e-12
+    print(f&quot;{name}: D* {[round(d, 6) for d in optimal_d]} | JS {js:.6f} | game {game:.6f}&quot;)</code></pre>
+<p><strong>Step 3. Export the calculated gradient curves.</strong></p>
+<p>The SVG is editable and opens in a browser. It shows mathematical local derivatives across fixed logits, not training progress.</p>
+<pre><code># Export the computed local derivative curves as an editable SVG.
+xs = [-10 + 20*i/400 for i in range(401)]
+def curve(fn):
+    return &quot; &quot;.join(f&quot;{100 + 50*(a+10):.2f},{560 - 400*fn(a):.2f}&quot; for a in xs)
+svg = f&#x27;&#x27;&#x27;&lt;svg xmlns=&quot;http://www.w3.org/2000/svg&quot; width=&quot;1200&quot; height=&quot;700&quot; viewBox=&quot;0 0 1200 700&quot;&gt;
+&lt;rect width=&quot;1200&quot; height=&quot;700&quot; fill=&quot;#FFF9EF&quot;/&gt;
+&lt;g font-family=&quot;Arial,sans-serif&quot; fill=&quot;#153449&quot;&gt;
+&lt;text x=&quot;70&quot; y=&quot;42&quot; font-size=&quot;22&quot;&gt;Inside AI · Deep Learning Models · Part 06&lt;/text&gt;
+&lt;text x=&quot;70&quot; y=&quot;88&quot; font-size=&quot;32&quot;&gt;Computed magnitude of the local logit gradient&lt;/text&gt;
+&lt;path d=&quot;M100 160 V560 H1100&quot; fill=&quot;none&quot; stroke=&quot;#153449&quot; stroke-width=&quot;2&quot;/&gt;
+&lt;polyline points=&quot;{curve(sigmoid)}&quot; fill=&quot;none&quot; stroke=&quot;#C66B2B&quot; stroke-width=&quot;4&quot;/&gt;
+&lt;polyline points=&quot;{curve(lambda a: 1-sigmoid(a))}&quot; fill=&quot;none&quot; stroke=&quot;#087F8C&quot; stroke-width=&quot;4&quot;/&gt;
+&lt;text x=&quot;45&quot; y=&quot;170&quot; font-size=&quot;22&quot;&gt;1.0&lt;/text&gt;&lt;text x=&quot;45&quot; y=&quot;565&quot; font-size=&quot;22&quot;&gt;0.0&lt;/text&gt;
+&lt;text x=&quot;88&quot; y=&quot;595&quot; font-size=&quot;22&quot;&gt;-10&lt;/text&gt;&lt;text x=&quot;594&quot; y=&quot;595&quot; font-size=&quot;22&quot;&gt;0&lt;/text&gt;
+&lt;text x=&quot;1085&quot; y=&quot;595&quot; font-size=&quot;22&quot;&gt;10&lt;/text&gt;
+&lt;text x=&quot;380&quot; y=&quot;630&quot; font-size=&quot;24&quot;&gt;Discriminator logit a for a fake sample&lt;/text&gt;
+&lt;text x=&quot;310&quot; y=&quot;675&quot; font-size=&quot;23&quot; fill=&quot;#C66B2B&quot;&gt;Minimax&lt;/text&gt;
+&lt;text x=&quot;650&quot; y=&quot;675&quot; font-size=&quot;23&quot; fill=&quot;#087F8C&quot;&gt;Non saturating&lt;/text&gt;
+&lt;text x=&quot;120&quot; y=&quot;140&quot; font-size=&quot;22&quot;&gt;|dL/da|&lt;/text&gt;
+&lt;/g&gt;&lt;/svg&gt;&#x27;&#x27;&#x27;
+Path(&quot;computed-gradient-curves.svg&quot;).write_text(svg, encoding=&quot;utf-8&quot;)
+print(&quot;Finite difference checks and JS identity: PASS&quot;)</code></pre>
+<p><strong>Actual output · 7 October 2026 · CPU · deterministic inputs</strong></p>
+<pre><code>Python 3.12.14 | standard library | CPU | deterministic, no seed needed
+Logit   -8 | minimax -0.000335 | non saturating -0.999665
+Logit    0 | minimax -0.500000 | non saturating -0.500000
+Logit    8 | minimax -0.999665 | non saturating -0.000335
+balanced: D* [0.5, 0.5] | JS 0.000000 | game -1.386294
+biased: D* [0.357143, 0.833333] | JS 0.101749 | game -1.182796
+Finite difference checks and JS identity: PASS</code></pre>
+<p><img alt="Computed local gradient magnitude over fake sample logits" src="https://miro.medium.com/v2/1*gmiiVNx0TGjUIRVNZ_BYRg.png"></p>
+<p><em>Figure 6. Fresh calculation on 7 October 2026, Python 3.12.14, standard library, CPU. Curves use the fixed logit grid in Step 3. This is not a GAN training experiment.</em></p>
+<p>The rejected fake at -8 receives almost no minimax logit signal. The biased distribution has positive JS and a game value above -log 4. Those results check the calculations. They do not show that a neural generator will converge, cover every mode or create useful images.</p>
+<p>One operation to remember: follow the derivative through the discriminator input before deciding what the generator can learn.</p>
+<p>Next comes a different question: what if we learn to remove noise instead of learning against an opponent? Part 07 will introduce diffusion. For now, return to the verified Part 05 companion above and mark which update detaches the fake sample.</p>
+<p>Come learn alongside me for projects and interview foundations. Follow Inside AI on <a href="https://medium.com/@thesomilsinghofficial">Medium</a> or <a href="https://thesomilsingh.substack.com/">Substack</a> and find the other channels in <a href="https://x.com/Skywalkerlyzv/status/2105897288749253054">my pinned X post</a>. If this helped, share it or leave the gradient you predicted. A clap on Medium is always welcome ❤️</p>
+<p>Sources: <a href="https://arxiv.org/abs/1406.2661">original GAN paper</a>, <a href="https://docs.pytorch.org/docs/2.14/generated/torch.nn.BCEWithLogitsLoss.html">PyTorch logit loss documentation</a>.</p>

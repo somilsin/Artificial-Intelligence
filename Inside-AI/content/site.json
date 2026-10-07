@@ -88,6 +88,23 @@
       "source": "part-05.html",
       "page": "part-05-gan.html",
       "date": "6 October 2026"
+    },
+    {
+      "part": "06",
+      "type": "Foundations",
+      "model": "GAN",
+      "title": "Why a GAN can reject a fake and still teach almost nothing",
+      "description": "Compare the two generator objectives, derive the ideal discriminator and inspect a recorded numerical gradient check with six original figures.",
+      "image": "https://miro.medium.com/v2/1*dHUQem2Z-zXJvU_QlfOkwA.png",
+      "image_alt": "A rejected fake has two different local gradient strengths",
+      "medium": "https://medium.com/@thesomilsinghofficial/why-a-gan-can-reject-a-fake-and-still-teach-almost-nothing-5a991b0cf2e5",
+      "substack": "https://thesomilsingh.substack.com/p/why-a-gan-can-reject-a-fake-and-still",
+      "x": "https://x.com/Skywalkerlyzv/status/2107825822203826420",
+      "company": "https://www.linkedin.com/pulse/why-gan-can-reject-fake-still-teach-almost-nothing-dduyc/",
+      "published": true,
+      "source": "part-06.html",
+      "page": "part-06-gan-foundations.html",
+      "date": "7 October 2026"
     }
   ],
   "news": [
@@ -169,6 +186,19 @@
         "Mentioned in a chat does not mean still required"
       ],
       "reading_label": "Read the five research notes ↗"
+    },
+    {
+      "id": "2026-10-07-prior-posts",
+      "title": "Latest AI note: policy checkpoint transfers",
+      "date": "7 October 2026",
+      "source_window": "Already published development note; preprint submitted 6 October 2026",
+      "source": "prior-posts-2026-10-07.md",
+      "approval": "approved",
+      "description": "The published NeMo-DCR note, with its reported refit results, limits and original reading links.",
+      "topics": [
+        "The policy update is small. The checkpoint transfer may not be."
+      ],
+      "reading_label": "Read the development note ↗"
     }
   ]
 }

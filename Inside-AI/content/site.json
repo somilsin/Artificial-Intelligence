@@ -199,6 +199,23 @@
         "The policy update is small. The checkpoint transfer may not be."
       ],
       "reading_label": "Read the development note ↗"
+    },
+    {
+      "id": "2026-10-08",
+      "title": "Five research notes: evidence, training and simulation",
+      "date": "8 October 2026",
+      "source_window": "Preprints submitted6Oct, surfaced7Oct, verified and published8Oct2026",
+      "source": "news-2026-10-08.md",
+      "approval": "approved",
+      "description": "Five distinct primary research notes with original diagrams, bounded findings, examples and verified X/company reading links.",
+      "topics": [
+        "More teacher feedback can make a student learn less",
+        "FP4 training has to agree with its own rollouts",
+        "An agent can get the result right for the wrong reason",
+        "UNREAL asks the model to choose its own evidence",
+        "A simulated scene and its robot task should grow together"
+      ],
+      "reading_label": "Read the five research notes →"
     }
   ]
 }

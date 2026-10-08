@@ -216,6 +216,23 @@
         "A simulated scene and its robot task should grow together"
       ],
       "reading_label": "Read the five research notes →"
+    },
+    {
+      "id": "2026-10-08-extra",
+      "title": "Five additional research notes: robots, evidence and agents",
+      "date": "8 October 2026 · extra edition",
+      "source_window": "Preprints submitted 7 October and surfaced 8 October 2026",
+      "source": "news-2026-10-08-extra.md",
+      "approval": "approved",
+      "description": "Robots planning toward images, agents computing evidence, coding potential, runtime control and memory validity. Five primary-source notes with original diagrams and explicit limits.",
+      "topics": [
+        "A robot can plan toward a picture without predicting every pixel",
+        "Sometimes the answer needs computation before it needs more retrieval",
+        "A base model can fail the agent harness and still be worth training",
+        "An agent staying on time does not prove it kept working",
+        "Agent memory can retrieve the right fact and still give you a bad prompt"
+      ]
     }
   ]
 }
+

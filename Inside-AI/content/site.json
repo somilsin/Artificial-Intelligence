@@ -261,6 +261,22 @@
       "topics": [
         "Diffusion feature forecasting with fresh shallow corrections"
       ]
+    },
+    {
+      "id": "2026-10-09",
+      "title": "Five fresh research notes: metrics, designs and agent workflows",
+      "date": "9 October 2026",
+      "source_window": "Primary preprints submitted 8 October 2026 and surfaced in the 9 October arXiv feed. Checked 9 October; recheck freshness, A/B dedup and access before delayed publication.",
+      "source": "news-2026-10-09.html",
+      "approval": "approved",
+      "description": "AI time horizons, buildable brick designs, agent monitoring, handwritten maths and multi-agent training. Five primary-source notes with original schematics and verified reading links.",
+      "topics": [
+        "A tenfold jump in an AI time horizon can mean different things",
+        "BrickBench asks an agent to design something you can build",
+        "OnTrack watches an agent while the run is still happening",
+        "HANS keeps the crossed out work in the OCR problem",
+        "MASS trains a model on how its agents work together"
+      ]
     }
   ]
 }

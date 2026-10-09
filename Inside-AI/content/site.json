@@ -105,6 +105,23 @@
       "source": "part-06.html",
       "page": "part-06-gan-foundations.html",
       "date": "7 October 2026"
+    },
+    {
+      "part": "07",
+      "type": "Overview",
+      "model": "DDPM",
+      "title": "How a diffusion model learns to turn noise into four clusters",
+      "description": "Train a small diffusion model, generate 4,096 points and inspect its limits with six figures, three code steps and the recorded CPU output.",
+      "image": "assets/part-07/figure-1-hero.png",
+      "image_alt": "Known data plus deliberate noise gives a supervised noise target",
+      "medium": "https://medium.com/@thesomilsinghofficial/how-a-diffusion-model-learns-to-turn-noise-into-four-clusters-4d3492034acd",
+      "substack": "https://thesomilsingh.substack.com/p/how-a-diffusion-model-learns-to-turn",
+      "x": "https://x.com/Skywalkerlyzv/article/2108206803809108066",
+      "company": "https://www.linkedin.com/pulse/how-diffusion-model-learns-turn-noise-four-clusters-mq0nc/",
+      "published": true,
+      "source": "part-07.html",
+      "page": "part-07-ddpm.html",
+      "date": "8 October 2026"
     }
   ],
   "news": [
@@ -232,7 +249,18 @@
         "An agent staying on time does not prove it kept working",
         "Agent memory can retrieve the right fact and still give you a bad prompt"
       ]
+    },
+    {
+      "id": "2026-10-08-prior-posts",
+      "title": "Previously published AI note: diffusion feature correction",
+      "date": "8 October 2026 · archive catch-up",
+      "source_window": "Preprint submitted 7 October; previously published 8 October 2026",
+      "source": "prior-posts-2026-10-08.html",
+      "approval": "approved",
+      "description": "The verified diffusion feature-correction development note, with its original copy, diagram, limits and X/company links.",
+      "topics": [
+        "Diffusion feature forecasting with fresh shallow corrections"
+      ]
     }
   ]
 }
-

@@ -1,0 +1,187 @@
+<h1>How a diffusion model learns to turn noise into four clusters</h1>
+
+<p>If training starts with real data, how can generation start with noise?</p>
+<p>Somil Singh · Inside AI</p>
+<p><strong>Deep Learning Models · Part 07</strong></p>
+<p>Take four little clouds of points. Add enough noise and the clouds blend together. The original structure becomes hard to see.</p>
+<p>Now start with a fresh cloud of noise. How do we get four clusters back when there's no original point to recover?</p>
+<p>Lemme walk through the missing piece: a model learns a noise estimate at many noise levels. A sampler uses that estimate repeatedly to move toward the learned data distribution. We’ll train a small example, generate 4,096 points and check where they land.</p>
+<p><img alt="Known data plus deliberate noise gives a supervised noise target" src="assets/part-07/figure-1-hero.png" /></p>
+<p><em>Concept hero. The training target is known noise. This is a schematic, not generated output.</em></p>
+<h3>1. The noisy point is still the same kind of object</h3>
+<p>A GAN maps a hidden code into a sample. Here, every state x_t has the same number of coordinates as the data. For an image those coordinates could be pixels. For our example they’re just two numbers.</p>
+<p>x_0 means a clean data point. x_t means the point at noise level t. A <strong>denoising diffusion probabilistic model</strong>, or DDPM, learns a sequence of reverse distributions that can produce clean samples from a simple starting distribution.</p>
+<p>The forward process is fixed in this example. It scales the current point slightly and adds independent Gaussian noise. The learned reverse process takes a noisy point and its timestep, then predicts the mean of the next, less noisy state.</p>
+<p>That timestep matters. The same coordinate might be almost clean at one level and mostly noise at another.</p>
+<h3>2. There are two directions with different jobs</h3>
+<p>The forward transition is:</p>
+<p><strong>x_t = sqrt(alpha_t) x_(t−1) + sqrt(beta_t) z</strong>, with z drawn from N(0,I).</p>
+<p>beta_t is the variance of noise added at that step. alpha_t = 1 − beta_t is the amount of variance retained from the previous state. In multiple dimensions, I means we use independent noise with unit variance in each coordinate before scaling it.</p>
+<p><img alt="Four forward noise levels progressively obscure four point clusters" src="assets/part-07/figure-2-forward.png" /></p>
+<p><em>Simulated forward corruption using the published toy schedule and seed 29. The same base noise is used across panels for comparison; these are marginal samples, not one sampled Markov trajectory.</em></p>
+<p>The reverse model doesn’t receive the original x_0 at generation time. It receives x_t and t. Its noise prediction controls a reverse Gaussian mean, while the sampler adds the chosen reverse noise variance except at the final step.</p>
+<p>Think of this as learning what a plausible next state looks like. It isn't undoing a saved random seed or restoring one uniquely determined original.</p>
+<h3>3. Training gets a target without a human label</h3>
+<p>We create a noisy point ourselves, so we know exactly which noise we added. The network epsilon_theta(x_t,t) tries to predict that noise.</p>
+<p>The simplified training objective averages the squared difference between known noise epsilon and the network’s prediction over clean data, timesteps and random noise.</p>
+<p><img alt="Simplified noise prediction objective with target, model and error roles" src="assets/part-07/figure-3-objective.png" /></p>
+<p><em>Objective schematic. The code averages over both the batch and the two coordinates.</em></p>
+<p>The target is epsilon. theta means the learned parameters. The model must use both the noisy point and timestep to reduce the error. We sample timesteps uniformly in this toy run.</p>
+<p>This is the simplified noise prediction objective. It is not the full variational likelihood bound with every weighting and endpoint term preserved. <a href="https://arxiv.org/html/2006.11239v2">Ho, Jain and Abbeel’s DDPM paper</a> gives the original formulation and connects the parameterization to the reverse process.</p>
+<p>A low average training error still doesn't prove the sampler works. Some noise levels are easier than others, and generation feeds the network its own previous outputs.</p>
+<h3>4. The shortcut lets us train without walking the whole chain</h3>
+<p>Define alpha_bar_t as the product alpha_1 × alpha_2 × … × alpha_t. Then we can draw a noisy point directly:</p>
+<p><strong>x_t = sqrt(alpha_bar_t) x_0 + sqrt(1 − alpha_bar_t) epsilon.</strong></p>
+<p>Instead of applying 150 forward steps to train on timestep 150, we use one clean point, one Gaussian draw and that cumulative coefficient.</p>
+<p><img alt="Numeric direct noising example with cumulative alpha 0.64" src="assets/part-07/figure-4-jump.png" /></p>
+<p><em>One coordinate: x_0 = 1, alpha_bar_t = 0.64 and epsilon = −0.5 give x_t = 0.5.</em></p>
+<p>The square roots scale amplitudes. Mixing up alpha_t and alpha_bar_t changes the noise level. Mixing variance with standard deviation changes it again.</p>
+<p>This shortcut supplies the correct marginal distribution at the selected timestep. It doesn't make sampling a one step operation. Our reverse sampler still visits every timestep.</p>
+<h3>5. One training update and one generated sample take different routes</h3>
+<p>Training samples a real point, a timestep and noise. It creates x_t directly, predicts the known noise and updates the network.</p>
+<p>Generation starts with x_T drawn from N(0,I). At each timestep the sampler uses:</p>
+<p><strong>mean_t = (x_t − beta_t / sqrt(1 − alpha_bar_t) × epsilon_theta(x_t,t)) / sqrt(alpha_t).</strong></p>
+<p>Then it draws the next state around this mean. Here the variance is beta_t × (1 − alpha_bar_(t−1)) / (1 − alpha_bar_t). Set alpha_bar_0 = 1. At the last step, the code adds no noise.</p>
+<p><img alt="Training uses one selected noise level while generation traverses all 200 steps" src="assets/part-07/figure-5-routes.png" /></p>
+<p><em>Two routes through the same noise predictor. Training has a target; generation has repeated reverse updates.</em></p>
+<p>Our schedule uses 200 steps with beta increasing from 0.0001 to 0.05. Terminal alpha_bar is about 0.006122, so a small amount of data signal remains. Starting at a standard Gaussian is an approximation. These are toy settings, not the original paper’s image training configuration.</p>
+<p>The Python arrays use indices 0 through 199. Index 0 corresponds to mathematical timestep 1. Keeping that mapping explicit prevents an easy off by one error.</p>
+<h3>6. A falling loss can hide a weak noise level</h3>
+<p><strong>Noise estimates vary by timestep.</strong> In the fresh run below, the earliest timestep’s held-out noise MSE is above 1, while the last timestep’s is much smaller. The scalar training loss hides that difference. A zero noise prediction would have expected MSE 1 under our per-coordinate reduction.</p>
+<p><strong>Four regions can still have the wrong proportions.</strong> Count the nearest centre assignments, then inspect distances and plots. Every point gets assigned to a centre even if it is nowhere near one, so assignment counts alone are weak evidence.</p>
+<p><strong>A terminal schedule can leave too much signal.</strong> Check alpha_bar_T before treating the terminal forward distribution as standard Gaussian. Data scaling, the schedule, network capacity and reverse variance all affect the result.</p>
+<p><strong>Changing the sampler changes the experiment.</strong> Removing all reverse noise or skipping timesteps is a different sampling procedure. Don't assume this trained predictor automatically makes every faster sampler correct.</p>
+<h3>Keep these three ideas</h3>
+<ol>
+<li><strong>The noise is a label we create.</strong> Known corruption gives a supervised learning target without an external annotation.</li>
+<li><strong>The timestep tells the model what noise level it sees.</strong> One direct forward draw can train a selected timestep.</li>
+<li><strong>Generation is repeated learned reverse sampling.</strong> It creates a plausible new sample, not a guaranteed recovery of a specific original.</li>
+</ol>
+<h3>7. A tiny diffusion model you can actually run</h3>
+<p>Install NumPy and Matplotlib with <code>pip install numpy matplotlib</code>. Save the three blocks in order as one script and run it with Python. No dataset download, pretrained weights or GPU is needed.</p>
+<p>We use a two hidden layer tanh network with width 64. Its input is the two noisy coordinates plus eight sine/cosine timestep features. Gradients and Adam updates are written in NumPy so every update stays visible. This is an educational implementation, not an efficient production framework.</p>
+<p><strong>Step 1. Build the data, schedule and noise predictor.</strong> The real distribution is an equal mixture centred at (−1,−1), (−1,1), (1,−1) and (1,1), with independent coordinate standard deviation 0.12. The initial model doesn't know those centres.</p>
+<pre><code class="language-python">import numpy as np
+import matplotlib
+matplotlib.use(&quot;Agg&quot;)
+import matplotlib.pyplot as plt
+import platform
+
+rng = np.random.default_rng(7)
+T = 200
+beta = np.linspace(0.0001, 0.05, T)
+alpha = 1 - beta
+abar = np.cumprod(alpha)
+previous = np.r_[1.0, abar[:-1]]
+posterior_var = beta * (1 - previous) / (1 - abar)
+centres = np.array([[-1., -1.], [-1., 1.], [1., -1.], [1., 1.]])
+
+def real(n):
+    return centres[rng.integers(4, size=n)] + 0.12 * rng.normal(size=(n, 2))
+
+def features(x, t):
+    angle = (t[:, None] + 1) / T * np.array([1, 2, 4, 8]) * np.pi
+    return np.c_[x, np.sin(angle), np.cos(angle)]
+
+sizes = [10, 64, 64, 2]
+params = []
+for a, b in zip(sizes[:-1], sizes[1:]):
+    params.extend([rng.normal(size=(a, b)) * np.sqrt(2 / (a + b)), np.zeros(b)])
+moment = [np.zeros_like(p) for p in params]
+velocity = [np.zeros_like(p) for p in params]
+
+def predict(x, t, cache=False):
+    f = features(x, t)
+    h1 = np.tanh(f @ params[0] + params[1])
+    h2 = np.tanh(h1 @ params[2] + params[3])
+    out = h2 @ params[4] + params[5]
+    return (out, (f, h1, h2)) if cache else out
+
+print(f&quot;Python {platform.python_version()} | NumPy {np.__version__} | CPU | seed 7&quot;)
+print(f&quot;T={T} | terminal alpha_bar={abar[-1]:.6f}&quot;)
+
+</code></pre>
+<p><strong>Step 2. Train on random noise levels.</strong> Each update uses 256 new synthetic points. We run 6,000 updates at learning rate 0.001. The manual backward pass differentiates the mean squared error through both tanh layers. After training, fresh draws test four fixed noise levels.</p>
+<pre><code class="language-python"># Run immediately after Step 1 in the same script or notebook.
+for step in range(1, 6001):
+    x0 = real(256)
+    t = rng.integers(T, size=len(x0))
+    eps = rng.normal(size=x0.shape)
+    a = abar[t, None]
+    xt = np.sqrt(a) * x0 + np.sqrt(1 - a) * eps
+    estimate, (f, h1, h2) = predict(xt, t, cache=True)
+    error = estimate - eps
+    # Mean over BOTH samples and coordinates.
+    d = 2 * error / error.size
+    dw3, db3 = h2.T @ d, d.sum(axis=0)
+    d2 = (d @ params[4].T) * (1 - h2 * h2)
+    dw2, db2 = h1.T @ d2, d2.sum(axis=0)
+    d1 = (d2 @ params[2].T) * (1 - h1 * h1)
+    dw1, db1 = f.T @ d1, d1.sum(axis=0)
+    gradients = [dw1, db1, dw2, db2, dw3, db3]
+    for i, gradient in enumerate(gradients):
+        moment[i] = 0.9 * moment[i] + 0.1 * gradient
+        velocity[i] = 0.999 * velocity[i] + 0.001 * gradient ** 2
+        m = moment[i] / (1 - 0.9 ** step)
+        v = velocity[i] / (1 - 0.999 ** step)
+        params[i] -= 0.001 * m / (np.sqrt(v) + 1e-8)
+    if step in (1, 6000):
+        print(f&quot;step {step:4d} | sampled training MSE {np.mean(error ** 2):.6f}&quot;)
+
+# Fresh synthetic draws, not the final training batch.
+checks = real(4096)
+for fixed_t in (0, 49, 99, 199):
+    eps = rng.normal(size=checks.shape)
+    xt = np.sqrt(abar[fixed_t]) * checks + np.sqrt(1 - abar[fixed_t]) * eps
+    predicted = predict(xt, np.full(len(xt), fixed_t))
+    mse = np.mean((predicted - eps) ** 2)
+    print(f&quot;held-out timestep {fixed_t + 1:3d} | noise MSE {mse:.6f}&quot;)
+
+</code></pre>
+<p><strong>Step 3. Generate without a clean input.</strong> Start 4,096 fresh Gaussian points, apply all 200 reverse steps and measure the result. The centres are used for evaluation only, never inside the reverse update. The script also saves a plot and raw sample arrays.</p>
+<pre><code class="language-python"># Each network call predicts noise at the CURRENT timestep.
+generated = rng.normal(size=(4096, 2))
+for t in reversed(range(T)):
+    eps_hat = predict(generated, np.full(len(generated), t))
+    mean = (generated - beta[t] / np.sqrt(1 - abar[t]) * eps_hat) / np.sqrt(alpha[t])
+    generated = mean
+    if t &gt; 0:
+        generated += np.sqrt(posterior_var[t]) * rng.normal(size=generated.shape)
+
+distance = np.linalg.norm(generated[:, None, :] - centres[None, :, :], axis=2)
+nearest = np.argmin(distance, axis=1)
+print(&quot;nearest-centre counts:&quot;, np.bincount(nearest, minlength=4).tolist())
+print(f&quot;fraction within radius 0.35: {np.mean(distance.min(axis=1) &lt; 0.35):.4f}&quot;)
+print(&quot;generated shape:&quot;, generated.shape)
+reference = real(4096)
+fig, axes = plt.subplots(1, 2, figsize=(10, 4.5), sharex=True, sharey=True)
+for ax, data, title in zip(axes, (reference, generated), (&quot;Fresh reference draws&quot;, &quot;Generated after 200 reverse steps&quot;)):
+    ax.scatter(data[:, 0], data[:, 1], s=3, alpha=0.35)
+    ax.set(title=title, xlabel=&quot;coordinate 1&quot;, ylabel=&quot;coordinate 2&quot;, xlim=(-2, 2), ylim=(-2, 2))
+    ax.set_aspect(&quot;equal&quot;)
+fig.suptitle(&quot;Inside AI · Part 07 · actual CPU run · seed 7&quot;)
+fig.tight_layout()
+fig.savefig(&quot;ddpm_output.png&quot;, dpi=180)
+np.savez(&quot;ddpm_samples.npz&quot;, reference=reference, generated=generated, beta=beta, abar=abar)
+
+</code></pre>
+<p><strong>Actual output, 8 October 2026.</strong> Fresh CPU training with Python 3.11.5, NumPy 1.23.5 and seed 7. Printed training losses use sampled batches before the update. Software and linear algebra differences can change results.</p>
+<pre><code class="language-text">Python 3.11.5 | NumPy 1.23.5 | CPU | seed 7
+T=200 | terminal alpha_bar=0.006122
+step    1 | sampled training MSE 0.928866
+step 6000 | sampled training MSE 0.210487
+held-out timestep   1 | noise MSE 1.094112
+held-out timestep  50 | noise MSE 0.439607
+held-out timestep 100 | noise MSE 0.288743
+held-out timestep 200 | noise MSE 0.017920
+nearest-centre counts: [1052, 935, 1102, 1007]
+fraction within radius 0.35: 0.9753
+generated shape: (4096, 2)
+</code></pre>
+<p><img alt="Reference and generated point distributions from the fresh CPU run" src="assets/part-07/ddpm_output.png" /></p>
+<p><em>Actual output. Left: fresh draws from the known data distribution. Right: points generated by the trained noise predictor and 200 step sampler. Identical axes, no rejected samples or selected best seed.</em></p>
+<p>The plot recovers four visible regions. About 97.53% of generated points land within 0.35 of a centre, and the counts are not perfectly balanced. That radius is a chosen toy diagnostic, not an image quality score. It doesn't establish exact distribution matching, image generation performance or robustness across seeds.</p>
+<p>The held-out points are fresh samples from the same known synthetic distribution. They test this toy setup, not generalization to a new dataset. The earliest noise prediction result also gives us a real limitation to investigate rather than hiding it behind the final sample plot.</p>
+<p>The operation to remember is <strong>predict noise at the current timestep, then apply the reverse update</strong>. A clean input supplies the training problem; it doesn't need to be present when we generate.</p>
+<p>Next, Part 08 will derive the reverse posterior and explain why noise prediction can parameterize its mean. It isn't published yet. Part 07 is the working overview, and the next notes will make the coefficients earn their place.</p>
+<p>If yall are building your foundations alongside me, keep the code and the checks together. Follow <a href="https://x.com/Skywalkerlyzv">Inside AI on X</a> for the next part, or read along on <a href="https://medium.com/@thesomilsinghofficial">Medium</a> and <a href="https://thesomilsingh.substack.com/">Substack</a>.</p>

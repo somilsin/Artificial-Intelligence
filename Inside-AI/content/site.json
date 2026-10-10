@@ -306,6 +306,22 @@
       "topics": [
         "A diffusion output can draw on different training examples for different reasons"
       ]
+    },
+    {
+      "id": "2026-10-10",
+      "title": "Five AI notes: suggestions, agent actions and joint signals",
+      "date": "10 October 2026",
+      "source_window": "Checked10Oct2026. Two official9Oct announcements plus three8Oct-submitted papers surfaced9Oct. Explicitly widened from prior9Oct cutoff to latest unreported research listing; no claim papers were released10Oct.",
+      "source": "news-2026-10-10.html",
+      "approval": "approved",
+      "description": "Codex message suggestions, Anthropic’s action report, geometry inputs, refusal scores and multimodal interactions. Primary sources, original diagrams and exact reading links.",
+      "topics": [
+        "Codex can suggest your next message, then leave you to send it",
+        "Anthropic reports where Claude kept going past the intended boundary",
+        "GeoReform changes how a geometry diagram becomes text",
+        "A safety score can hide different refusal behaviours",
+        "HRIL learns signals that only appear when modalities meet"
+      ]
     }
   ]
 }

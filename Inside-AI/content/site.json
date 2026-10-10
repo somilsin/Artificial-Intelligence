@@ -122,6 +122,23 @@
       "source": "part-07.html",
       "page": "part-07-ddpm.html",
       "date": "8 October 2026"
+    },
+    {
+      "part": "08",
+      "type": "Foundations",
+      "model": "DDPM",
+      "title": "Why predicting noise gives a diffusion model a reverse step",
+      "description": "Derive one reverse distribution and check the gradient with actual numbers. Then remove the clean point and see what the model has to learn instead.",
+      "image": "assets/part-08/figure-1-hero.png",
+      "image_alt": "Known training target and learned generation estimate",
+      "medium": "https://medium.com/@thesomilsinghofficial/why-predicting-noise-gives-a-diffusion-model-a-reverse-step-87b84ff625b0",
+      "substack": "https://thesomilsingh.substack.com/p/why-predicting-noise-gives-a-diffusion",
+      "x": "https://x.com/Skywalkerlyzv/article/2108560064126841315",
+      "company": "https://www.linkedin.com/pulse/why-predicting-noise-gives-diffusion-model-reverse-dc5jc/",
+      "published": true,
+      "source": "part-08.html",
+      "page": "part-08-ddpm-foundations.html",
+      "date": "9 October 2026"
     }
   ],
   "news": [
@@ -276,6 +293,18 @@
         "OnTrack watches an agent while the run is still happening",
         "HANS keeps the crossed out work in the OCR problem",
         "MASS trains a model on how its agents work together"
+      ]
+    },
+    {
+      "id": "2026-10-09-prior-posts",
+      "title": "Previously published AI note: diffusion training attribution",
+      "date": "9 October 2026 · archive catch-up",
+      "source_window": "Preprint submitted 8 October; originally published 9 October 2026. Website archive added 10 October.",
+      "source": "prior-posts-2026-10-09.html",
+      "approval": "approved",
+      "description": "Which training images helped a diffusion model make a particular output? CADT follows shape, colour and style through denoising.",
+      "topics": [
+        "A diffusion output can draw on different training examples for different reasons"
       ]
     }
   ]

@@ -1,0 +1,182 @@
+<h1>Why predicting noise gives a diffusion model a reverse step</h1>
+
+<p>The model never sees the clean point during generation. So where does its next step come from?</p>
+<p>Somil Singh · Inside AI</p>
+<p><strong>Deep Learning Models · Part 08</strong></p>
+<p>In Part 07 we trained a small diffusion model and got four clusters back from noise. The sampler used a noise prediction to choose each reverse mean.</p>
+<p>But why that formula? Why should guessing noise teach a model where to move?</p>
+<p>Let's work through it. We'll start with a clean point we know, derive one reverse distribution and check the gradient with actual numbers. Then we'll remove the clean point and see what the model has to learn instead.</p>
+<p><img alt="Known training target and learned generation estimate" src="assets/part-08/figure-1-hero.png" /></p>
+<p><em>Concept schematic. The training route knows the clean point. Generation doesn't.</em></p>
+<h3>1. A noisy observation can have more than one clean source</h3>
+<p>Use one coordinate first. A clean value x0 gets scaled and mixed with Gaussian noise:</p>
+<p><strong>xt = sqrt(A) × x0 + sqrt(1 − A) × epsilon.</strong></p>
+<p>Here A means alpha_bar_t, the cumulative signal coefficient from Part 07. epsilon has mean zero and variance one. Conditional on x0, xt has mean sqrt(A) × x0 and variance 1 − A.</p>
+<p>Set A = 0.64. The signal amplitude is 0.8 and the noise amplitude is 0.6. If x0 = 1 and epsilon = −0.5, the observation is 0.5.</p>
+<p>That doesn't mean every observation at 0.5 came from x0 = 1. A different clean value with different noise can land there too. Training gives us a known source for each example. A generated point has no such source attached.</p>
+<p>We'll use the mathematical timesteps 1 through 200. The code indexes them 0 through 199. So index 99 means timestep 100. Getting that shift wrong changes which coefficients you're using.</p>
+<h3>2. Knowing x0 makes one reverse distribution easy</h3>
+<p>Let y mean the previous state x_(t−1), P mean alpha_bar_(t−1), a mean alpha_t and b mean beta_t. Then A = aP and a = 1 − b.</p>
+<p>For a fixed clean x0, two pieces constrain y. Its forward marginal says y is Gaussian with mean sqrt(P) × x0 and variance 1 − P. The transition to the observed xt says xt is Gaussian with mean sqrt(a) × y and variance b.</p>
+<p>Multiplying these densities gives a posterior for y. Ignore terms that don't contain y and write its negative log density as:</p>
+<p><strong>(y − sqrt(P) × x0)² / (2(1 − P)) + (xt − sqrt(a) × y)² / (2b).</strong></p>
+<p>The coefficient of y² gives posterior precision 1/(1 − P) + a/b. Invert it:</p>
+<p><strong>posterior variance = b(1 − P)/(1 − A).</strong></p>
+<p>The linear coefficient gives the mean:</p>
+<p><strong>posterior mean = [sqrt(P) × b × x0 + sqrt(a) × (1 − P) × xt] / (1 − A).</strong></p>
+<p><img alt="Two Gaussian constraints combined into a posterior" src="assets/part-08/figure-2-posterior.png" /></p>
+<p><em>Posterior schematic. These are conditional relationships, not measured sample quality.</em></p>
+<p>No network was needed for that calculation. The catch is right there in the formula: it uses x0. We can compute this training posterior q(x_(t−1) | xt,x0), but generation needs a transition using xt alone.</p>
+<h3>3. The likelihood objective compares whole chains</h3>
+<p>A DDPM defines a forward chain that adds noise and a learned reverse chain that starts from a simple prior. The original <a href="https://arxiv.org/abs/2006.11239">DDPM paper</a> expresses a variational bound with a terminal prior term, middle posterior KL terms and a final reconstruction term.</p>
+<p><img alt="Terminal, middle and endpoint terms in the chain objective" src="assets/part-08/figure-3-objective.png" /></p>
+<p><em>Objective schematic. The runnable check below isolates one middle Gaussian term.</em></p>
+<p>For a middle timestep greater than one, fix the reverse variance sigma². The KL between the exact training posterior and the learned Gaussian has a mean dependent part:</p>
+<p><strong>(posterior mean − learned mean)² / (2sigma²).</strong></p>
+<p>The remaining terms don't depend on the predicted mean when both variances are fixed. So learning a reverse mean becomes a regression problem with a known target. In several dimensions, sum the coordinate squared errors.</p>
+<p>This is one term, not the whole likelihood bound. The terminal term is constant with respect to the network for a fixed forward schedule and fixed prior. The endpoint likelihood still needs its own treatment. The code deliberately checks t = 100 to avoid pretending a zero endpoint posterior variance is safe to divide by.</p>
+<h3>4. Substitute the known noise and the mean simplifies</h3>
+<p>From our forward observation, solve for the clean point:</p>
+<p><strong>x0 = [xt − sqrt(1 − A) × epsilon] / sqrt(A).</strong></p>
+<p>Substitute that into the posterior mean from Section 2 and collect terms. The result is:</p>
+<p><strong>posterior mean = [xt − b × epsilon / sqrt(1 − A)] / sqrt(a).</strong></p>
+<p>Now replace epsilon with the network prediction epsilon_theta(xt,t). That's the mean formula our Part 07 sampler used. It needs the noisy point, timestep and learned noise estimate. It doesn't need a stored clean point.</p>
+<p>Let delta = epsilon_theta − epsilon and c = b/sqrt(a(1 − A)). Then learned mean minus target mean is −c × delta. The mean dependent KL becomes:</p>
+<p><strong>w × delta², where w = b²/[2sigma²a(1 − A)].</strong></p>
+<p>Its derivative with respect to the prediction is 2w × delta. Predict too much noise and that gradient pushes the prediction down under gradient descent.</p>
+<p><img alt="Noise error mapped into reverse mean error and gradient" src="assets/part-08/figure-4-gradient.png" /></p>
+<p><em>Gradient schematic. Section 7 checks this equality and its derivative numerically.</em></p>
+<p>The simplified DDPM objective drops these timestep weights and trains on noise squared error. Both objectives use the same noise target, but they put different weight on different noise levels. A small simplified loss isn't automatically a tight likelihood bound.</p>
+<h3>5. A model learns an estimate across possible clean sources</h3>
+<p>With squared error, the best prediction for a given input is the conditional average of its target. If m = E[epsilon | xt,t], then for a candidate prediction f:</p>
+<p><strong>E[(epsilon − f)² | xt,t] = E[(epsilon − m)² | xt,t] + (m − f)².</strong></p>
+<p>The first term doesn't change with f. The second is smallest at f = m. That's why a noise predictor learns the conditional mean of the possible added noises. It isn't recovering the exact random draw behind every noisy input.</p>
+<p>For a tiny analytic example, let the clean data be equally likely to be −1 or +1. At A = 0.64, an observation of zero can come from either side equally. Its conditional clean mean is zero, even though zero is never a clean data point in this toy.</p>
+<p>That doesn't make zero a valid generated sample. An intermediate estimate and a final sample are different objects. Generation keeps taking reverse steps and sampling their distributions.</p>
+<p><img alt="Known targets during training and learned transitions during sampling" src="assets/part-08/figure-5-routes.png" /></p>
+<p><em>Two routes schematic. The generation route has no clean input or target noise.</em></p>
+<p>The noisy density's score, meaning its log density gradient, also follows from this Gaussian mixture:</p>
+<p><strong>score(xt,t) = −E[epsilon | xt,t] / sqrt(1 − A).</strong></p>
+<p>The code calculates this relation from the two component probabilities. This score assertion checks the algebra; the posterior integration and gradient checks use separate numerical calculations. This gives a concrete reason that noise prediction can describe a direction through the noisy data distribution. It doesn't make every DDPM sampler identical to a generic gradient ascent routine.</p>
+<h3>6. The equations can be correct while the model still fails</h3>
+<p>Our exact posterior uses the clean training point. The learned reverse Gaussian sees xt alone. After averaging over possible x0 values, the true reverse conditional needn't be a single Gaussian. Small steps and a good estimate help, but the regression identity doesn't remove that modeling choice.</p>
+<p>The starting prior is another approximation. Part 07 used 200 steps with beta from 0.0001 to 0.05. Its terminal alpha_bar was small, not exactly zero. Check that value before assuming the final forward distribution is exactly standard normal.</p>
+<p>Also keep variance and standard deviation separate. sigma² belongs in the Gaussian KL denominator. sqrt(sigma²) scales sampled noise. At the last step, the sampler uses its specified endpoint convention rather than blindly adding more noise.</p>
+<p>Check the reduction too. A loss averaged over a batch and two coordinates has a different gradient scale from a summed loss. Today's gradient check is for one coordinate and one middle term. It doesn't audit every detail of a neural network implementation.</p>
+<p><strong>Keep these three ideas</strong></p>
+<ol>
+<li>Knowing x0 makes the training posterior Gaussian and tractable. Generation has to work without it.</li>
+<li>Noise error changes the reverse mean by a known factor. The Gaussian mean penalty is a weighted noise squared error.</li>
+<li>A noise predictor learns a conditional estimate. It doesn't undo a uniquely identified original or replace the whole sampling chain.</li>
+</ol>
+<h3>7. Three runnable checks for the missing mechanism</h3>
+<p>Run these steps in order in one Python session, or concatenate them into one file. Dependencies are NumPy and Matplotlib. The recorded run uses Python 3.11.5, NumPy 1.23.5 and Matplotlib 3.7.1 on CPU. A compatible environment can be created with <code>python -m pip install numpy==1.23.5 matplotlib==3.7.1</code> using Python 3.11.</p>
+<p>This is a fresh numerical check, not a second training run. No weights, downloads or GPU are needed.</p>
+<p><strong>Step 1. Compute a Gaussian posterior two ways.</strong> Use the same schedule as Part 07. Compare its closed form mean and variance with a normalized numerical product of the two densities.</p>
+<pre><code class="language-python">import numpy as np
+import matplotlib
+matplotlib.use(&quot;Agg&quot;)
+import matplotlib.pyplot as plt
+import platform
+rng = np.random.default_rng(19)
+T = 200
+beta = np.linspace(0.0001, 0.05, T)
+alpha = 1 - beta
+abar = np.cumprod(alpha)
+prev = np.r_[1., abar[:-1]]
+t = 99  # zero-based index: mathematical timestep 100
+x0, xt = 1., 0.3
+b, a, A, P = beta[t], alpha[t], abar[t], prev[t]
+vpost = b * (1 - P) / (1 - A)
+mpost = (np.sqrt(P)*b*x0 + np.sqrt(a)*(1-P)*xt)/(1-A)
+epsilon = (xt - np.sqrt(A)*x0)/np.sqrt(1-A)
+meps = (xt - b*epsilon/np.sqrt(1-A))/np.sqrt(a)
+assert np.isclose(mpost, meps, atol=1e-12)
+grid = np.linspace(mpost-6*np.sqrt(vpost), mpost+6*np.sqrt(vpost), 50001)
+logq = -(grid-np.sqrt(P)*x0)**2/(2*(1-P))
+logq -= (xt-np.sqrt(a)*grid)**2/(2*b)
+density = np.exp(logq-logq.max())
+density /= np.trapz(density, grid)
+mnum = np.trapz(grid*density, grid)
+vnum = np.trapz((grid-mnum)**2*density, grid)
+assert abs(mnum-mpost)&lt;1e-8 and abs(vnum-vpost)&lt;1e-8
+print(f&quot;Python {platform.python_version()} | NumPy {np.__version__} | CPU | seed 19&quot;)
+print(f&quot;t=100 | posterior mean={mpost:.6f} | variance={vpost:.6f}&quot;)
+print(f&quot;mean parameterization error={abs(mpost-meps):.2e}&quot;)
+print(f&quot;numerical mean error={abs(mnum-mpost):.2e} | variance error={abs(vnum-vpost):.2e}&quot;)
+</code></pre>
+<p><strong>Step 2. Check the noise parameterization and gradient.</strong> Hold the reverse variance fixed at the exact posterior variance for this middle timestep. Compare the mean KL penalty with weighted noise error and compare the analytic derivative with a finite difference.</p>
+<pre><code class="language-python">sigma2 = vpost  # fixed reverse variance; only test t &gt; 1
+c = b / np.sqrt(a*(1-A))
+weight = c*c/(2*sigma2)
+guess = epsilon + 0.4
+def kl_loss(prediction):
+    mu = (xt-b*prediction/np.sqrt(1-A))/np.sqrt(a)
+    return (mpost-mu)**2/(2*sigma2)
+h = 1e-5
+numeric_grad = (kl_loss(guess+h)-kl_loss(guess-h))/(2*h)
+analytic_grad = 2*weight*(guess-epsilon)
+assert np.isclose(kl_loss(guess),weight*(guess-epsilon)**2)
+assert abs(numeric_grad-analytic_grad)&lt;1e-8
+print(f&quot;KL mean penalty={kl_loss(guess):.6f} | epsilon weight={weight:.6f}&quot;)
+print(f&quot;analytic gradient={analytic_grad:.6f} | finite difference={numeric_grad:.6f}&quot;)
+print(f&quot;gradient error={abs(numeric_grad-analytic_grad):.2e}&quot;)
+</code></pre>
+<p><strong>Step 3. Remove the known clean point.</strong> For an equal mixture of two clean point masses, calculate component probabilities from a noisy observation. Use them to obtain conditional clean and noise means, then check the score relation and save the plot.</p>
+<pre><code class="language-python"># New analytic toy: equal mixture of two clean point masses {-1, +1}.
+# No neural network is trained. Compute the exact conditional estimator.
+Atoy = 0.64
+noisevar = 1-Atoy
+locations = np.array([-1.,1.])
+probe = np.array([-0.5,0.,0.5])
+def oracle(x):
+    logits = -(x[:,None]-np.sqrt(Atoy)*locations)**2/(2*noisevar)
+    probs = np.exp(logits-logits.max(axis=1,keepdims=True))
+    probs /= probs.sum(axis=1,keepdims=True)
+    clean_mean = probs @ locations
+    eps_mean = (x-np.sqrt(Atoy)*clean_mean)/np.sqrt(noisevar)
+    score = -(x-np.sqrt(Atoy)*clean_mean)/noisevar
+    assert np.allclose(score,-eps_mean/np.sqrt(noisevar))
+    return clean_mean,eps_mean,score
+clean_mean,eps_mean,score = oracle(probe)
+for x,m,e,s in zip(probe,clean_mean,eps_mean,score):
+    print(f&quot;x={x:+.1f} | E[x0|x]={m:+.6f} | E[epsilon|x]={e:+.6f} | score={s:+.6f}&quot;)
+xs=np.linspace(-2.5,2.5,501)
+ms,es,ss=oracle(xs)
+fig,axes=plt.subplots(1,2,figsize=(12,4.8),layout=&quot;constrained&quot;)
+axes[0].plot(grid,density,color=&quot;#087F8C&quot;,label=&quot;normalized Gaussian product&quot;)
+axes[0].axvline(mpost,color=&quot;#C66B2B&quot;,linestyle=&quot;--&quot;,label=&quot;closed-form mean&quot;)
+axes[0].set(xlabel=&quot;previous state x_(t-1)&quot;,ylabel=&quot;conditional density&quot;,title=&quot;Known clean point: Gaussian posterior&quot;)
+axes[0].legend(fontsize=9)
+axes[1].plot(xs,ms,label=&quot;conditional clean mean&quot;,color=&quot;#087F8C&quot;)
+axes[1].plot(xs,es,label=&quot;conditional noise mean&quot;,color=&quot;#C66B2B&quot;)
+axes[1].axhline(0,color=&quot;#153449&quot;,linewidth=.6)
+axes[1].set(xlabel=&quot;noisy observation x&quot;,ylabel=&quot;conditional expectation&quot;,title=&quot;Two possible clean points: smooth estimates&quot;)
+axes[1].legend(fontsize=9)
+fig.suptitle(&quot;Inside AI · Deep Learning Models · Part 08 | Actual numerical checks&quot;,color=&quot;#153449&quot;)
+fig.savefig(&quot;foundations-output.png&quot;,dpi=160)
+fig.savefig(&quot;foundations-output.svg&quot;)
+print(&quot;Saved foundations-output.png | no training or image benchmark&quot;)
+</code></pre>
+<p><strong>Actual output, 9 October 2026</strong></p>
+<pre><code class="language-text">Python 3.11.5 | NumPy 1.23.5 | CPU | seed 19
+t=100 | posterior mean=0.311983 | variance=0.024673
+mean parameterization error=0.00e+00
+numerical mean error=0.00e+00 | variance error=1.80e-09
+KL mean penalty=0.002882 | epsilon weight=0.018011
+analytic gradient=0.014409 | finite difference=0.014409
+gradient error=4.61e-13
+x=-0.5 | E[x0|x]=-0.804455 | E[epsilon|x]=+0.239273 | score=-0.398788
+x=+0.0 | E[x0|x]=+0.000000 | E[epsilon|x]=+0.000000 | score=-0.000000
+x=+0.5 | E[x0|x]=+0.804455 | E[epsilon|x]=-0.239273 | score=+0.398788
+Saved foundations-output.png | no training or image benchmark
+</code></pre>
+<p><img alt="Actual posterior density and conditional estimates" src="assets/part-08/foundations-output.png" /></p>
+<p><em>Actual numerical output. Left: normalized density product at timestep 100. Right: exact conditional estimates for the separate two point toy with A = 0.64. Neither panel is a generated image benchmark.</em></p>
+<p>The two mean formulas agree to floating point precision. Numerical integration gives a variance error around 1.8 × 10⁻⁹. The finite difference gradient matches the analytic gradient to about 4.6 × 10⁻¹³ in this run.</p>
+<p>At a noisy observation of +0.5, the toy's conditional clean mean is about +0.804. Its conditional noise mean is about −0.239. At zero, both means are zero by symmetry. These are exact estimates for the specified toy, not learned network outputs.</p>
+<p><strong>Limits and the next question</strong></p>
+<p>We checked one middle Gaussian term and a two point mixture. We didn't retrain the four cluster model, estimate a dataset likelihood, report image quality or prove convergence of a learned sampler. The assertions test the stated numeric identities, with ordinary floating point and finite integration error.</p>
+<p>The noise target now has a reason to exist. The next question is how to keep useful sample quality while taking fewer reverse steps. That needs a sampling argument of its own.</p>
+<p>The full trained example is in <a href="https://x.com/Skywalkerlyzv/article/2108206803809108066">Part 07 on X</a>, <a href="https://medium.com/@thesomilsinghofficial/how-a-diffusion-model-learns-to-turn-noise-into-four-clusters-4d3492034acd">Medium</a> and <a href="https://thesomilsingh.substack.com/p/how-a-diffusion-model-learns-to-turn">Substack</a>.</p>
+<p>Follow Inside AI for the next model pair. We'll keep the code, outputs and assumptions together.</p>

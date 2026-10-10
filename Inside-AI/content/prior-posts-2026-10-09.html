@@ -1,0 +1,13 @@
+<h1>A diffusion output can draw on different training examples for different reasons</h1>
+<p>Somil Singh · Inside AI</p>
+<p><strong>AI development · 9 October 2026</strong></p>
+<p>Which training images helped a diffusion model make a particular output? The answer can change depending on whether you're asking about shape, colour or style.</p>
+<p>CADT, a preprint submitted on 8 October, follows the model's internal responses through denoising. At each selected noisy state it compares a target condition with a matched reference condition. The noisy input stays fixed while the factor being examined changes.</p>
+<p>It collects the size and direction of those representation changes across stages. Then it compares the generated query's trajectory with a bank built from training examples, using the bank's covariance to adjust the comparison.</p>
+<p><img alt="Matched conditions at the same noisy state" src="assets/prior-posts-2026-10-09/cadt-concept.png" /></p>
+<p><em>Concept schematic. No plotted performance or generated samples.</em></p>
+<p>One controlled test trains on blue triangles, blue circles and red circles while holding out red triangles. Shape attribution and colour attribution can then be checked separately. The paper also evaluates CIFAR-100 and ArtBench. Its reported precision measures retrieval of candidates matching the target factor.</p>
+<p>That gives the attribution question a useful level of detail. An example can support the shape in an output without explaining its style.</p>
+<p>The mathematical removal result concerns a descriptor bank with the model fixed. It isn't the same operation as removing an image from training and retraining the model. The paper includes separate retraining experiments, but these results don't establish provenance for an arbitrary commercial generator.</p>
+<p>No independent reproduction was run here.</p>
+<p><a href="https://arxiv.org/abs/2610.11238">Paper and submission history</a> · <a href="https://arxiv.org/html/2610.11238v1">Full method and experiments</a></p><p>Previously published: <a href="https://x.com/Skywalkerlyzv/article/2108562992661225725">X Article</a> · <a href="https://www.linkedin.com/feed/update/urn:li:share:7514329469701017600?actorCompanyId=143953415">Inside AI company summary</a>.</p>

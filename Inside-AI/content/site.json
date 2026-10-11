@@ -351,6 +351,22 @@
       "topics": [
         "Ai2 budgets GPU time to make shared clusters easier to use"
       ]
+    },
+    {
+      "id": "2026-10-11",
+      "title": "Five AI notes: coding tools, agent behaviour and learning from examples",
+      "date": "11 October 2026",
+      "source_window": "8–11 October 2026, widened explicitly for a quiet weekend; four preprints submitted 8 October and listed 9 October plus a 10 October product update. These are new to this series, not all announced today.",
+      "source": "news-2026-10-11.html",
+      "approval": "approved",
+      "description": "Copilot controls, agent population theory, uncertainty reporting, PASS instruction selection and AAArena. Original sources and reported limits come with each note.",
+      "topics": [
+        "Copilot for JetBrains gives teams more control over models and tools",
+        "An agent population can change the risk even when each model stays fixed",
+        "An agent can notice conflicting evidence and still hide it in the answer",
+        "PASS allocates fine-tuning examples to concepts with weaker support",
+        "AAArena tests agents that improve game programs from replays"
+      ]
     }
   ]
 }

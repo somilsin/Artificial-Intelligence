@@ -1,0 +1,168 @@
+<h1>How DDIM takes fewer steps through the same noise prediction problem</h1>
+
+<p>What happens to the samples when 200 reverse evaluations become 20, 5 or just 1?</p>
+<p>Somil Singh · Inside AI</p>
+<p><strong>Deep Learning Models · Part 09</strong></p>
+<p>Part 08 gave the noise prediction a job: it determines the reverse mean. Now there's another choice to make. How often do we need to ask the predictor for a new answer?</p>
+<p>Let's hold that predictor fixed and change the sampling route. We'll use a four cluster toy where the best noise estimate can be calculated exactly. That lets us inspect the sampler without mixing in a network's training error.</p>
+<p><img alt="Full route and short DDIM route" src="assets/part-09/figure-1-hero.png" /></p>
+<p><em>Schematic. The shorter route uses coefficients calculated for the selected pair of times. It doesn't reuse an adjacent step coefficient for a larger jump.</em></p>
+<h3>1. The time tells us how noisy the point is</h3>
+<p>Our clean points sit around four centres: (−1, −1), (−1, 1), (1, −1) and (1, 1). Each coordinate has a within cluster standard deviation of 0.12.</p>
+<p>At time t, write the noisy point as:</p>
+<p><strong>xₜ = √Aₜ x₀ + √(1 − Aₜ) ε</strong></p>
+<p>Here Aₜ is the product of the one step α values up to t. It's the retained signal fraction. At the clean endpoint A₀ = 1. The code uses a 200 step linear beta schedule and gives A₂₀₀ ≈ 0.006122.</p>
+<p>This marginal description tells us how to make a training pair at any chosen time. It doesn't by itself force generation to visit every time.</p>
+<h3>2. Keep the predictor, choose the route</h3>
+<p>DDIM stands for Denoising Diffusion Implicit Models. Song, Meng and Ermon describe a family of sampling processes that can reuse a DDPM noise predictor. Their construction keeps the noisy marginals used by the training objective while changing the process between them. See <a href="https://arxiv.org/html/2010.02502v2">the original paper, sections 4.1 and 4.2</a>.</p>
+<p>The model still gets the current point and its actual time. If the route jumps from 200 to 190, the next evaluation uses 190. Passing the loop counter would ask the predictor the wrong question.</p>
+<p><img alt="Clean data, noisy marginal and predictor" src="assets/part-09/figure-2-representation.png" /></p>
+<p><em>Schematic. Aₜ is cumulative. Our runnable example uses the exact conditional noise mean for its specified mixture, replacing a learned predictor only for this toy.</em></p>
+<h3>3. The noise prediction objective stays familiar</h3>
+<p>The prediction task is the same squared error job:</p>
+<p><strong>E[‖ε − εθ(xₜ, t)‖²]</strong></p>
+<p>For a fixed noisy point and time, the best squared error answer is the conditional mean of the noise. It isn't necessarily the particular noise draw that produced the point.</p>
+<p>In this toy, each noisy component is Gaussian with variance vₜ = Aₜ × 0.0144 + 1 − Aₜ. The distances to its four noisy centres give posterior component weights. If m is their weighted clean centre, the exact noise mean is:</p>
+<p><strong>ε̂(x, t) = √(1 − Aₜ) × (x − √Aₜ m) / vₜ</strong></p>
+<p>We'll use that calculation for every route. No network is trained in this experiment.</p>
+<p><img alt="Training and sampling jobs" src="assets/part-09/figure-3-objective.png" /></p>
+<p><em>Schematic. This article changes the sampling job. A trained network would still need to learn useful noise predictions over its noise range.</em></p>
+<h3>4. Build the jump from its two endpoints</h3>
+<p>First convert the current noise estimate into a clean estimate:</p>
+<p><strong>x̂₀ = (xₜ − √(1 − Aₜ) ε̂) / √Aₜ</strong></p>
+<p>Then choose an earlier time s and combine three terms:</p>
+<p><strong>xₛ = √Aₛ x̂₀ + √(1 − Aₛ − σ²) ε̂ + σz</strong></p>
+<p>The fresh draw z is standard Gaussian. For the usual interpolation:</p>
+<p><strong>σ² = η² × (1 − Aₛ)/(1 − Aₜ) × (1 − Aₜ/Aₛ)</strong></p>
+<p>At η = 0, the fresh noise term disappears. The initial draw still varies across samples. Holding that draw, predictor and route fixed makes the sampler deterministic. It doesn't make all generated points equal or every route produce the same points.</p>
+<p>At s = 0, Aₛ = 1. Both noise coefficients vanish and the last step returns x̂₀. The code follows this endpoint directly. The <a href="https://github.com/ermongroup/ddim/blob/main/functions/denoising.py">authors' sampler implementation</a> uses the same clean estimate, variance and direction structure.</p>
+<p><img alt="Three pieces of the reverse jump" src="assets/part-09/figure-4-update.png" /></p>
+<p><em>Schematic of the generalized jump. The code checks its adjacent η = 1 mean against the DDPM posterior mean, using zero added noise for that identity check.</em></p>
+<h3>5. Training and generation take different routes</h3>
+<p>A learned version draws clean points, times and noise during training. It learns to predict the noise from those noisy pairs. Generation starts with a noise draw and repeatedly asks for a new prediction as the state changes.</p>
+<p>Our experiment skips learning because the distribution is specified. We compare 200, 50, 20, 10, 5, 2 and 1 evaluations of that same exact predictor. Every run starts with the same 4,096 noise draws. Every route ends at time zero.</p>
+<p><img alt="Training and sampling lanes" src="assets/part-09/figure-5-routes.png" /></p>
+<p><em>Schematic. Retained times are selected backwards. Predictions must be recalculated at the current state rather than cached from the first point.</em></p>
+<h3>6. Four visible clusters aren't the whole result</h3>
+<p>Nearest centre counts tell us whether a quadrant gets neglected. They miss how much spread remains around those centres.</p>
+<p>For this target, the expected squared distance to its generating centre is 2 × 0.0144 = 0.0288. Nearest centre assignment gives almost the same value because the clusters are well separated. A value below that isn't automatically better. It can mean the samples are too concentrated.</p>
+<p>The one call route produces points close to the middle. Quadrant counts still look balanced because tiny positive and negative coordinates get assigned to different centres. That count alone hides a serious distribution failure.</p>
+<p><strong>Keep these three ideas</strong></p>
+<ol>
+<li>The predictor's job and the sampler's route are separate choices. Keep the actual noise level attached to every evaluation.</li>
+<li>A DDIM jump uses both endpoint signal fractions. A shorter route needs the corresponding coefficients.</li>
+<li>Fewer calls can change spread even when every cluster gets a similar count. Measure the distribution you wanted.</li>
+</ol>
+<h3>7. Run the sampler comparison</h3>
+<p>Use Python with NumPy and Matplotlib: <code>python -m pip install numpy matplotlib</code>. Put the following three steps in one script and run it. Step 2 depends on Step 1 and Step 3 depends on both.</p>
+<p><strong>Step 1. Define the mixture and its exact noise predictor.</strong> The stable weights avoid underflow from large negative logits. Normal starting noise approximates the terminal noisy marginal; A₂₀₀ is small but not zero.</p>
+<pre><code class="language-python">import numpy as np
+import matplotlib
+matplotlib.use(&quot;Agg&quot;)
+import matplotlib.pyplot as plt
+import platform, time
+rng = np.random.default_rng(23)
+T = 200
+beta = np.linspace(0.0001, 0.05, T)
+A = np.r_[1.0, np.cumprod(1 - beta)]
+centres = np.array([[-1., -1.], [-1., 1.], [1., -1.], [1., 1.]])
+v0 = 0.12 ** 2
+def epsilon_exact(x, t):
+    a = A[t]
+    v = a * v0 + 1 - a
+    delta = x[:, None, :] - np.sqrt(a) * centres[None, :, :]
+    logits = -(delta ** 2).sum(axis=2) / (2 * v)
+    weights = np.exp(logits - logits.max(axis=1, keepdims=True))
+    weights /= weights.sum(axis=1, keepdims=True)
+    mean_centre = weights @ centres
+    return np.sqrt(1 - a) * (x - np.sqrt(a) * mean_centre) / v
+def real(n):
+    return centres[rng.integers(4, size=n)] + np.sqrt(v0) * rng.normal(size=(n, 2))
+initial = rng.normal(size=(4096, 2))
+reference = real(len(initial))
+print(f&quot;Python {platform.python_version()} | NumPy {np.__version__} | CPU | seed 23&quot;)
+print(f&quot;T={T} | terminal A={A[-1]:.6f} | samples={len(initial)} | no training&quot;)
+</code></pre>
+<p><strong>Step 2. Implement the jump and check two properties.</strong> An adjacent η = 1 update should match the DDPM mean. A fixed η = 0 run should repeat exactly. These checks verify implementation identities, not sample quality.</p>
+<pre><code class="language-python">def ddim_step(x, t, s, eta=0.0, noise=None):
+    assert 0 &lt;= s &lt; t &lt;= T and 0 &lt;= eta &lt;= 1
+    at, previous = A[t], A[s]
+    eps = epsilon_exact(x, t)
+    clean = (x - np.sqrt(1 - at) * eps) / np.sqrt(at)
+    variance = eta ** 2 * (1 - previous) / (1 - at) * (1 - at / previous)
+    direction2 = 1 - previous - variance
+    assert variance &gt;= -1e-12 and direction2 &gt;= -1e-12
+    result = np.sqrt(previous) * clean + np.sqrt(max(direction2, 0)) * eps
+    if variance &gt; 0:
+        assert noise is not None
+        result = result + np.sqrt(variance) * noise
+    return result
+def sample(calls):
+    assert 1 &lt;= calls &lt;= T
+    ts = np.rint(np.linspace(T, 1, calls)).astype(int)
+    assert len(np.unique(ts)) == calls
+    x = initial.copy()
+    for t, s in zip(ts, np.r_[ts[1:], 0]):
+        x = ddim_step(x, int(t), int(s))
+    return x
+# An adjacent eta=1 update must recover the DDPM posterior mean.
+t, s = 100, 99
+x = initial[:16]
+eps = epsilon_exact(x, t)
+alpha = A[t] / A[s]
+mean_ddpm = (x - (1 - alpha) * eps / np.sqrt(1 - A[t])) / np.sqrt(alpha)
+identity_error = np.max(np.abs(ddim_step(x, t, s, eta=1, noise=np.zeros_like(x)) - mean_ddpm))
+assert identity_error &lt; 1e-12
+assert np.array_equal(sample(20), sample(20))
+print(f&quot;adjacent eta=1 mean error={identity_error:.2e} | eta=0 repeat identical=True&quot;)
+</code></pre>
+<p><strong>Step 3. Compare routes and draw their actual outputs.</strong> Report centre distances alongside counts. Timings include the toy predictor and update, are single CPU runs and aren't a hardware benchmark.</p>
+<pre><code class="language-python">def diagnostics(x):
+    d2 = ((x[:, None, :] - centres[None, :, :]) ** 2).sum(axis=2)
+    assigned = d2.argmin(axis=1)
+    counts = np.bincount(assigned, minlength=4)
+    mse = d2.min(axis=1).mean()
+    return counts, mse
+counts, ref_mse = diagnostics(reference)
+print(f&quot;reference centre MSE={ref_mse:.6f} | expected near {2*v0:.4f}&quot;)
+samples = {}
+for calls in (200, 50, 20, 10, 5, 2, 1):
+    start = time.perf_counter()
+    samples[calls] = sample(calls)
+    elapsed = time.perf_counter() - start
+    counts, mse = diagnostics(samples[calls])
+    print(f&quot;calls={calls:3d} | centre MSE={mse:.6f} | counts={counts.tolist()} | seconds={elapsed:.3f}&quot;)
+fig, axes = plt.subplots(1, 4, figsize=(15, 4.3), constrained_layout=True)
+for ax, label, points in zip(axes, (&quot;Target draws&quot;, &quot;DDIM 200 calls&quot;, &quot;DDIM 20 calls&quot;, &quot;DDIM 1 call&quot;), (reference, samples[200], samples[20], samples[1])):
+    ax.scatter(points[:1000, 0], points[:1000, 1], s=3, alpha=.38, color=&quot;#087F8C&quot;)
+    ax.scatter(centres[:, 0], centres[:, 1], s=35, marker=&quot;x&quot;, color=&quot;#C66B2B&quot;)
+    ax.set(xlim=(-2, 2), ylim=(-2, 2), xlabel=&quot;x&quot;, ylabel=&quot;y&quot;, title=label)
+    ax.set_aspect(&quot;equal&quot;)
+fig.suptitle(&quot;Inside AI · Deep Learning Models · Part 09 | Actual CPU samples, exact noise predictor&quot;, color=&quot;#153449&quot;)
+fig.savefig(&quot;ddim-output.png&quot;, dpi=160)
+fig.savefig(&quot;ddim-output.svg&quot;)
+print(&quot;Saved ddim-output.png | toy sampler comparison, no image benchmark&quot;)
+</code></pre>
+<p><strong>Actual output, 10 October 2026</strong></p>
+<pre><code class="language-text">Python 3.11.5 | NumPy 1.23.5 | CPU | seed 23
+T=200 | terminal A=0.006122 | samples=4096 | no training
+adjacent eta=1 mean error=4.44e-16 | eta=0 repeat identical=True
+reference centre MSE=0.028815 | expected near 0.0288
+calls=200 | centre MSE=0.027681 | counts=[1028, 1021, 1000, 1047] | seconds=0.156
+calls= 50 | centre MSE=0.024686 | counts=[1028, 1021, 1000, 1047] | seconds=0.038
+calls= 20 | centre MSE=0.020822 | counts=[1028, 1021, 1000, 1047] | seconds=0.016
+calls= 10 | centre MSE=0.030669 | counts=[1028, 1021, 1000, 1047] | seconds=0.008
+calls=  5 | centre MSE=0.223984 | counts=[1028, 1021, 1000, 1047] | seconds=0.004
+calls=  2 | centre MSE=1.707935 | counts=[1028, 1021, 1000, 1047] | seconds=0.002
+calls=  1 | centre MSE=1.757858 | counts=[1028, 1021, 1000, 1047] | seconds=0.001
+Saved ddim-output.png | toy sampler comparison, no image benchmark
+</code></pre>
+<p><img alt="Actual target and DDIM sample comparison" src="assets/part-09/ddim-output.png" /></p>
+<p><em>Actual CPU output. Each panel shows the first 1,000 of 4,096 points. Crosses mark the prescribed centres. All DDIM panels use the same initial draws and exact conditional noise predictor with η = 0.</em></p>
+<p>The 200 call route gives a centre MSE of 0.027681, close to the target draw's 0.028815. The 20 call route gives 0.020822, which is smaller because its spread is too narrow. With 5 calls the value jumps to 0.223984. With one call it's 1.757858.</p>
+<p>All routes have the same quadrant counts here. The symmetric toy and fixed initial draws preserve those assignments while point locations change. That does not imply stable semantic content for other data.</p>
+<p><strong>Limits and the next question</strong></p>
+<p>This is an original sampler experiment on an analytic two dimensional mixture. We haven't trained a new network, rerun Part 07's learned predictor, measured image quality or tested another seed. Starting with normal noise rather than the exact finite time marginal adds a small initial approximation. The centre statistic isn't a general image quality metric. Smaller isn't inherently better.</p>
+<p>The sampler can use fewer evaluations, but the route still needs checking. Part 10 will examine why the noisy marginals let us change that route and what the deterministic update approximates.</p>
+<p>For the reverse mean argument, see <a href="https://x.com/Skywalkerlyzv/article/2108560064126841315">Part 08 on X</a>, <a href="https://medium.com/@thesomilsinghofficial/why-predicting-noise-gives-a-diffusion-model-a-reverse-step-87b84ff625b0">Medium</a> or <a href="https://thesomilsingh.substack.com/p/why-predicting-noise-gives-a-diffusion">Substack</a>.</p>
+<p>Follow Inside AI for the companion. We'll keep the assumptions beside the code and results.</p>

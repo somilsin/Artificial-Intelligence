@@ -139,6 +139,23 @@
       "source": "part-08.html",
       "page": "part-08-ddpm-foundations.html",
       "date": "9 October 2026"
+    },
+    {
+      "part": "09",
+      "type": "Overview",
+      "model": "DDIM",
+      "title": "How DDIM takes fewer steps through the same noise prediction problem",
+      "description": "Keep the noise predictor fixed and compare 200, 20 and fewer sampling calls. Full code, actual output and six figures show why balanced cluster counts can hide a change in spread.",
+      "image": "assets/part-09/figure-1-hero.png",
+      "image_alt": "A full sampling route and a shorter route with coefficients for its selected time pairs",
+      "medium": "https://medium.com/@thesomilsinghofficial/how-ddim-takes-fewer-steps-through-the-same-noise-prediction-problem-0ed236bc649c",
+      "substack": "https://thesomilsingh.substack.com/p/how-ddim-takes-fewer-steps-through",
+      "x": "https://x.com/Skywalkerlyzv/article/2108911108371501112",
+      "company": "https://www.linkedin.com/pulse/how-ddim-takes-fewer-steps-through-same-noise-prediction-kbhec/",
+      "published": true,
+      "source": "part-09.html",
+      "page": "part-09-ddim-overview.html",
+      "date": "10 October 2026"
     }
   ],
   "news": [
@@ -321,6 +338,18 @@
         "GeoReform changes how a geometry diagram becomes text",
         "A safety score can hide different refusal behaviours",
         "HRIL learns signals that only appear when modalities meet"
+      ]
+    },
+    {
+      "id": "2026-10-10-prior-posts",
+      "title": "Previously published AI note: GPU time budgets",
+      "date": "10 October 2026 · archive catch-up",
+      "source_window": "Ai2 source published 9 October; note published 10 October. Website archive added 11 October 2026.",
+      "source": "prior-posts-2026-10-10.html",
+      "approval": "approved",
+      "description": "Ai2 gives teams budgets of GPU time and lets resumable jobs share its clusters. Reported deployment results and the cost of preemption are kept together.",
+      "topics": [
+        "Ai2 budgets GPU time to make shared clusters easier to use"
       ]
     }
   ]

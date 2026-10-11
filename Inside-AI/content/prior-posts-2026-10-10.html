@@ -1,0 +1,10 @@
+<h1>Ai2 budgets GPU time to make shared clusters easier to use</h1>
+<figure><img src="assets/prior-posts-2026-10-10/ai2-scheduling.png" alt="Ai2 GPU time budgets and resumable jobs"><figcaption>Inside AI schematic accompanying the published note.</figcaption></figure>
+<p>Ai2 changed how its researchers get GPU time. Its 9 October writeup explains why.</p>
+<p>Everyone setting their job to HIGH priority had made the old priority levels useless. Some researchers kept idle jobs running so they could debug without another long wait.</p>
+<p>The new system gives teams budgets of GPU time. A fair share scheduler tracks recent use over a seven day window. Jobs declare the minimum runtime they need to make progress. After that protected window, the scheduler can preempt them and requeue resumable work.</p>
+<p>Ai2 reports that teams received 98% of the GPU hours they were owed during a 30 day test. Cluster occupancy stayed at 98%. Debug jobs&#x27; p90 queue wait fell from two hours to 30 seconds. Those are the reported deployment results; the simulation used different workloads and numbers.</p>
+<p>There was a cost too. Preempting interactive sessions meant people lost state they had to rebuild by hand. Restorable sessions are planned work.</p>
+<p>Checkpointing matters a lot when fair access depends on being able to resume.</p>
+<p>Source: <a href="https://huggingface.co/blog/allenai/impactful-scheduling">https://huggingface.co/blog/allenai/impactful-scheduling</a>.</p>
+<p>Previously published: <a href="https://x.com/Skywalkerlyzv/article/2108915317183598862">X Article</a> · <a href="https://www.linkedin.com/feed/update/urn:li:share:7514681481152307200/?actorCompanyId=143953415">Inside AI company summary</a>.</p>

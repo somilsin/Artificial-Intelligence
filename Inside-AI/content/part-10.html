@@ -1,0 +1,183 @@
+<h1>Why DDIM can change the sampling path without changing the noise task</h1>
+<nav class="reading" aria-label="Published Part 10 reading links"><a href="https://medium.com/@thesomilsinghofficial/why-ddim-can-change-the-sampling-path-without-changing-the-noise-task-fb04e7d2c260">medium</a><a href="https://thesomilsingh.substack.com/p/why-ddim-can-change-the-sampling">substack</a><a href="https://x.com/Skywalkerlyzv/status/2109325708141228260">x</a><a href="https://www.linkedin.com/pulse/why-ddim-can-change-sampling-path-without-changing-w04lc">company</a></nav>
+
+<p>How can the same noise predictor follow a different path back to data?</p>
+<p>Somil Singh · Inside AI</p>
+<p><strong>Deep Learning Models · Part 10</strong></p>
+<p>Part 09 kept the predictor fixed and tried shorter DDIM schedules. Four clusters still appeared at 20 steps. Their spread changed though.</p>
+<p>Lemme unpack the update behind that result. We can check its variance budget, recover the adjacent DDPM mean and measure what happens when the predicted noise is slightly wrong. No new training run needed for this one.</p>
+<p><img alt="Two routes use the same noise task" src="https://miro.medium.com/v2/resize:fit:700/1*W9Yb7MggM3wHGV-5aUMGJA.png" /></p>
+<p><em>Schematic: the training pair stays at one noise level while the sampler chooses how to move between levels.</em></p>
+<h3>1. A noisy level is a distribution, not a whole trajectory</h3>
+<p>Start with the familiar corruption equation:</p>
+<p><strong>x_t = sqrt(A_t) x_0 + sqrt(1 - A_t) epsilon.</strong></p>
+<p>Here A_t is the cumulative product of the per-step signal factors. A_0 = 1. Later noisy times have smaller A_t. Epsilon is standard Gaussian noise. These are the DDPM forward marginals. <a href="https://arxiv.org/html/2006.11239v2">DDPM paper, equations 4 and 14</a>.</p>
+<p>Condition on a particular clean value x_0. Then the mean is sqrt(A_t) x_0 and the variance is 1 - A_t. That's all a single-time marginal tells us. It doesn't specify how noise at two times is correlated.</p>
+<p>Our scalar check takes x_0 = 1.2 and A_t = 0.25. Its noisy mean is 0.6 and its variance is 0.75. There are many ways to connect that distribution to an earlier level with A_s = 0.64.</p>
+<h3>2. The variance has a budget</h3>
+<p>DDIM constructs alternative joint paths while retaining those single-time marginals. Its reverse update replaces the unknown clean value with a prediction. <a href="https://arxiv.org/html/2010.02502v4">DDIM paper, equations 7, 9 and 12</a>.</p>
+<p>Use t for the current noisy time and s for an earlier time. Write a = A_t and b = A_s, so 0 &lt; a &lt; b &lt;= 1.</p>
+<p>The predicted clean value is:</p>
+<p><strong>x0_hat = (x_t - sqrt(1 - a) epsilon_hat) / sqrt(a).</strong></p>
+<p>Then move to s:</p>
+<p><strong>x_s = sqrt(b) x0_hat + sqrt(1 - b - sigma²) epsilon_hat + sigma z.</strong></p>
+<p>The signal term gets sqrt(b). The old residual gets a direction coefficient. Fresh independent Gaussian noise z gets sigma.</p>
+<p>For this diagnostic only, suppose we know x_0 and the actual epsilon that corrupted it. The clean estimate is exact. The two noise terms have total variance (1 - b - sigma²) + sigma² = 1 - b. Same budget for every admissible sigma. Their dependence on the old state changes.</p>
+<p><strong>Knowing the corruption noise is stronger than having an optimal predictor.</strong> At generation time the network sees x_t and t. It doesn't see the hidden x_0 or the individual noise draw.</p>
+<p><img alt="Same marginals with different dependence" src="https://miro.medium.com/v2/resize:fit:700/1*NXON9eV4Vx2jxYm5PZjfsw.png" /></p>
+<p><em>Schematic: three eta choices share a target conditional mean of 0.96 and variance of 0.36. The experiment below checks sampled values.</em></p>
+<h3>3. The objective still asks for predicted noise</h3>
+<p>The usual simplified loss samples one clean example, one time and one corruption noise:</p>
+<p><strong>L = E[w_t ||epsilon - f_theta(x_t, t)||²].</strong></p>
+<p>For an unrestricted function, its best prediction is the conditional mean E[epsilon | x_t, t]. Expand the square around that mean: the expected error becomes the unavoidable conditional variance plus the squared distance from the mean. The cross term vanishes. A positive weight at that time doesn't change this pointwise minimizer.</p>
+<p>A finite network shares parameters across times. It can trade accuracy at one level for accuracy at another. Different loss weights can therefore change its fitted solution. The DDIM paper's weighted-objective argument includes a separate-parameters condition; don't turn it into a promise that every finite shared network has identical optima.</p>
+<p>The shared marginal noise task makes a fitted DDPM predictor usable in the DDIM sampler. It doesn't certify perfect samples on every schedule.</p>
+<p><img alt="Noise objective and term roles" src="https://miro.medium.com/v2/resize:fit:700/1*CJ9Ac-4WZ99CD6f7tMzmDg.png" /></p>
+<p><em>Schematic: the target noise is available during corruption. The clean value is hidden from the predictor.</em></p>
+<h3>4. Eta chooses the fresh noise and changes the coefficients</h3>
+<p>Use the generalized variance from the authors' implementation:</p>
+<p><strong>sigma² = eta² (1 - b)/(1 - a) (1 - a/b).</strong></p>
+<p>Eta = 0 removes fresh step noise. Eta = 1 with adjacent original times recovers the DDPM posterior variance. <a href="https://github.com/ermongroup/ddim/blob/main/functions/denoising.py">Authors' sampler code</a>.</p>
+<p>Let's put numbers into the update. Take x_t = 0.9 and epsilon_hat = 0.6 with a = 0.25 and b = 0.64. The clean estimate is about 0.760770. At eta = 0 the direction coefficient is 0.6. At eta = 1 some of that noise budget moves into sigma z. The output block gives both values with z fixed to zero.</p>
+<p>Now perturb only epsilon_hat by delta while holding x_t, the times, eta and z fixed. Substitution gives:</p>
+<p><strong>Delta x_s = [sqrt(1 - b - sigma²) - sqrt(b/a) sqrt(1 - a)] delta.</strong></p>
+<p>The coefficient measures local sensitivity to a prediction error. Our central finite difference checks it against the implemented update. Later steps will see a changed state and make changed predictions too, so this one coefficient isn't a full trajectory error bound.</p>
+<p><img alt="DDIM coefficient and sensitivity check" src="https://miro.medium.com/v2/resize:fit:700/1*F64rLcqkkNpt7NJTTRTvtQ.png" /></p>
+<p><em>Schematic: the numeric inputs are fixed. The runnable check reports the resulting output and derivative.</em></p>
+<h3>5. Deterministic steps still start from random noise</h3>
+<p>At eta = 0 a fixed predictor, fixed schedule and fixed initial state produce a fixed output. The initial noise is still random. That's where the generated distribution comes from.</p>
+<p>Training chooses noisy levels from the original schedule. Generation can choose a subset of those levels and compute the correct a and b for each jump. Skipping a level doesn't mean applying an adjacent-step coefficient ten times further away.</p>
+<p>The last jump uses b = A_0 = 1. Both residual coefficients vanish and the update returns the predicted clean value. Don't evaluate the predictor at the clean endpoint; evaluate it at the current noisy time then perform that final jump.</p>
+<p><img alt="Training and sampling routes" src="https://miro.medium.com/v2/resize:fit:700/1*I_0sBqL2i4OvpiH-bek6RA.png" /></p>
+<p><em>Schematic: this lesson checks the algebra with an analytic toy predictor. It doesn't train an image model.</em></p>
+<h3>6. What these checks can and can't catch</h3>
+<p>A negative square-root argument often points to reversed time ordering, the wrong cumulative coefficient or an invalid variance. Check those before clipping. The code allows tiny roundoff error only after asserting the variance budget.</p>
+<p>The known-noise marginal check verifies a conditional construction. Generation uses a predicted conditional mean instead. Those are different tests.</p>
+<p>An adjacent eta = 1 identity checks the algebra against a DDPM posterior mean with zero fresh noise. It doesn't prove a skipped eta = 1 schedule reproduces all original DDPM samples.</p>
+<p>Finally, the four-Gaussian experiment reuses the analytic predictor from Part 09. It isolates finite schedule behaviour. Cluster counts and distance to centres are diagnostics here. Lower distance alone can mean the clusters have become too narrow (the target within-cluster mean squared radius is about 0.0288).</p>
+<p><strong>Keep these three ideas</strong></p>
+<ol>
+<li>A single-time noise distribution leaves room for different correlations between times.</li>
+<li>The DDIM update splits a fixed variance budget between the reused residual and fresh noise.</li>
+<li>A deterministic schedule can be repeatable and still change the output when its time grid changes.</li>
+</ol>
+<h3>7. Run the three checks</h3>
+<p>Use Python with NumPy and Matplotlib. Install those packages if needed with <code>python -m pip install numpy matplotlib</code>. Run the three blocks in order in one script or notebook. The last block writes the measured plot to the current directory.</p>
+<p><strong>Step 1. Check conditional marginals.</strong> Here we supply the actual corruption noise and known clean value. Eta changes their coupling while the target mean and variance stay fixed.</p>
+<pre><code class="language-python">import numpy as np
+import matplotlib
+matplotlib.use(&quot;Agg&quot;)
+import matplotlib.pyplot as plt
+import platform
+rng = np.random.default_rng(31)
+def coefficients(a, b, eta):
+    assert 0 &lt; a &lt; b &lt;= 1 and 0 &lt;= eta &lt;= 1
+    variance = eta**2 * (1-b)/(1-a) * (1-a/b)
+    direction2 = 1-b-variance
+    assert direction2 &gt;= -1e-12
+    return np.sqrt(max(variance, 0)), np.sqrt(max(direction2, 0))
+def update(x, eps, a, b, eta=0, z=0):
+    sigma, direction = coefficients(a, b, eta)
+    clean = (x-np.sqrt(1-a)*eps)/np.sqrt(a)
+    return np.sqrt(b)*clean + direction*eps + sigma*z
+a, b, x0 = 0.25, 0.64, 1.2
+n = 100000
+eps, z = rng.normal(size=n), rng.normal(size=n)
+xt = np.sqrt(a)*x0 + np.sqrt(1-a)*eps
+print(f&quot;Python {platform.python_version()} | NumPy {np.__version__} | CPU | seed 31&quot;)
+print(f&quot;known x0={x0} | conditional draws={n} | no training&quot;)
+marginals = []
+for eta in (0, 0.5, 1):
+    xs = update(xt, eps, a, b, eta, z)
+    sigma, direction = coefficients(a, b, eta)
+    exact_var = direction**2 + sigma**2
+    assert abs(exact_var-(1-b)) &lt; 1e-12
+    marginals.append((eta, xs))
+    print(f&quot;eta={eta:.1f} | mean={xs.mean():.6f} | variance={xs.var():.6f}&quot;)
+print(f&quot;target mean={np.sqrt(b)*x0:.6f} | variance={1-b:.6f}&quot;)
+</code></pre>
+<p><strong>Step 2. Check one-step sensitivity and the adjacent DDPM identity.</strong> The finite difference holds the input state fixed. The DDPM comparison uses zero fresh noise so the means can be compared directly.</p>
+<pre><code class="language-python"># Hold x, time, eta and z fixed. Perturb only the predicted noise.
+x, e, h = 0.9, 0.6, 1e-6
+clean = (x-np.sqrt(1-a)*e)/np.sqrt(a)
+for eta in (0, 1):
+    sigma, direction = coefficients(a, b, eta)
+    gain = direction-np.sqrt(b/a)*np.sqrt(1-a)
+    fd = (update(x, e+h, a, b, eta)-update(x, e-h, a, b, eta))/(2*h)
+    assert abs(fd-gain) &lt; 1e-8
+    print(f&quot;eta={eta} | clean={clean:.6f} | next={update(x,e,a,b,eta):.6f} | gain={gain:.6f}&quot;)
+T = 200
+beta = np.linspace(0.0001, 0.05, T)
+A = np.r_[1., np.cumprod(1-beta)]
+t, s = 100, 99
+alpha = A[t]/A[s]
+ddpm_mean = (xt-(1-alpha)*eps/np.sqrt(1-A[t]))/np.sqrt(alpha)
+error = np.max(np.abs(update(xt,eps,A[t],A[s],eta=1)-ddpm_mean))
+assert error &lt; 1e-12
+print(f&quot;adjacent eta=1 DDPM mean max error={error:.2e}&quot;)
+</code></pre>
+<p><strong>Step 3. Compare finite deterministic schedules.</strong> This predictor is the exact conditional mean for the specified mixture. It isn't an oracle for each example's hidden noise. All schedules start from the same 4096 vectors.</p>
+<pre><code class="language-python"># The exact conditional-mean predictor for a four-Gaussian toy.
+centres = np.array([[-1.,-1.],[-1.,1.],[1.,-1.],[1.,1.]])
+v0 = 0.12**2
+initial = rng.normal(size=(4096,2))
+def predictor(x, t):
+    a = A[t]
+    v = a*v0 + 1-a
+    delta = x[:,None,:]-np.sqrt(a)*centres[None,:,:]
+    logits = -(delta**2).sum(axis=2)/(2*v)
+    w = np.exp(logits-logits.max(axis=1,keepdims=True))
+    w /= w.sum(axis=1,keepdims=True)
+    return np.sqrt(1-a)*(x-np.sqrt(a)*(w@centres))/v
+def sample(calls):
+    times = np.rint(np.linspace(T,1,calls)).astype(int)
+    assert len(np.unique(times)) == calls
+    x = initial.copy()
+    for t,s in zip(times,np.r_[times[1:],0]):
+        x = update(x,predictor(x,int(t)),A[t],A[s])
+    return x
+results = {k:sample(k) for k in (200,20,5)}
+assert np.array_equal(sample(20),sample(20))
+print(&quot;same initial noise + same eta=0 schedule: identical=True&quot;)
+print(f&quot;terminal A={A[-1]:.6f} | samples={len(initial)}&quot;)
+for calls,x in results.items():
+    d2 = ((x[:,None,:]-centres[None,:,:])**2).sum(axis=2)
+    counts = np.bincount(d2.argmin(axis=1),minlength=4)
+    print(f&quot;calls={calls:3} | centre MSE={d2.min(axis=1).mean():.6f} | counts={counts.tolist()}&quot;)
+print(f&quot;200 vs 20 paired max difference={np.abs(results[200]-results[20]).max():.6f}&quot;)
+fig, axes = plt.subplots(1,3,figsize=(12,3.9),sharex=True,sharey=True)
+for ax,(calls,x) in zip(axes,results.items()):
+    ax.scatter(x[:,0],x[:,1],s=2,alpha=.35,c=&quot;#087F8C&quot;)
+    ax.scatter(centres[:,0],centres[:,1],marker=&quot;x&quot;,c=&quot;#C66B2B&quot;,s=60)
+    ax.set(title=f&quot;{calls} evaluations&quot;,xlabel=&quot;x coordinate&quot;,xlim=(-2.4,2.4),ylim=(-2.4,2.4))
+    ax.set_aspect(&quot;equal&quot;)
+axes[0].set_ylabel(&quot;y coordinate&quot;)
+fig.suptitle(&quot;Inside AI · Deep Learning Models · Part 10\nSame initial noise, same predictor, different finite schedules&quot;)
+fig.tight_layout()
+fig.savefig(&quot;ddim-foundations-output.png&quot;,dpi=180)
+print(&quot;Saved ddim-foundations-output.png | measured toy, no image benchmark&quot;)
+</code></pre>
+<p><strong>Actual output, 11 October 2026.</strong> CPU run in this workspace. No neural training. The empirical moments fluctuate with the seed and sample count; the algebraic assertions use stated tolerances.</p>
+<pre><code class="language-text">Python 3.11.5 | NumPy 1.23.5 | CPU | seed 31
+known x0=1.2 | conditional draws=100000 | no training
+eta=0.0 | mean=0.957714 | variance=0.361039
+eta=0.5 | mean=0.956966 | variance=0.361523
+eta=1.0 | mean=0.957024 | variance=0.361133
+target mean=0.960000 | variance=0.360000
+eta=0 | clean=0.760770 | next=0.968616 | gain=-0.785641
+eta=1 | clean=0.760770 | next=0.764500 | gain=-1.125833
+adjacent eta=1 DDPM mean max error=8.88e-16
+same initial noise + same eta=0 schedule: identical=True
+terminal A=0.006122 | samples=4096
+calls=200 | centre MSE=0.027672 | counts=[1072, 1031, 999, 994]
+calls= 20 | centre MSE=0.020672 | counts=[1072, 1031, 999, 994]
+calls=  5 | centre MSE=0.229895 | counts=[1072, 1031, 999, 994]
+200 vs 20 paired max difference=0.446624
+Saved ddim-foundations-output.png | measured toy, no image benchmark
+</code></pre>
+<p><img alt="Measured deterministic schedule outputs" src="https://miro.medium.com/v2/resize:fit:700/1*RhSLZKrCePhDgFUvt014xw.png" /></p>
+<p><em>Measured output from Step 3: same initial noise and analytic predictor, 200, 20 and 5 evaluations. Orange crosses mark the four mixture centres.</em></p>
+<p>The fixed 20-step run repeats exactly here. Its output differs from the 200-step run. The conditional marginal checks stay close to their target moments and the two algebraic checks pass their tolerances. These results cover this implementation and toy distribution. They aren't image-quality scores, a speed benchmark or proof of exact finite-step sampling. The terminal mixture is only approximately standard Gaussian because A_T is small but nonzero.</p>
+<p>For the sampler comparison that led here, read <a href="https://x.com/Skywalkerlyzv/article/2108911108371501112">Part 09 on X</a>, <a href="https://medium.com/@thesomilsinghofficial/how-ddim-takes-fewer-steps-through-the-same-noise-prediction-problem-0ed236bc649c">Medium</a> or <a href="https://thesomilsingh.substack.com/p/how-ddim-takes-fewer-steps-through">Substack</a>.</p>
+<p>Next up: what changes when generation is learned as a velocity field?</p>
+<p>Follow Inside AI for the next model pair. Full equations, runnable checks and the bits that break.</p>

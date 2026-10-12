@@ -156,6 +156,23 @@
       "source": "part-09.html",
       "page": "part-09-ddim-overview.html",
       "date": "10 October 2026"
+    },
+    {
+      "part": "10",
+      "type": "Foundations",
+      "model": "DDIM",
+      "title": "Why DDIM can change the sampling path without changing the noise task",
+      "description": "Check the DDIM variance budget, noise-prediction objective and one-step sensitivity. The full derivation, three runnable checks and six figures retain the recorded toy results and their limits.",
+      "image": "https://miro.medium.com/v2/resize:fit:700/1*W9Yb7MggM3wHGV-5aUMGJA.png",
+      "image_alt": "Two sampling routes share the same marginal noise task",
+      "medium": "https://medium.com/@thesomilsinghofficial/why-ddim-can-change-the-sampling-path-without-changing-the-noise-task-fb04e7d2c260",
+      "substack": "https://thesomilsingh.substack.com/p/why-ddim-can-change-the-sampling",
+      "x": "https://x.com/Skywalkerlyzv/status/2109325708141228260",
+      "company": "https://www.linkedin.com/pulse/why-ddim-can-change-sampling-path-without-changing-w04lc",
+      "published": true,
+      "source": "part-10.html",
+      "page": "part-10-ddim-foundations.html",
+      "date": "11 October 2026 · website archive added 12 October 2026"
     }
   ],
   "news": [

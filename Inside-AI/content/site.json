@@ -173,6 +173,21 @@
       "source": "part-10.html",
       "page": "part-10-ddim-foundations.html",
       "date": "11 October 2026 · website archive added 12 October 2026"
+    },
+    {
+      "part": "11",
+      "type": "Overview",
+      "model": "Normalizing flows",
+      "title": "Normalizing flows: bend a distribution without losing the way back",
+      "description": "Fit a tiny reversible flow on CPU. Full code, actual output and six figures connect the density calculation to the route back.",
+      "image": "https://substackcdn.com/image/fetch/$s_!1kCB!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Ffd64c390-15ad-46f4-9080-b2b0aa35286f_2340x1260.png",
+      "image_alt": "A Gaussian point cloud and its reversible curved transformation",
+      "medium": "https://medium.com/@thesomilsinghofficial/normalizing-flows-bend-a-distribution-without-losing-the-way-back-7fa69ccacd6b",
+      "substack": "https://thesomilsingh.substack.com/p/normalizing-flows-bend-a-distribution",
+      "published": true,
+      "source": "part-11.html",
+      "page": "part-11-normalizing-flows.html",
+      "date": "12 October 2026"
     }
   ],
   "news": [
@@ -384,6 +399,20 @@
         "PASS allocates fine-tuning examples to concepts with weaker support",
         "AAArena tests agents that improve game programs from replays"
       ]
+    },
+    {
+      "id": "2026-10-12",
+      "date": "12 October 2026",
+      "title": "AI routes and inspectable results",
+      "description": "Research and AI work, with original sources and corresponding X posts.",
+      "topics": [
+        "Finding a route through Wikipedia",
+        "Include the setup with the result",
+        "Diagrams you can inspect and edit"
+      ],
+      "source": "news-2026-10-12.html",
+      "approval": "approved",
+      "reading_label": "Read the sources and posts ↗"
     }
   ]
 }

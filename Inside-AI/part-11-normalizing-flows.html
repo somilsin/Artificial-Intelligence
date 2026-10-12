@@ -1,0 +1,228 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Normalizing flows: bend a distribution without losing the way back | Inside AI</title><meta name="description" content="Fit a tiny reversible flow on CPU. Full code, actual output and six figures connect the density calculation to the route back.">
+<link rel="canonical" href="https://medium.com/@thesomilsinghofficial/normalizing-flows-bend-a-distribution-without-losing-the-way-back-7fa69ccacd6b"><meta name="theme-color" content="#0E0C09">
+<meta property="og:title" content="Normalizing flows: bend a distribution without losing the way back | Inside AI"><meta property="og:description" content="Fit a tiny reversible flow on CPU. Full code, actual output and six figures connect the density calculation to the route back.">
+<meta property="og:type" content="website"><meta property="og:url" content="https://medium.com/@thesomilsinghofficial/normalizing-flows-bend-a-distribution-without-losing-the-way-back-7fa69ccacd6b">
+<meta property="og:image" content="https://somilsin.github.io/Artificial-Intelligence/Inside-AI/assets/linkedin-banner.png">
+<link rel="icon" href="assets/inside-ai-logo.png"><link rel="stylesheet" href="styles.css"></head><body><main class="reader"><a class="back label" href="index.html#library">← Back to the library</a><p class="article-date">12 October 2026 · Somil Singh</p><h1>Normalizing flows: bend a distribution without losing the way back</h1>
+<p>Can we turn a round cloud into a curve and still know the density of every point?</p>
+<p>Somil Singh · Inside AI</p>
+<p><strong>Deep Learning Models · Part 11</strong></p>
+<p>Imagine a plot where the points gather around a U. A single Gaussian misses the bend. We could fit a generator that draws a similar curve. Here we're going to ask for something extra: a route back to the starting point and a density calculation that survives the bend.</p>
+<p>Lemme make that concrete. By the end, you'll have a small fitted flow you can run on CPU, with a check that catches the wrong Jacobian sign. That sign can quietly break the whole density calculation.</p>
+<p><img alt="A Gaussian point cloud and its reversible curved transformation" src="https://substackcdn.com/image/fetch/$s_!1kCB!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Ffd64c390-15ad-46f4-9080-b2b0aa35286f_2340x1260.png" /></p>
+<p><em>Figure 1. Concept illustration using a known two dimensional map. This is separate from the fitted experiment below.</em></p>
+<h2>1. Representation: keep a reversible address for every point</h2>
+<p>Let z be a point drawn from a simple base distribution pZ. We'll use two independent standard normal coordinates. Let x be a point in the curved data space.</p>
+<p>The generator g maps z to x. Its inverse f maps x back to z:</p>
+<p><strong>x = g(z), z = f(x), f = g⁻¹.</strong></p>
+<p>Both vectors have two coordinates. An ordinary bijective flow doesn't squeeze a large input into a smaller bottleneck. Each x has exactly one matching z under the model. A chain of these reversible transformations is a normalizing flow. <a href="https://arxiv.org/html/1912.02762v2">Normalizing flows review</a>.</p>
+<p>That gives us a useful representation for density estimation. The model can move complicated data toward a distribution we already know how to score. Whether the learned representation actually resembles that base is something to check on held out data.</p>
+<p>Flows also appear inside approximate posterior models. Rezende and Mohamed used sequences of invertible transformations to make variational distributions more flexible. Today's runnable check uses a flow directly as a data density model. <a href="https://arxiv.org/abs/1505.05770">Original variational flows paper</a>.</p>
+<h2>2. Mechanism: let one coordinate steer the other</h2>
+<p>For one affine coupling layer, keep the first coordinate and transform the second:</p>
+<p><strong>x1 = z1</strong></p>
+<p><strong>x2 = z2 exp(s(z1)) + t(z1).</strong></p>
+<p>s controls log scale. t controls translation. The functions read z1, which passes through unchanged. So the inverse can calculate those same values from x1:</p>
+<p><strong>z1 = x1</strong></p>
+<p><strong>z2 = (x2 − t(x1)) exp(−s(x1)).</strong></p>
+<p>The positive scale exp(s) makes the second coordinate's affine operation invertible for finite s. We don't need to invert the conditioner functions themselves. In neural flows, those functions can be neural networks. The outer coupling structure is what preserves the inverse. <a href="https://www.tensorflow.org/probability/api_docs/python/tfp/bijectors/RealNVP">TensorFlow Probability's RealNVP definition</a>.</p>
+<p><img alt="Affine coupling diagram with one coordinate conditioning scale and translation" src="https://substackcdn.com/image/fetch/$s_!F-1x!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F8e1a8e9d-7343-4a01-b06d-8bae66f856fe_2340x1260.png" /></p>
+<p><em>Figure 2. Schematic of one coupling layer. The preserved coordinate supplies the information needed to reverse the other coordinate.</em></p>
+<p>One layer leaves part of the input unchanged. Stacking layers with alternating splits lets both parts change. Real NVP uses this idea to make flexible transformations with tractable inverses and determinants. <a href="https://arxiv.org/html/1605.08803v3">Real NVP, sections 3.2 to 3.5</a>.</p>
+<h2>3. Objective: count the local stretch</h2>
+<p>Here f points from data to base. The density equation is:</p>
+<p><strong>log pX(x) = log pZ(f(x)) + log |det Jf(x)|.</strong></p>
+<p>Jf is the Jacobian matrix of f with respect to x. Its determinant describes the local change in volume. The base density tells us how much density sits at the encoded location. The determinant converts that density back into data coordinates. <a href="https://arxiv.org/html/1605.08803v3">Real NVP, change of variables</a>.</p>
+<p>For training, minimize the mean negative log likelihood:</p>
+<p><strong>L = −(1/n) Σ log pX(xᵢ).</strong></p>
+<p>So the plus sign inside log density becomes a subtraction inside NLL. Always write down the direction before copying a formula. A library may name its base to data operation <code>forward</code>, while this article calls the data to base map f.</p>
+<p><img alt="Density objective with base density and local volume correction" src="https://substackcdn.com/image/fetch/$s_!a8Mm!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F54e9633d-c9df-4d80-bf10-0839bf96382d_2340x1260.png" /></p>
+<p><em>Figure 3. The determinant corrects for local volume. Natural logarithms give NLL in nats per point.</em></p>
+<p>The word exact describes evaluation of this specified model density. It doesn't say the fitted model has recovered the true distribution. Continuous density isn't a probability assigned to one exact point either. It can exceed one because probability comes from integrating density over a region.</p>
+<h2>4. The trick: the complicated derivative misses the diagonal</h2>
+<p>Use a deliberately simple map for a hand calculation:</p>
+<p><strong>g(z1, z2) = (z1, 2z2 + z1²).</strong></p>
+<p>Its Jacobian rows are (1, 0) and (2z1, 2). The matrix is triangular, so its determinant is 2. The derivative of z1² appears off the diagonal. The shift bends the cloud without affecting this determinant.</p>
+<p>The small local patch doubles in area. The density halves.</p>
+<p>At z = (1, 0.5), g gives x = (1, 2). For a standard two dimensional Gaussian, pZ(z) is about 0.08519. Then pX(x) is about 0.04259 because |det Jf| = 1/2. These numbers are an authored hand calculation, not a trained-model result.</p>
+<p><img alt="Numerical triangular Jacobian example showing density halving" src="https://substackcdn.com/image/fetch/$s_!vMkZ!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F1f4eed86-fe24-4230-949a-1dedaa42f6c0_2340x1260.png" /></p>
+<p><em>Figure 4. A local area illustration. The rectangle represents the determinant's area ratio, not the full transformed shape of a finite region.</em></p>
+<p>The same logic gives log |det Jg| = s(z1) for our coupling layer and log |det Jf| = −s(x1) for its inverse. We'll check that second expression against a numerical Jacobian in the code.</p>
+<p>If you forget the determinant, stretching can change your purported total probability mass. A reversible generator alone doesn't make a density calculation correct.</p>
+<h2>5. Two routes: fit the map, then reverse it</h2>
+<p>During training, take observed x, encode it with f, compute its base log density and inverse log determinant, then update parameters to reduce NLL.</p>
+<p>During generation, draw a new z from the base and apply g. The coefficients stay fixed. There's no optimizer in this route.</p>
+<p><img alt="Training route from data to base and sampling route from base to data" src="https://substackcdn.com/image/fetch/$s_!HmSh!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fa05ceeb3-064d-4bed-bee3-3cf23b7d6c80_2340x1260.png" /></p>
+<p><em>Figure 5. Both routes use the same fitted parameters. A chain reverses its layer order when inverted and adds its layer log determinants when scored.</em></p>
+<p>Coupling flows are one design. Glow adds invertible 1×1 convolutions that mix channels in an image flow. That changes how information moves between coupling layers. Our two dimensional example has neither those convolutions nor an image architecture. <a href="https://arxiv.org/abs/1807.03039">Glow paper</a>.</p>
+<p>The practical design question is how to get enough expressive power while keeping both the inverse and determinant cheap. Dense unconstrained transforms don't automatically give you either.</p>
+<h2>6. Failure: a correct inverse can still be a poor model</h2>
+<p>If the round trip fails, inspect the algebra and direction first. If the round trip passes but density is wrong, inspect the Jacobian sign, any omitted preprocessing and the sum over event coordinates. If the encoded data still has obvious structure, your map may need more capacity.</p>
+<p>Large positive or negative log scales can overflow or amplify numerical errors. Bounding the five coefficients in today's tiny optimizer keeps the example manageable. It doesn't solve stability for every architecture.</p>
+<p>Our fitted family has a particularly sharp limit. Since x1 = z1, its first marginal must stay standard normal. And x2 conditional on x1 is Gaussian. It can fit the generated curve below because the data were created from that same family. Give it a strongly non-Gaussian first marginal or a multimodal conditional and one layer won't cover the change.</p>
+<p>Discrete image pixels also need a treatment such as dequantization when using a continuous density model. Today's smooth synthetic coordinates skip that issue. <a href="https://arxiv.org/html/1605.08803v3">Real NVP preprocessing discussion</a>.</p>
+<p><strong>Keep these three ideas</strong></p>
+<ol>
+<li>A bijective flow keeps a reversible address with the same dimension.</li>
+<li>Density follows the local volume change. Check which direction your determinant describes.</li>
+<li>Inversion and held out likelihood answer different questions. Passing one doesn't guarantee the other.</li>
+</ol>
+<h2>7. Runnable check: fit a curve on CPU</h2>
+<p>This uses NumPy, SciPy and Matplotlib. It fits five coefficients in a polynomial shift and a bounded tanh log scale. It's a small affine coupling model, not a neural network or a reproduction of the full Real NVP image model.</p>
+<p>Install <code>numpy scipy matplotlib</code> in your Python environment. The tested versions are Python 3.11.5, NumPy 1.23.5, SciPy 1.10.1 and Matplotlib 3.7.1. Save the three blocks below in order as <code>flow_demo.py</code> and run <code>python flow_demo.py</code>. They also work as three ordered notebook cells. The output directory is created beside the script, or in the notebook's working directory.</p>
+<p><strong>Step 1. Define the reversible map and draw separate training and test data.</strong></p>
+<p>The shift is t(u) = a(u² − 1) + bu + c. The log scale is s(u) = d tanh(u) + e. The true coefficients create the data only. The optimizer starts from zeros.</p>
+<pre><code class="language-python">&quot;&quot;&quot;CPU teaching flow. Run: python flow_demo.py. No neural/image claim.&quot;&quot;&quot;
+from pathlib import Path
+import json
+import platform
+import numpy as np
+import scipy
+from scipy.optimize import minimize
+from scipy.integrate import simpson
+import matplotlib
+matplotlib.use(&quot;Agg&quot;)
+import matplotlib.pyplot as plt
+
+# Step 1: a tiny invertible map and fresh synthetic train/test draws.
+SEED = 11
+rng = np.random.default_rng(SEED)
+out = Path(__file__).resolve().parent if &quot;__file__&quot; in globals() else Path.cwd()
+figures = out / &quot;figures&quot;
+figures.mkdir(exist_ok=True)
+
+def conditions(u, theta):
+    a, b, c, d, e = theta
+    return a * (u*u - 1) + b*u + c, d*np.tanh(u) + e
+
+def generate(z, theta):
+    t, s = conditions(z[:, 0], theta)
+    return np.column_stack((z[:, 0], z[:, 1]*np.exp(s) + t))
+
+def encode(x, theta):
+    t, s = conditions(x[:, 0], theta)
+    z = np.column_stack((x[:, 0], (x[:, 1] - t)*np.exp(-s)))
+    return z, -s  # log |det J_f|, for the DATA -&gt; BASE direction
+
+def log_prob(x, theta):
+    z, logdet = encode(x, theta)
+    return -0.5*np.sum(z*z, axis=1) - np.log(2*np.pi) + logdet
+
+truth = np.array([0.7, 0.0, 0.0, 0.35, 0.0])
+train = generate(rng.normal(size=(4000, 2)), truth)
+test = generate(rng.normal(size=(4000, 2)), truth)
+</code></pre>
+<p><strong>Step 2. Fit the conditioner by maximum likelihood.</strong></p>
+<p>The objective returns one mean NLL. L-BFGS-B uses numerical derivatives here and respects the coefficient bounds. The test set doesn't enter the optimizer. Lower test NLL is better within this common coordinate system. <a href="https://docs.scipy.org/doc/scipy/reference/optimize.minimize-lbfgsb.html">SciPy optimizer documentation</a>.</p>
+<pre><code class="language-python"># Step 2: fit five conditioner coefficients using mean exact model NLL.
+initial = np.zeros(5)
+fit = minimize(lambda theta: -log_prob(train, theta).mean(), initial,
+               method=&quot;L-BFGS-B&quot;, bounds=[(-2, 2)]*5,
+               options={&quot;maxiter&quot;: 300, &quot;ftol&quot;: 1e-12, &quot;gtol&quot;: 1e-7})
+assert fit.success, fit.message
+theta = fit.x
+baseline_nll = -log_prob(test, initial).mean()
+flow_nll = -log_prob(test, theta).mean()
+assert flow_nll &lt; baseline_nll - 0.1
+</code></pre>
+<p><strong>Step 3. Check the inverse and density, then generate new points.</strong></p>
+<p>The round trip checks reconstruction. The finite difference Jacobian checks the analytic inverse log determinant. The numerical integral checks almost all the fitted probability mass on a large finite rectangle. It's still a truncated check, not a proof over the whole plane. The final plot uses a fresh base draw for model samples.</p>
+<pre><code class="language-python"># Step 3: check inversion, determinant sign and finite-grid normalization.
+z_test, inverse_ld = encode(test, theta)
+roundtrip = np.max(np.abs(generate(z_test, theta) - test))
+assert roundtrip &lt; 1e-10
+point = np.array([0.4, -0.8])
+eps = 1e-5
+columns = []
+for j in range(2):
+    delta = np.zeros(2)
+    delta[j] = eps
+    columns.append((encode((point+delta)[None], theta)[0][0]
+                    - encode((point-delta)[None], theta)[0][0])/(2*eps))
+jac = np.column_stack(columns)
+numeric_ld = np.linalg.slogdet(jac)[1]
+analytic_ld = encode(point[None], theta)[1][0]
+ld_error = abs(numeric_ld-analytic_ld)
+assert ld_error &lt; 1e-8
+u = np.linspace(-5, 5, 601)
+v = np.linspace(-7, 22, 701)
+uu, vv = np.meshgrid(u, v)
+grid = np.column_stack((uu.ravel(), vv.ravel()))
+density = np.exp(log_prob(grid, theta)).reshape(v.size, u.size)
+mass = simpson(simpson(density, x=u, axis=1), x=v)
+assert 0.995 &lt; mass &lt; 1.005
+sample = generate(rng.normal(size=(4000, 2)), theta)
+
+report = {
+    &quot;run_date_local&quot;: &quot;2026-10-12&quot;, &quot;seed&quot;: SEED,
+    &quot;python&quot;: platform.python_version(), &quot;numpy&quot;: np.__version__,
+    &quot;scipy&quot;: scipy.__version__, &quot;matplotlib&quot;: matplotlib.__version__,
+    &quot;device&quot;: &quot;CPU&quot;, &quot;dtype&quot;: &quot;float64&quot;, &quot;train_n&quot;: 4000, &quot;test_n&quot;: 4000,
+    &quot;parameters&quot;: theta.tolist(), &quot;optimizer_success&quot;: bool(fit.success),
+    &quot;optimizer_iterations&quot;: int(fit.nit), &quot;baseline_test_nll_nats&quot;: float(baseline_nll),
+    &quot;flow_test_nll_nats&quot;: float(flow_nll), &quot;roundtrip_max_abs_error&quot;: float(roundtrip),
+    &quot;numeric_logdet&quot;: float(numeric_ld), &quot;analytic_logdet&quot;: float(analytic_ld),
+    &quot;logdet_abs_error&quot;: float(ld_error), &quot;finite_grid_probability_mass&quot;: float(mass),
+    &quot;finite_grid_bounds&quot;: [[-5, 5], [-7, 22]], &quot;grid_shape&quot;: [701, 601],
+    &quot;latent_test_mean&quot;: z_test.mean(axis=0).tolist(),
+    &quot;latent_test_std&quot;: z_test.std(axis=0).tolist(),
+    &quot;all_assertions&quot;: &quot;PASS&quot;, &quot;neural_network_training&quot;: False,
+    &quot;limitations&quot;: &quot;Five fitted coefficients on generated continuous 2D data from the same family; no image benchmark, out-of-family claim or exhaustive bijection test. Grid mass is a truncated numerical check.&quot;
+}
+(out/&quot;run-output.json&quot;).write_text(json.dumps(report, indent=2), encoding=&quot;utf-8&quot;)
+np.savez(out/&quot;measured-data.npz&quot;, train=train, test=test, latent=z_test, sample=sample,
+         theta=theta, truth=truth)
+summary = (f&quot;CPU float64 | seed={SEED} | train=4000 | test=4000\n&quot;
+           f&quot;optimizer: {fit.success} | iterations={fit.nit}\n&quot;
+           f&quot;held-out NLL: baseline={baseline_nll:.6f}, flow={flow_nll:.6f} nats/point\n&quot;
+           f&quot;round-trip max abs error: {roundtrip:.3e}\n&quot;
+           f&quot;log-det finite-difference error: {ld_error:.3e}\n&quot;
+           f&quot;finite-grid probability mass: {mass:.8f}\nall assertions: PASS\n&quot;)
+(out/&quot;run-output.txt&quot;).write_text(summary, encoding=&quot;utf-8&quot;)
+print(summary)
+
+# This is an actual output figure, not a diagram of desired results.
+plt.rcParams.update({&quot;font.family&quot;: &quot;DejaVu Sans&quot;, &quot;font.size&quot;: 11,
+                     &quot;text.color&quot;: &quot;#153449&quot;, &quot;axes.labelcolor&quot;: &quot;#153449&quot;,
+                     &quot;axes.titlesize&quot;: 13, &quot;svg.fonttype&quot;: &quot;none&quot;})
+fig, axes = plt.subplots(1, 3, figsize=(13.5, 4.8), facecolor=&quot;#FFF9EF&quot;)
+for ax, data, title, color, labels in zip(
+    axes, [test, z_test, sample],
+    [&quot;Held-out curved data&quot;, &quot;Encoded held-out data&quot;, &quot;New samples from fitted flow&quot;],
+    [&quot;#C66B2B&quot;, &quot;#087F8C&quot;, &quot;#397BA5&quot;], [(&quot;x1&quot;, &quot;x2&quot;), (&quot;z1&quot;, &quot;z2&quot;), (&quot;x1&quot;, &quot;x2&quot;)]):
+    ax.scatter(data[:, 0], data[:, 1], s=3, alpha=0.28, color=color, rasterized=False)
+    ax.set_title(title)
+    ax.set_xlabel(labels[0]); ax.set_ylabel(labels[1])
+    ax.grid(alpha=0.15)
+    ax.spines[[&quot;top&quot;, &quot;right&quot;]].set_visible(False)
+axes[0].set(xlim=(-4, 4), ylim=(-5, 13))
+axes[2].set(xlim=(-4, 4), ylim=(-5, 13))
+axes[1].set(xlim=(-4, 4), ylim=(-4, 4))
+fig.suptitle(&quot;Inside AI · Deep Learning Models · Part 11\nMeasured CPU run: straighten the curve, then sample&quot;, fontsize=15)
+fig.text(0.5, 0.018, f&quot;4,000 points per panel · seed 11 · test NLL {flow_nll:.4f} nats/point · panel limits crop rare extremes&quot;, ha=&quot;center&quot;, fontsize=10)
+fig.tight_layout(rect=(0, .05, 1, .87))
+fig.savefig(figures/&quot;figure-6-output.png&quot;, dpi=180)
+fig.savefig(figures/&quot;figure-6-output.svg&quot;)
+plt.close(fig)
+</code></pre>
+<p><strong>Actual output: 12 October 2026, CPU float64, seed 11</strong></p>
+<pre><code class="language-text">CPU float64 | seed=11 | train=4000 | test=4000
+optimizer: True | iterations=11
+held-out NLL: baseline=3.297276, flow=2.826420 nats/point
+round-trip max abs error: 8.882e-16
+log-det finite-difference error: 3.125e-12
+finite-grid probability mass: 0.99999942
+all assertions: PASS
+</code></pre>
+<p><img alt="Actual held out data, encoded points and generated samples from the fitted flow" src="https://substackcdn.com/image/fetch/$s_!_oxh!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F9ece3bdb-af18-4bc5-b687-9ebac620d2ee_2430x864.png" /></p>
+<p><em>Figure 6. Measured output from the script above. Each panel has 4,000 points. The first and third use matching axis limits; rare extremes outside the plotted windows are cropped.</em></p>
+<p>The fitted model's held out NLL dropped by about 0.471 nats per point relative to the identity Gaussian baseline. That comparison uses the same 4,000 test points in the same coordinates. The encoded plot looks much closer to a round cloud. The reconstruction error is at floating point scale.</p>
+<p>This establishes that the small model fitted this generated distribution and that the implemented density checks passed. It says nothing about image quality, real world generalization or whether these five coefficients are enough for a different dataset. The integral result is close to one on the specified grid, with finite bounds and numerical integration error.</p>
+<p>Try changing the generated first coordinate to a mixture of Gaussians while keeping the fitted family unchanged. Then inspect that first encoded coordinate. You'll see exactly which part this layer has no freedom to fix. That's a useful next experiment before adding a second coupling layer.</p>
+<p>The operation to remember is <strong>move the points and account for the volume</strong>. Once that feels concrete, the next question is how to compose several layers without losing the inverse or the determinant bookkeeping.</p>
+<p>For the previous sampler calculation, read <a href="https://medium.com/@thesomilsinghofficial/why-ddim-can-change-the-sampling-path-without-changing-the-noise-task-fb04e7d2c260">Part 10: DDIM foundations</a>.</p>
+<p>Follow Inside AI for the next teaching installment. The full series is on <a href="https://medium.com/@thesomilsinghofficial">Medium</a> and <a href="https://thesomilsingh.substack.com/">Substack</a>.</p><p>Also read this article on <a href="https://medium.com/@thesomilsinghofficial/normalizing-flows-bend-a-distribution-without-losing-the-way-back-7fa69ccacd6b">Medium</a> or <a href="https://thesomilsingh.substack.com/p/normalizing-flows-bend-a-distribution">Substack</a>.</p></main><footer class="footer"><div class="wrap"><span class="label">Inside AI · Somil Singh · 2026</span>
+<nav class="footer-nav" aria-label="More links"><a href="https://github.com/somilsin">GitHub</a><a href="https://somilsin.github.io/Artificial-Intelligence/portfolio/">Portfolio</a>
+<a href="https://www.linkedin.com/in/somil-singh/">LinkedIn profile</a><a href="mailto:insideaicosmos@gmail.com">Business enquiries / collab</a></nav></div></footer></body></html>

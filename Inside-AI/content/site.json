@@ -413,6 +413,47 @@
       "source": "news-2026-10-12.html",
       "approval": "approved",
       "reading_label": "Read the sources and posts ↗"
+    },
+    {
+      "id": "2026-10-13",
+      "date": "13 October 2026",
+      "title": "Muse Wonder, Claude transcript scope and TutorMoments",
+      "description": "Three verified notes on coding-agent context, reasoning provenance and tutoring judgments, with original sources and actual Inside AI posts.",
+      "topics": [
+        "Muse Wonder: context across conversations",
+        "Claude: organisation-scoped reasoning transcripts",
+        "TutorMoments: support or a push for rigor"
+      ],
+      "source": "news-2026-10-13.html",
+      "approval": "approved",
+      "reading_label": "Read the sources and posts ↗",
+      "verified_items": [
+        {
+          "id": "x-original-muse-wonder",
+          "source_event_key": "meta:muse-wonder:2026-10-12",
+          "source": "https://research.meta.ai/blog/muse-wonder",
+          "live_url": "https://x.com/Skywalkerlyzv/status/2110013977090789652",
+          "copy_sha256_utf8": "6aa25d6c4187bae21b1eefc1e3265b71ea1cc8d28e99b55f2ecc3f69a6c7dc84",
+          "native_published_at_utc": "2026-10-13T14:25:08Z"
+        },
+        {
+          "id": "x-reference-anthropic-distillation-defenses",
+          "source_event_key": "anthropic:distillation-defenses:2026-10-12:x:2109795898909950247",
+          "source": "https://www.anthropic.com/research/distillation-defenses",
+          "live_url": "https://x.com/Skywalkerlyzv/status/2110021197958447465",
+          "copy_sha256_utf8": "1966d97f8ca2cfdb2f3eedc02955e9e772e069d75e15c5b78c98b0b508059eb0",
+          "native_published_at_utc": "2026-10-13T14:53:50Z"
+        },
+        {
+          "id": "x-reference-ai2-tutormoments-update",
+          "source_event_key": "ai2:tutormoments-frontier-update:x:2109746787405742292",
+          "source": "https://tutormoments.allen.ai/",
+          "live_url": "https://x.com/Skywalkerlyzv/status/2110030713160630669",
+          "copy_sha256_utf8": "83a96c5e73c1c04f1811a619f7e8c8fe4baf4e32a0fe22e097f12f2498aa4d7c",
+          "native_published_at_utc": "2026-10-13T15:31:39Z"
+        }
+      ]
     }
   ]
 }
+

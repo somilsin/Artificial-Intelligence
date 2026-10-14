@@ -453,7 +453,64 @@
           "native_published_at_utc": "2026-10-13T15:31:39Z"
         }
       ]
+    },
+    {
+      "id": "2026-10-14",
+      "date": "14 October 2026",
+      "title": "Agent context, robotics, scam detection and fish tracking",
+      "description": "Five verified AI notes on agent context, robotics, local scam detection, fish-track correction and model-evaluation cooperation, with original sources and actual Inside AI posts.",
+      "topics": [
+        "ScaleDown: agent context middleware",
+        "Argon: inspectable robotics prompts",
+        "Gemma: on-device scam detection",
+        "Molmo2Fish: language-guided corrections",
+        "Anthropic: Singapore evaluation cooperation"
+      ],
+      "source": "news-2026-10-14.html",
+      "approval": "approved",
+      "reading_label": "Read the sources and posts ↗",
+      "verified_items": [
+        {
+          "id": "scaledown-context",
+          "source_event_key": "langchain:scaledown-deep-agents:2026-10-13",
+          "source": "https://www.langchain.com/blog/building-long-running-agents-with-scaledown-and-deep-agents",
+          "live_url": "https://x.com/Skywalkerlyzv/status/2110365212583096436",
+          "copy_sha256_utf8": "47d64cb0b9e6bd0a323c0a6ab054bffa56ca153c54cc027ddf0990ffce6b8d68",
+          "native_published_at_utc": "2026-10-14T13:40:50Z"
+        },
+        {
+          "id": "argon-robotics",
+          "source_event_key": "google:argon-robotics:2026-10-13",
+          "source": "https://developers.googleblog.com/en/gemini-4-argon-for-robotics/",
+          "live_url": "https://x.com/Skywalkerlyzv/status/2110366763271791024",
+          "copy_sha256_utf8": "0ba6b25cb7d3c07bd2d11ef0dd3f86981bb750848c9f5f267ebfe3c5271af944",
+          "native_published_at_utc": "2026-10-14T13:46:59Z"
+        },
+        {
+          "id": "gemma-scam",
+          "source_event_key": "google:govtech-scam-detection:2026-10-14",
+          "source": "https://deepmind.google/blog/on-device-ai-scam-detection-mddi/",
+          "live_url": "https://x.com/Skywalkerlyzv/status/2110387715489563129",
+          "copy_sha256_utf8": "6164393948c77c0801dc453ac77cceb95a4dab137501bf99eacb0a87a74ce80c",
+          "native_published_at_utc": "2026-10-14T15:10:15Z"
+        },
+        {
+          "id": "molmo2fish",
+          "source_event_key": "ai2:molmo2fish:2026-10-13",
+          "source": "https://allenai.org/blog/molmo2fish",
+          "live_url": "https://x.com/Skywalkerlyzv/status/2110388416223567921",
+          "copy_sha256_utf8": "9be30c4a8aaf1e720c19e0fd002ba0b5d1840603588ef4147bde640d1f078260",
+          "native_published_at_utc": "2026-10-14T15:13:02Z"
+        },
+        {
+          "id": "singapore-mou",
+          "source_event_key": "anthropic:singapore-mou:2026-10-14",
+          "source": "https://www.anthropic.com/news/singapore-office-opening",
+          "live_url": "https://x.com/Skywalkerlyzv/status/2110388984430113028",
+          "copy_sha256_utf8": "fe33b396eee6cfe031187f4f3f47b5da5f7213323016ef37485fc5f2856e5361",
+          "native_published_at_utc": "2026-10-14T15:15:17Z"
+        }
+      ]
     }
   ]
 }
-

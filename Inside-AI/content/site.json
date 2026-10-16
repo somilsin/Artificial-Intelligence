@@ -188,6 +188,21 @@
       "source": "part-11.html",
       "page": "part-11-normalizing-flows.html",
       "date": "12 October 2026"
+    },
+    {
+      "part": "12",
+      "type": "Foundations",
+      "model": "Normalizing flows",
+      "title": "A flow can reverse perfectly and still learn the wrong thing",
+      "description": "Compose two coupling layers, trace the gradient and check the probability bookkeeping before trusting the fit. Six figures, runnable code and recorded output retain the toy model limits.",
+      "image": "assets/part-12/figure-1-concept.png",
+      "image_alt": "Two coupling layers compose an invertible flow while density learning still requires the right objective",
+      "medium": "https://medium.com/@thesomilsinghofficial/deep-learning-12-a-flow-can-reverse-perfectly-and-still-learn-the-wrong-thing-4dd4b823bc5f",
+      "substack": "https://thesomilsingh.substack.com/p/deep-learning-12-a-flow-can-reverse",
+      "published": true,
+      "source": "part-12.html",
+      "page": "part-12-flow-foundations.html",
+      "date": "14 October 2026"
     }
   ],
   "news": [
@@ -509,6 +524,69 @@
           "live_url": "https://x.com/Skywalkerlyzv/status/2110388984430113028",
           "copy_sha256_utf8": "fe33b396eee6cfe031187f4f3f47b5da5f7213323016ef37485fc5f2856e5361",
           "native_published_at_utc": "2026-10-14T15:15:17Z"
+        }
+      ]
+    },
+    {
+      "id": "2026-10-15",
+      "date": "15 October 2026",
+      "title": "Document review, climate simulations and inspectable agent evidence",
+      "description": "Five verified Inside AI notes on Deep Review, Earth AI, HiRO-ACEv2, Apertus and LangSmith, with primary sources, reported limits and actual X/company posts.",
+      "topics": [
+        "Deep Review: inspect connections across a document",
+        "Earth AI: inspect the plan and data trail",
+        "HiRO-ACEv2: sharp climate fields with a fixed climate limit",
+        "Apertus 1.5: training stages you can inspect",
+        "LangSmith AI Search: check the actual tool evidence"
+      ],
+      "source": "news-2026-10-15.html",
+      "approval": "approved",
+      "reading_label": "Read the sources and posts ↗",
+      "verified_items": [
+        {
+          "id": "deep-review",
+          "source_event_key": "google:deep-review-public:2026-10-14",
+          "source": "https://research.google/blog/analyzing-technical-documents-with-deep-review/",
+          "copy_sha256_utf8": "59ca44f2086313925581b39547cc8228cf1e913d3c9b00090578d44de8d1ed17",
+          "status": "live_native_verified",
+          "live_url": "https://x.com/Skywalkerlyzv/status/2110755678986064210",
+          "native_published_at_utc": "2026-10-15T15:32:24Z"
+        },
+        {
+          "id": "earth-ai",
+          "source_event_key": "google:earth-ai-geospatial-agent-report:2026-10-14",
+          "source": "https://research.google/blog/putting-earth-ai-to-work-geospatial-agents-for-our-planets-biggest-challenges/",
+          "copy_sha256_utf8": "d51ee7cef64da5fa1d49ef943e2c4d41d951bb03e303fcc8a71b83fff363983d",
+          "status": "live_native_verified",
+          "live_url": "https://x.com/Skywalkerlyzv/status/2110759503046267211",
+          "native_published_at_utc": "2026-10-15T15:47:36Z"
+        },
+        {
+          "id": "hiro-acev2",
+          "source_event_key": "ai2:hiro-acev2:2026-10-14",
+          "source": "https://huggingface.co/blog/allenai/hiro-acev2",
+          "copy_sha256_utf8": "b91679cb6304ea3118c59c8d28a95c606ec52f31c36df8f726af0fcd89352c06",
+          "status": "live_native_verified",
+          "live_url": "https://x.com/Skywalkerlyzv/status/2110791649718886829",
+          "native_published_at_utc": "2026-10-15T17:55:20Z"
+        },
+        {
+          "id": "apertus-report",
+          "source_event_key": "swiss-ai:apertus15-release-notes:2026-10-15",
+          "source": "https://huggingface.co/blog/swiss-ai/apertus-v15-release-notes",
+          "copy_sha256_utf8": "df54f54e5703a980b9709f06e7261bc46c63d742c5482b2f2364a056eeda5128",
+          "status": "live_native_verified",
+          "live_url": "https://x.com/Skywalkerlyzv/status/2110791994541027813",
+          "native_published_at_utc": "2026-10-15T17:56:42Z"
+        },
+        {
+          "id": "langsmith-ai-search",
+          "source_event_key": "langchain:langsmith-ai-search:2026-10-13",
+          "source": "https://www.langchain.com/blog/agent-traces-ai-search-langsmith",
+          "copy_sha256_utf8": "6806bcf6ef6478829ddc66eafc2d238434cfa33ee31f7d67b6d2c426beb29869",
+          "status": "live_native_verified",
+          "live_url": "https://x.com/Skywalkerlyzv/status/2110792372040905093",
+          "native_published_at_utc": "2026-10-15T17:58:12Z"
         }
       ]
     }

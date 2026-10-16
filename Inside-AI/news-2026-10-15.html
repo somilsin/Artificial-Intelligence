@@ -1,0 +1,55 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Document review, climate simulations and inspectable agent evidence | Inside AI</title><meta name="description" content="Five verified Inside AI notes on Deep Review, Earth AI, HiRO-ACEv2, Apertus and LangSmith, with primary sources, reported limits and actual X/company posts.">
+<link rel="canonical" href="https://somilsin.github.io/Artificial-Intelligence/Inside-AI/news-2026-10-15.html"><meta name="theme-color" content="#0E0C09">
+<meta property="og:title" content="Document review, climate simulations and inspectable agent evidence | Inside AI"><meta property="og:description" content="Five verified Inside AI notes on Deep Review, Earth AI, HiRO-ACEv2, Apertus and LangSmith, with primary sources, reported limits and actual X/company posts.">
+<meta property="og:type" content="website"><meta property="og:url" content="https://somilsin.github.io/Artificial-Intelligence/Inside-AI/news-2026-10-15.html">
+<meta property="og:image" content="https://somilsin.github.io/Artificial-Intelligence/Inside-AI/assets/linkedin-banner.png">
+<link rel="icon" href="assets/inside-ai-logo.png"><link rel="stylesheet" href="styles.css"></head><body><main class="reader"><a class="back label" href="index.html#news">← Back to Inside AI</a><h1>World AI notes · 15 October 2026</h1>
+<p>Somil Singh · Inside AI</p>
+<section><h2>Deep Review: inspect connections across a document</h2>
+<p>A proof can break where two sections meet. Reviewing each paragraph separately won&#x27;t catch that.</p>
+<p>Google&#x27;s Deep Review splits a document into overlapping segments, gives harder sections more compute, then checks the reports together. It&#x27;s now publicly available for PDF and plain-text input.</p>
+<p>Useful as another pass before submission. Human judgement still matters.</p>
+<p><a href="https://research.google/blog/analyzing-technical-documents-with-deep-review/">https://research.google/blog/analyzing-technical-documents-with-deep-review/</a></p>
+<p class="source-note">Google’s 14 October public-release announcement. Initial PDF and plain-text support; no independent performance replication.</p>
+<p><a href="https://x.com/Skywalkerlyzv/status/2110755678986064210">Read the verified Inside AI post on X ↗</a></p>
+<p><a href="https://www.linkedin.com/feed/update/urn:li:share:7516558774355271680?actorCompanyId=143953415">Read the corresponding company post ↗</a></p>
+</section>
+<section><h2>Earth AI: inspect the plan and data trail</h2>
+<p>A map answer needs the data trail too.</p>
+<p>Google&#x27;s experimental geospatial agent shows its plan and sources, so an expert can check the dataset choices. Its new report also warns that GeoExpertQueries grades against expert workflows, rather than verifying the final answer.</p>
+<p>That distinction matters when reading the scores.</p>
+<p><a href="https://research.google/blog/putting-earth-ai-to-work-geospatial-agents-for-our-planets-biggest-challenges/">https://research.google/blog/putting-earth-ai-to-work-geospatial-agents-for-our-planets-biggest-challenges/</a></p>
+<p><a href="https://x.com/GoogleResearch/status/2110410554057822630">https://x.com/GoogleResearch/status/2110410554057822630</a></p>
+<p class="source-note">Google’s 14 October experimental geospatial-agent report. Expert-workflow grading does not establish final-answer correctness.</p>
+<p><a href="https://x.com/Skywalkerlyzv/status/2110759503046267211">Read the verified Inside AI post on X ↗</a></p>
+<p><a href="https://www.linkedin.com/feed/update/urn:li:share:7516559410635223040?actorCompanyId=143953415">Read the corresponding company post ↗</a></p>
+</section>
+<section><h2>HiRO-ACEv2: sharp climate fields with a fixed climate limit</h2>
+<p>The sharp storm map is only part of this result.</p>
+<p>Ai2&#x27;s HiRO-ACEv2 turns 100 km climate simulations into 3 km rain, wind and pressure fields. The reported cost is about 1/300 of X-SHiELD.</p>
+<p>But it&#x27;s tied to the climate it learned from. The team says warmer climates and ERA5 aren&#x27;t supported yet.</p>
+<p><a href="https://huggingface.co/blog/allenai/hiro-acev2">https://huggingface.co/blog/allenai/hiro-acev2</a></p>
+<p><a href="https://x.com/allen_ai/status/2110407184685072881">https://x.com/allen_ai/status/2110407184685072881</a></p>
+<p class="source-note">Ai2’s 14 October report. The cost comparison is reported by the team; this is climate simulation, not independent real-world forecast validation.</p>
+<p><a href="https://x.com/Skywalkerlyzv/status/2110791649718886829">Read the verified Inside AI post on X ↗</a></p>
+</section>
+<section><h2>Apertus 1.5: training stages you can inspect</h2>
+<p>Open weights are more useful when you can inspect the steps between them.</p>
+<p>Swiss AI&#x27;s new Apertus 1.5 write-up links intermediate training checkpoints and data mixes. That gives researchers a way to compare what changed after SFT, RLVR and DPO.</p>
+<p>The notes are new today; the team dates the weight release to July 24.</p>
+<p><a href="https://huggingface.co/blog/swiss-ai/apertus-v15-release-notes">https://huggingface.co/blog/swiss-ai/apertus-v15-release-notes</a></p>
+<p class="source-note">Swiss AI’s notes published 15 October describe weights released 24 July. Checkpoints enable inspection; no independent training replication is claimed.</p>
+<p><a href="https://x.com/Skywalkerlyzv/status/2110791994541027813">Read the verified Inside AI post on X ↗</a></p>
+</section>
+<section><h2>LangSmith AI Search: check the actual tool evidence</h2>
+<p>An agent saying &quot;done&quot; doesn&#x27;t tell you whether the tool worked.</p>
+<p>LangChain&#x27;s AI Search reads agent trajectories to find behaviours you describe. One useful debugging check: compare its matches with the actual tool results. The current token budget prioritises user and assistant messages, so tool evidence can be trimmed.</p>
+<p>Public beta, announced October 13: <a href="https://www.langchain.com/blog/agent-traces-ai-search-langsmith">https://www.langchain.com/blog/agent-traces-ai-search-langsmith</a></p>
+<p class="source-note">LangChain’s 13 October beta announcement. Tool-message trimming can omit relevant evidence; the suggested comparison with actual tool results is an original debugging check.</p>
+<p><a href="https://x.com/Skywalkerlyzv/status/2110792372040905093">Read the verified Inside AI post on X ↗</a></p>
+</section>
+</main><footer class="footer"><div class="wrap"><span class="label">Inside AI · Somil Singh · 2026</span>
+<nav class="footer-nav" aria-label="More links"><a href="https://github.com/somilsin">GitHub</a><a href="https://somilsin.github.io/Artificial-Intelligence/portfolio/">Portfolio</a>
+<a href="https://www.linkedin.com/in/somil-singh/">LinkedIn profile</a><a href="mailto:insideaicosmos@gmail.com">Business enquiries / collab</a></nav></div></footer></body></html>

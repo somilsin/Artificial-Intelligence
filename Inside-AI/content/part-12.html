@@ -1,0 +1,240 @@
+<h1>Deep Learning #12: A flow can reverse perfectly and still learn the wrong thing</h1>
+<p>Compose coupling layers, trace the likelihood gradient and test the bookkeeping before trusting the fit.</p>
+<p>Somil Singh · Inside AI</p>
+<p><strong>Deep Learning Models · Part 12</strong></p>
+<p>You can send a point through two layers, reverse both and get the original point back to machine precision. That feels reassuring. Then the optimizer takes the wrong step because one gradient term went missing.</p>
+<p>Lemme separate those checks. Last time we fitted one reversible layer. This time both coordinates get a turn and we'll trace the training signal through the whole chain. You'll run a CPU example with ten coefficients, check its handwritten gradient against a second calculation and catch the wrong determinant sign deliberately.</p>
+<p><img alt="Composition and inverse order" src="assets/part-12/figure-1-concept.png" /></p>
+<p><em>Figure 1. Concept schematic of the data-to-base chain and the reverse generation order. This is a two dimensional teaching model.</em></p>
+<h2>1. Representation: a chain needs its intermediate coordinates</h2>
+<p>Call the observation x, the intermediate representation h and the final base coordinate z. Our encoder is h = f1(x), then z = f2(h). In compact notation, f = f2 ∘ f1. Composition means the rightmost function runs first.</p>
+<p>To generate, start with a fresh standard normal z. Undo f2 to obtain h, then undo f1 to obtain x. That reverse order matters. Individually correct inverses in the wrong order generally don't undo the chain.</p>
+<p>The <a href="https://arxiv.org/html/1605.08803v3#S3.SS5">Real NVP paper, section 3.5</a>, develops alternating coupling layers and their composition. We use that structural idea here with small polynomial and tanh conditioners. We're not reproducing its convolutional image architecture or results.</p>
+<p>Neither layer reduces the dimension. Every intermediate point has two coordinates. The cache in our code stores the actual input seen by each layer because both the determinant and the gradient depend on those intermediate values.</p>
+<h2>2. Mechanism: let both coordinates move</h2>
+<p>Within one data-to-base layer, let u denote the preserved coordinate and v the other coordinate. Define a shift t(u) and log scale s(u). The transformed coordinate is:</p>
+<p><strong>w = (v − t(u)) exp(−s(u)); the preserved output is u.</strong></p>
+<p>Its inverse is v = w exp(s(u)) + t(u). The preserved u lets the inverse evaluate the same conditioner. It never needs an inverse of t or s.</p>
+<p>In our first layer u is coordinate 1. In the second, u is the new coordinate 2. A coordinate held fixed in one layer can therefore change in the other. Two layers remove that particular one-layer restriction; they don't establish unlimited expressive power.</p>
+<p><img alt="Alternating coordinates" src="assets/part-12/figure-2-concept.png" /></p>
+<p><em>Figure 2. Alternating which coordinate is preserved lets both coordinates change across the chain. Each conditioner uses its layer's current input.</em></p>
+<p>The code uses t(u) = a(u² − 1) + bu + c and s(u) = d tanh(u) + e. Each layer has five coefficients. Positive exp(s) preserves invertibility for finite values, while the optimizer's coefficient bounds keep this small example manageable. They are not a universal stability guarantee.</p>
+<h2>3. Objective: add local volume changes at the right points</h2>
+<p>For a data-to-base coupling layer, the Jacobian determinant is exp(−s(u)), so its log absolute determinant is −s(u). The full Jacobian follows the chain rule. Determinants multiply and their logarithms add:</p>
+<p><strong>log |det Jf(x)| = −s1(x's preserved coordinate) − s2(h's preserved coordinate).</strong></p>
+<p>The second term belongs at h. Evaluating every layer's scale at the original x changes the model density calculation.</p>
+<p>For our two dimensional standard normal base, the per-example negative log likelihood is:</p>
+<p><strong>ℓ(x) = 0.5(z1² + z2²) + log(2π) + s1 + s2.</strong></p>
+<p>This is the base cost minus the data-to-base log determinant. The measured batch loss is its mean, in nats per point. The loss contains a route through z and direct contributions from the scales.</p>
+<p><img alt="Determinant ledger" src="assets/part-12/figure-3-concept.png" /></p>
+<p><em>Figure 3. Concept ledger for this specific data-to-base convention. The scale terms enter NLL with a plus sign; code must retain each layer's input.</em></p>
+<p>Exact here means we evaluate the density specified by the model without an approximate latent integral. It does not mean the fitted density equals the unknown distribution that produced real observations. Today's data are synthetic and generated from the same family being fitted.</p>
+<h2>4. The gradient: the determinant is cheap, not constant</h2>
+<p>Here's the bit that's easy to drop. Let gw be the upstream derivative of the mean loss with respect to w. Let n be the batch size. A single layer contributes:</p>
+<p><strong>dL/dt = −gw exp(−s); dL/ds = −gw w + 1/n.</strong></p>
+<p>The 1/n term comes directly from the scale's contribution to mean NLL. Omitting it differentiates a different objective. For the preserved input, with gu_out denoting the upstream derivative on that coordinate:</p>
+<p><strong>gu_in = gu_out − gw exp(−s)t′(u) + (−gw w + 1/n)s′(u).</strong></p>
+<p>Here t′(u) = 2au + b and s′(u) = d(1 − tanh²(u)). For the other input, gv_in = gw exp(−s). These equations are our own chain-rule derivation for the exact code below. They include the loss route through the transformed coordinate and the direct log-volume route.</p>
+<p><img alt="Two gradient routes" src="assets/part-12/figure-4-concept.png" /></p>
+<p><em>Figure 4. Both routes contribute to learning. A triangular determinant avoids a full matrix determinant during training; its parameter dependence remains.</em></p>
+<p>The coefficient derivatives follow the conditioner bases. For example, a multiplies u² − 1, so its gradient sums (dL/dt)(u² − 1) across the batch. d multiplies tanh(u), so its gradient sums (dL/ds)tanh(u). Our reverse pass walks layer 2 before layer 1, just as ordinary backpropagation walks a computation graph backward.</p>
+<h2>5. Train one route; generate with the same fitted coefficients</h2>
+<p>Training starts with observed x, encodes it, computes mean NLL and updates the ten coefficients. The true coefficients are used only to generate separate training and test draws. Fitting starts from zeros. The test observations do not enter the optimizer.</p>
+<p>Generation draws a new Gaussian z and reverses the fitted chain. There is no optimizer in that route. A round trip checks the implementation's inverse. A held-out likelihood checks how this fitted density scores separate observations in the same coordinates. A gradient check tests whether the learning direction matches the implemented objective.</p>
+<p>Those three questions deserve three checks. A clean reconstruction does not validate a loss gradient. A passing finite difference check on 32 points is useful evidence for those ten parameter derivatives, not a proof for every input or architecture.</p>
+<h2>6. Failure: name the check that actually failed</h2>
+<p>If reconstruction fails, inspect layer order and which coordinate is preserved. If the numerical Jacobian disagrees with the log determinant, inspect direction, sign and intermediate inputs. If parameter finite differences disagree with the reverse pass, inspect the direct scale term and the batch mean factor.</p>
+<p>Central differences compare (L(θ+εej) − L(θ−εej))/(2ε) with the analytic derivative. ε balances floating point cancellation against truncation error. We use float64 and ε = 10⁻⁶ for this small deterministic batch. Changing the scale of the problem can require another step size.</p>
+<p><strong>Keep these three ideas</strong></p>
+<ol>
+<li>Compose maps in the encoding order and invert them in the reverse order.</li>
+<li>Add log determinants at the actual intermediate inputs and keep their gradients.</li>
+<li>Check inversion, parameter gradients and held-out likelihood separately.</li>
+</ol>
+<p>Our family has only ten coefficients. We use one seed and generated continuous coordinates, not images or a public benchmark. Two alternating layers can still fit a different real dataset poorly. The plots crop extreme points and do not measure sample quality. The numerical Jacobian checks one point; it doesn't exhaust the whole input space.</p>
+<h2>7. Runnable check: trace and fit the full chain on CPU</h2>
+<p>Install <code>numpy scipy matplotlib</code> in your own Python environment. This run used Python 3.11.5, NumPy 1.23.5, SciPy 1.10.1 and Matplotlib 3.7.1. Save the following three blocks in order as <code>flow12_demo.py</code> and run <code>python flow12_demo.py</code>. The script creates a <code>figures</code> directory beside itself. It uses no neural network library.</p>
+<p><strong>Step 1. Implement the chain, its inverse and the exact reverse pass.</strong></p>
+<p><code>encode</code> returns the base coordinates, per-point log determinants and a cache for backpropagation. <code>value_grad</code> returns the mean NLL and a flat vector of ten derivatives. The initial upstream derivative for the Gaussian base is z/n.</p>
+<pre><code class="language-python">&quot;&quot;&quot;Two coupling layers, handwritten likelihood gradients. CPU teaching example.&quot;&quot;&quot;
+# Step 1: define the data-to-base chain and its reverse.
+from pathlib import Path
+import json
+import platform
+import numpy as np
+import scipy
+from scipy.optimize import minimize
+import matplotlib
+matplotlib.use(&quot;Agg&quot;)
+import matplotlib.pyplot as plt
+
+out = Path(__file__).resolve().parent
+(out / &quot;figures&quot;).mkdir(exist_ok=True)
+rng = np.random.default_rng(12)
+keeps = [0, 1]
+
+def encode(x, theta):
+    h = x.copy()
+    ld = np.zeros(len(x))
+    cache = []
+    for k, row in zip(keeps, theta.reshape(2, 5)):
+        a, b, c, d, e = row
+        j = 1-k
+        u, v = h[:, k].copy(), h[:, j].copy()
+        q = np.tanh(u)
+        t = a*(u*u-1) + b*u + c
+        s = d*q + e
+        r = np.exp(-s)
+        w = (v-t)*r
+        h[:, j] = w
+        ld -= s
+        cache.append((k, u, q, r, w, a, b, d))
+    return h, ld, cache
+
+def generate(z, theta):
+    h = z.copy()
+    rows = theta.reshape(2, 5)
+    for i in reversed(range(2)):
+        k, j = keeps[i], 1-keeps[i]
+        a, b, c, d, e = rows[i]
+        u = h[:, k].copy()
+        h[:, j] = h[:, j]*np.exp(d*np.tanh(u)+e) + a*(u*u-1)+b*u+c
+    return h
+
+def value_grad(theta, x):
+    z, ld, cache = encode(x, theta)
+    n = len(x)
+    loss = np.mean(0.5*np.sum(z*z, axis=1) + np.log(2*np.pi) - ld)
+    gh = z/n
+    gt = np.zeros((2, 5))
+    for i in reversed(range(2)):
+        k, u, q, r, w, a, b, d = cache[i]
+        j = 1-k
+        gw = gh[:, j].copy()
+        gs = -gw*w + 1/n
+        gshift = -gw*r
+        gt[i] = [np.sum(gshift*(u*u-1)), np.sum(gshift*u),
+                 np.sum(gshift), np.sum(gs*q), np.sum(gs)]
+        gu = gh[:, k] - gw*r*(2*a*u+b) + gs*d*(1-q*q)
+        gh[:, j] = gw*r
+        gh[:, k] = gu
+    return loss, gt.ravel()
+
+truth = np.array([0.55, 0., 0., 0.3, 0., -0.45, 0., 0., -0.25, 0.])
+train = generate(rng.normal(size=(3000, 2)), truth)
+test = generate(rng.normal(size=(3000, 2)), truth)
+</code></pre>
+<p><strong>Step 2. Check every coefficient derivative before fitting.</strong></p>
+<p>The check uses a nonzero probe and the first 32 training points. The optimizer receives both the value and analytic derivative with <code>jac=True</code>, as specified in <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.optimize.minimize.html">SciPy's minimize contract</a>. L-BFGS-B then fits all 3,000 training points with coefficient bounds. No test point contributes to that fit.</p>
+<pre><code class="language-python"># Step 2: verify the parameter gradient, then fit only the training data.
+probe = np.array([0.2, -0.1, 0.05, 0.1, -0.05, -0.1, 0.1, 0., -0.1, 0.05])
+small = train[:32]
+analytic = value_grad(probe, small)[1]
+eps = 1e-6
+numeric = np.zeros(10)
+for j in range(10):
+    delta = np.zeros(10)
+    delta[j] = eps
+    numeric[j] = (value_grad(probe+delta, small)[0]
+                  - value_grad(probe-delta, small)[0])/(2*eps)
+gradient_errors = np.abs(analytic-numeric)
+assert gradient_errors.max() &lt; 1e-6
+initial = np.zeros(10)
+fit = minimize(value_grad, initial, args=(train,), jac=True,
+               method=&quot;L-BFGS-B&quot;, bounds=[(-1.5, 1.5)]*10,
+               options={&quot;maxiter&quot;: 300, &quot;ftol&quot;: 1e-12, &quot;gtol&quot;: 1e-7})
+assert fit.success, fit.message
+theta = fit.x
+baseline = value_grad(initial, test)[0]
+fitted = value_grad(theta, test)[0]
+assert fitted &lt; baseline - 0.1
+</code></pre>
+<p><strong>Step 3. Test the inverse and the determinant, then draw fresh samples.</strong></p>
+<p>We calculate a separate numerical input Jacobian at (0.4, −0.8). A deliberately flipped analytic sign should fail that comparison. These numerical checks validate this implementation at the stated probe and tolerance. They are independent of the optimizer's success flag.</p>
+<pre><code class="language-python"># Step 3: check the chain, determinant and samples independently.
+z, ld, _ = encode(test, theta)
+roundtrip = np.max(np.abs(generate(z, theta)-test))
+assert roundtrip &lt; 1e-10
+point = np.array([0.4, -0.8])
+jacobian = np.zeros((2, 2))
+for j in range(2):
+    delta = np.zeros(2)
+    delta[j] = 1e-5
+    jacobian[:, j] = (encode((point+delta)[None], theta)[0][0]
+                      - encode((point-delta)[None], theta)[0][0])/(2e-5)
+numeric_ld = np.linalg.slogdet(jacobian)[1]
+analytic_ld = encode(point[None], theta)[1][0]
+ld_error = abs(numeric_ld-analytic_ld)
+wrong_sign_error = abs(numeric_ld+analytic_ld)
+assert ld_error &lt; 1e-8
+assert wrong_sign_error &gt; 1e-2
+sample = generate(rng.normal(size=(3000, 2)), theta)
+report = dict(run_date_local=&quot;2026-10-14&quot;, seed=12, python=platform.python_version(),
+              numpy=np.__version__, scipy=scipy.__version__, matplotlib=matplotlib.__version__,
+              device=&quot;CPU&quot;, dtype=&quot;float64&quot;, layers=2, parameters=10,
+              train_n=3000, test_n=3000, optimizer_iterations=int(fit.nit),
+              optimizer_success=bool(fit.success), gradient_max_abs_error=float(gradient_errors.max()),
+              baseline_test_nll=float(baseline), fitted_test_nll=float(fitted),
+              roundtrip_max_abs_error=float(roundtrip), logdet_abs_error=float(ld_error),
+              wrong_sign_error=float(wrong_sign_error), numeric_logdet=float(numeric_ld),
+              analytic_logdet=float(analytic_ld), all_assertions=&quot;PASS&quot;,
+              neural_network_training=False,
+              limits=&quot;Same-family synthetic continuous 2D data; ten polynomial/tanh coefficients, one seed. No image benchmark or generalization claim.&quot;)
+(out/&quot;run-output.json&quot;).write_text(json.dumps(report, indent=2), encoding=&quot;utf-8&quot;)
+summary = (f&quot;CPU float64 | seed=12 | layers=2 | parameters=10\n&quot;
+           f&quot;train=3000 | test=3000 | iterations={fit.nit}\n&quot;
+           f&quot;gradient max abs error: {gradient_errors.max():.3e}\n&quot;
+           f&quot;held-out NLL: baseline={baseline:.6f}, fitted={fitted:.6f} nats/point\n&quot;
+           f&quot;round-trip max abs error: {roundtrip:.3e}\n&quot;
+           f&quot;log-det abs error: {ld_error:.3e}\n&quot;
+           f&quot;wrong-sign log-det error: {wrong_sign_error:.6f}\nall assertions: PASS\n&quot;)
+(out/&quot;run-output.txt&quot;).write_text(summary, encoding=&quot;utf-8&quot;)
+print(summary)
+np.savez(out/&quot;measured-data.npz&quot;, test=test, latent=z, sample=sample,
+         theta=theta, analytic=analytic, numeric=numeric, gradient_errors=gradient_errors)
+plt.rcParams.update({&quot;font.size&quot;: 11, &quot;font.family&quot;: &quot;DejaVu Sans&quot;})
+fig, ax = plt.subplots(figsize=(10, 4.8), facecolor=&quot;#FFF9EF&quot;)
+ax.bar(np.arange(10), np.maximum(gradient_errors, 1e-16), color=&quot;#087F8C&quot;)
+ax.set_yscale(&quot;log&quot;)
+ax.axhline(1e-6, color=&quot;#C66B2B&quot;, linestyle=&quot;--&quot;, label=&quot;assertion threshold&quot;)
+ax.set(xlabel=&quot;Parameter index (two layers × five coefficients)&quot;, ylabel=&quot;Absolute gradient error&quot;,
+       title=&quot;Measured check: handwritten gradient vs central difference&quot;)
+ax.legend()
+fig.tight_layout()
+fig.savefig(out/&quot;figures/figure-5-gradient.png&quot;, dpi=180)
+fig.savefig(out/&quot;figures/figure-5-gradient.svg&quot;)
+plt.close(fig)
+fig, axes = plt.subplots(1, 3, figsize=(13.5, 4.6), facecolor=&quot;#FFF9EF&quot;)
+for ax, data, title in zip(axes, [test, z, sample],
+                          [&quot;Held-out synthetic data&quot;, &quot;Encoded held-out data&quot;, &quot;Fresh fitted-flow samples&quot;]):
+    ax.scatter(data[:, 0], data[:, 1], s=3, alpha=0.25, color=&quot;#087F8C&quot;)
+    ax.set(title=title, xlabel=&quot;coordinate 1&quot;, ylabel=&quot;coordinate 2&quot;)
+    ax.grid(alpha=0.15)
+axes[0].set(xlim=(-6, 6), ylim=(-6, 6))
+axes[2].set(xlim=(-6, 6), ylim=(-6, 6))
+axes[1].set(xlim=(-4, 4), ylim=(-4, 4))
+fig.suptitle(&quot;Part 12 · measured CPU run · 3,000 points per panel · seed 12&quot;)
+fig.tight_layout()
+fig.savefig(out/&quot;figures/figure-6-output.png&quot;, dpi=180)
+fig.savefig(out/&quot;figures/figure-6-output.svg&quot;)
+plt.close(fig)
+</code></pre>
+<p><strong>Actual output: 14 October 2026, CPU float64, seed 12</strong></p>
+<pre><code class="language-text">CPU float64 | seed=12 | layers=2 | parameters=10
+train=3000 | test=3000 | iterations=30
+gradient max abs error: 1.584e-10
+held-out NLL: baseline=3.871101, fitted=2.860647 nats/point
+round-trip max abs error: 7.105e-15
+log-det abs error: 6.714e-13
+wrong-sign log-det error: 0.329948
+all assertions: PASS
+</code></pre>
+<p><img alt="Measured coefficient-gradient errors" src="assets/part-12/figure-5-gradient.png" /></p>
+<p><em>Figure 5. Actual absolute errors for all ten coefficient derivatives at the stated probe on 32 training points. The dashed line is the 10⁻⁶ assertion threshold.</em></p>
+<p><img alt="Measured data, encoded points and generated samples" src="assets/part-12/figure-6-output.png" /></p>
+<p><em>Figure 6. Actual held-out data, its encoding and a fresh fitted-flow draw. Each panel contains 3,000 points. The data and sample panels share axis limits; rare extremes outside the windows are cropped.</em></p>
+<p>The fitted held-out NLL improved by 1.010454 nats per point against the identity Gaussian baseline on the same 3,000 test observations. The optimizer took 30 iterations. The gradient check's largest absolute discrepancy was 1.584e-10. Flipping the determinant sign produced an error of 0.329948 at the chosen input, while the correct sign agreed within 6.714e-13.</p>
+<p>These are authored measurements from the supplied script, not results reported by Real NVP. The fit is intentionally favorable: the generating family matches the fitted family. It establishes that this small chain and reverse pass passed the stated checks. It doesn't establish performance on images, out-of-family data or other seeds.</p>
+<p>Try removing the direct 1/n scale contribution from a copy of the gradient function. Leave the objective unchanged and rerun the coefficient check. That experiment makes the distinction concrete: invertibility can survive while the training derivative fails.</p>
+<p>For the one-layer setup, read <a href="https://medium.com/@thesomilsinghofficial/normalizing-flows-bend-a-distribution-without-losing-the-way-back-7fa69ccacd6b">Part 11</a>. The broader <a href="https://arxiv.org/html/1912.02762v2">normalizing-flows review</a> discusses architectures beyond this example. Next we'll move to the next model overview selected by the series record.</p>
+<p>Read the full series on <a href="https://medium.com/@thesomilsinghofficial">Medium</a> and <a href="https://thesomilsingh.substack.com/">Substack</a>.</p>

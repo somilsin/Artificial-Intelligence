@@ -1,0 +1,217 @@
+<h1>Deep Learning #13: Lower energy still doesn’t tell you the probability</h1>
+<p>Build an energy-based model you can normalize exactly, check its learning gradient and see where a good optimizer still leaves a bad fit.</p>
+<p>Somil Singh · Inside AI</p>
+<p><strong>Deep Learning Models · Part 13</strong></p>
+<p>Give one state an energy of zero. Is it now certain to appear? Nope. Another state can also have zero energy. A thousand others can sit nearby. The probability needs the whole field of competitors.</p>
+<p>Lemme make that visible. After flows, we're moving to energy-based models. We'll assign scores to 81 possible states, turn those scores into actual probabilities and fit four coefficients with a gradient we can check by hand and in code. No GPU needed.</p>
+<p><img alt="Energy scores and normalized masses in an authored three-state illustration" src="assets/part-13/figure-1.png" /></p>
+<p><em>Figure 1. Authored numerical illustration, not a training result. Energies [2, 0, 1] become masses approximately [0.090, 0.665, 0.245] after normalization.</em></p>
+<h2>1. Representation: assign a scalar to each possible state</h2>
+<p>An energy-based model, or EBM, gives a possible observation x a real-valued score Eθ(x). Lower energy means greater unnormalized weight exp(−Eθ(x)). θ contains the learned parameters. Energy here is a model score. It isn't a measured physical energy or a calibrated confidence.</p>
+<p>Our states are the 81 equally spaced values from −2 to 2, inclusive. That's the entire sample space. A generated value must be one of those states. We're modelling a probability mass function, not a continuous density evaluated at a grid of plotting points.</p>
+<p>For each state define u = x/2 and the feature vector φ(x) = [u, u², u³, u⁴]. The energy is Eθ(x) = θᵀφ(x). Four shared coefficients shape all 81 masses. We deliberately leave out a constant feature because the common energy offset cannot change the normalized distribution.</p>
+<p>The <a href="https://arxiv.org/html/1903.08689v2#S3">Du and Mordatch paper, section 3</a>, describes neural energies, Boltzmann normalization and implicit sampling. Its high-dimensional setting needs approximate sampling. Here we choose a tiny finite state space so normalization and model expectations can be evaluated directly. This example isn't a reproduction of that paper's image experiments.</p>
+<h2>2. Mechanism: turn relative scores into a distribution</h2>
+<p>Each state receives the positive weight w(x) = exp(−Eθ(x)). Add every weight to obtain the partition function Zθ. Then divide:</p>
+<p><strong>Zθ = Σs∈S exp(−Eθ(s)); pθ(x) = exp(−Eθ(x)) / Zθ.</strong></p>
+<p>The sum runs over the specified state space S. Zθ depends on the coefficients but not on which single state you're currently scoring. All 81 probabilities sum to one.</p>
+<p><img alt="Four polynomial features and their shared energy readout" src="assets/part-13/figure-2.png" /></p>
+<p><em>Figure 2. Deterministic feature map used by the runnable demo. The left curves are evaluated feature values. The right equation describes how shared coefficients produce one energy per state.</em></p>
+<p>The ratio pθ(a)/pθ(b) = exp(−Eθ(a) + Eθ(b)) cancels Zθ. That's useful for comparing two states. It doesn't tell us their absolute probabilities. Adding more allowed states can change Zθ and therefore change the probability of every existing state even when their individual energies stay fixed.</p>
+<p>A flow supplies density through an invertible transformation and its volume correction. This finite EBM supplies an energy on each state and normalizes across the state set. Neither construction makes an arbitrary fitted model correct for real data.</p>
+<h2>3. Objective: the partition function has a gradient too</h2>
+<p>Let qdata(x) be the observed fraction of training draws at state x. We minimize the mean negative log likelihood, or NLL:</p>
+<p><strong>L(θ) = Σx qdata(x)Eθ(x) + log Zθ.</strong></p>
+<p>The first term charges energy to observations. The second accounts for all the competing states. Its sign is plus because −log[exp(−E)/Z] = E + log Z. A lower training NLL means greater average log probability for that empirical dataset under the specified model.</p>
+<p><img alt="The partition function contribution to negative log likelihood" src="assets/part-13/figure-3.png" /></p>
+<p><em>Figure 3. Authored three-state calculation using Figure 1's energies. Observation B has energy zero, but its NLL is log Z ≈ 0.408 nats. The formula uses probability masses on a finite sample space.</em></p>
+<p>For our linear-in-features energy, differentiating the log partition function gives ∇θ log Zθ = −Σx pθ(x)φ(x). Therefore:</p>
+<p><strong>∇θL = Edata[φ(x)] − Emodel[φ(x)].</strong></p>
+<p>The empirical feature average and the current model feature average pull against each other. Gradient descent subtracts their difference. This is the finite-state version of the data-versus-model expectation structure; <a href="https://arxiv.org/html/1912.03263v3#S2">Grathwohl et al., section 2</a>, states the general log-likelihood derivative. Their paper also connects classifier logits to a joint EBM. We aren't training that classifier here.</p>
+<p>Dropping log Z gives only the data term. That derivative can keep lowering observed energies without paying for the probability assigned elsewhere. The optimizer could execute your code perfectly while optimizing the wrong objective.</p>
+<h2>4. The useful trick: energy has no absolute zero</h2>
+<p>Add the same finite constant c to every energy. The weights all get multiplied by exp(−c). So does their sum. The factor cancels, leaving every probability unchanged:</p>
+<p><strong>E′(x) = E(x) + c; Z′ = exp(−c)Z; p′(x) = p(x).</strong></p>
+<p>This applies to one common shift across all states. A different shift for each state changes their relative energies and generally changes the distribution. Adding c doesn't mean scaling the energies; multiplication changes the relative weights.</p>
+<p><img alt="Actual energy shift and unchanged fitted probability masses" src="assets/part-13/figure-4.png" /></p>
+<p><em>Figure 4. Actual fitted energies and normalized probabilities from this run. A common +1,000 shift changed probabilities by at most 1.322e-15. The left panel uses the full energy scale, so the original curve is compressed near zero.</em></p>
+<p>Directly computing exp(−E−1000) can underflow to zeros. Dividing those zeros doesn't recover a probability. Our code evaluates log Z with log-sum-exp: for a = −E and m = max(a), log Z = m + log Σ exp(a−m). At least one shifted exponential equals one. This removes a needless numerical failure; it doesn't solve the cost of summing an enormous state space.</p>
+<h2>5. Training and generation take different routes</h2>
+<p>The authored target combines two Gaussian-shaped weight profiles on the same 81 states and normalizes them. They aren't a continuous Gaussian mixture sampler. We draw 6,000 training states and a separate 6,000 test states from these known discrete masses.</p>
+<p>Training starts with θ = 0, which makes all energies equal and the model uniform. At every update we enumerate all states, calculate the exact model feature expectation and compare it with the training feature average. Adam updates the four coefficients for 4,000 steps. Its moments help choose parameter steps; there's no minibatch estimate or MCMC approximation in this gradient.</p>
+<p><img alt="Training and independent categorical generation routes" src="assets/part-13/figure-5.png" /></p>
+<p><em>Figure 5. Concept schematic of this exact finite-state experiment. Training updates coefficients. Generation holds them fixed and draws directly from the normalized categorical law.</em></p>
+<p>Generation evaluates the fitted masses once and takes 20,000 independent categorical draws. The resulting frequencies fluctuate around those masses. Independent sampling here is possible because all masses fit in memory. It says nothing about how quickly a Markov chain would move between modes.</p>
+<p>In a continuous EBM, the partition function is an integral and often intractable. The <a href="https://arxiv.org/html/1903.08689v2#S3">Du and Mordatch sampling section</a> uses Langevin dynamics to construct approximate samples. Our demo does not implement Langevin dynamics, estimate its mixing time or validate a neural image generator.</p>
+<h2>6. Failure: a correct gradient can still fit the wrong shape</h2>
+<p>Four polynomial features restrict the energy family. Our target has two peaks with different widths. The fit can improve held-out likelihood against a uniform baseline and still miss aspects of that target. Because we authored the complete target law, we can measure KL(target ∥ fitted) directly rather than infer success from a tidy histogram.</p>
+<p>The observed test NLL is 4.107736 nats per state draw versus 4.394449 for uniform. The known-target KL remains 0.064320 nats. The final training gradient norm is 2.170e-12. That small gradient reports local stationarity of this implemented training objective. It doesn't say the target distribution has been recovered.</p>
+<p>Keep the checks separate. A finite-difference check tests a derivative at its stated parameter probe. Probability summation checks normalization. Common-shift invariance checks a mathematical symmetry. Test NLL compares fitted laws on separate data. Sampling total variation here compares a finite empirical histogram with the known fitted masses. None replaces the others.</p>
+<p><strong>Keep these three ideas</strong></p>
+<ol>
+<li>An energy supplies relative weight. Absolute probability also needs the allowed state space and its normalizer.</li>
+<li>Likelihood learning compares observed and model feature expectations. The normalizer contributes the second expectation.</li>
+<li>A good implementation can expose a limited model family. Exact arithmetic for a toy problem doesn't establish scalable sampling or real-world performance.</li>
+</ol>
+<h2>7. Runnable check: enumerate everything before approximating anything</h2>
+<p>Use Python with NumPy and Matplotlib. This run used Python 3.11.5, NumPy 1.23.5 and Matplotlib 3.7.1 on CPU with float64 arrays and seed 13. No PyTorch or newly installed dependency was used. Paste the three steps into one file in order and run it from the folder where you want the output files. Step 2 and Step 3 use the state created by Step 1.</p>
+<p><strong>Step 1. Define the finite state space, authored target and exact objective.</strong> Counts are reduced to fractions before averaging features, so the loss is per state draw. The held-out counts stay out of the optimizer.</p>
+<pre><code class="language-python">from pathlib import Path
+import json
+import platform
+from datetime import datetime, timezone
+import numpy as np
+import matplotlib
+matplotlib.use(&quot;Agg&quot;)
+import matplotlib.pyplot as plt
+
+out = Path(&quot;.&quot;)
+(out / &quot;figures&quot;).mkdir(exist_ok=True)
+seed = 13
+rng = np.random.default_rng(seed)
+x = np.linspace(-2.0, 2.0, 81)
+u = x / 2.0
+phi = np.stack([u, u**2, u**3, u**4], axis=1)
+
+def normalize(energy):
+    logits = -energy
+    top = logits.max()
+    log_z = top + np.log(np.exp(logits - top).sum())
+    log_p = logits - log_z
+    return np.exp(log_p), log_p, log_z
+
+# Authored mixture weights on 81 states, not a continuous density.
+weights = (0.38 * np.exp(-0.5 * ((x + 0.95) / 0.28)**2) / 0.28
+           + 0.62 * np.exp(-0.5 * ((x - 0.75) / 0.42)**2) / 0.42)
+target = weights / weights.sum()
+train_i = rng.choice(len(x), 6000, p=target)
+test_i = rng.choice(len(x), 6000, p=target)
+q_train = np.bincount(train_i, minlength=len(x)) / len(train_i)
+q_test = np.bincount(test_i, minlength=len(x)) / len(test_i)
+data_features = q_train @ phi
+
+def objective(theta, q=q_train):
+    p, log_p, log_z = normalize(phi @ theta)
+    loss = -q @ log_p
+    grad = q @ phi - p @ phi
+    return loss, grad
+</code></pre>
+<p><strong>Step 2. Check the derivative, fit four coefficients and test the common energy shift.</strong> Central finite differences use ε = 10⁻⁵ at a nonzero four-dimensional probe. The assertion threshold is 10⁻⁷. Every optimizer gradient then uses the full model law.</p>
+<pre><code class="language-python"># Check the exact objective before fitting, at a nonzero probe.
+probe = np.array([0.3, -0.7, 0.2, 0.8], dtype=np.float64)
+analytic = objective(probe)[1]
+eps = 1e-5
+numeric = np.zeros(4)
+for j in range(4):
+    delta = np.zeros(4)
+    delta[j] = eps
+    numeric[j] = (objective(probe + delta)[0]
+                  - objective(probe - delta)[0]) / (2 * eps)
+grad_errors = np.abs(analytic - numeric)
+assert grad_errors.max() &lt; 1e-7
+
+# Deterministic full-distribution gradients; Adam only updates four coefficients.
+theta = np.zeros(4, dtype=np.float64)
+m = np.zeros(4)
+v = np.zeros(4)
+losses = []
+for t in range(1, 4001):
+    loss, grad = objective(theta)
+    losses.append(float(loss))
+    m = 0.9 * m + 0.1 * grad
+    v = 0.999 * v + 0.001 * grad**2
+    m_hat = m / (1 - 0.9**t)
+    v_hat = v / (1 - 0.999**t)
+    theta -= 0.04 * m_hat / (np.sqrt(v_hat) + 1e-8)
+losses.append(float(objective(theta)[0]))
+energy = phi @ theta
+p, log_p, log_z = normalize(energy)
+shifted_p, _, shifted_log_z = normalize(energy + 1000.0)
+shift_error = np.max(np.abs(p - shifted_p))
+assert shift_error &lt; 1e-12
+assert np.isclose(p.sum(), 1.0, atol=1e-12)
+assert losses[-1] &lt; losses[0]
+assert np.isfinite(theta).all()
+</code></pre>
+<p><strong>Step 3. Draw samples, save the actual results and make the diagnostic plots.</strong> KL uses the known authored target. Total variation, or TV, is half the summed absolute difference between the generated frequencies and the fitted probabilities. It is a sampling diagnostic for this draw, not the fit error against the target.</p>
+<pre><code class="language-python"># These are independent categorical draws, not MCMC transitions.
+sample_i = rng.choice(len(x), 20000, p=p)
+sample_freq = np.bincount(sample_i, minlength=len(x)) / len(sample_i)
+baseline_nll = np.log(len(x))
+test_nll = float(-q_test @ log_p)
+target_kl = float(target @ (np.log(target) - log_p))
+sample_tv = float(0.5 * np.abs(sample_freq - p).sum())
+metrics = {
+    &quot;run_at_utc&quot;: datetime.now(timezone.utc).isoformat(),
+    &quot;python&quot;: platform.python_version(), &quot;numpy&quot;: np.__version__,
+    &quot;matplotlib&quot;: matplotlib.__version__, &quot;device&quot;: &quot;CPU&quot;, &quot;dtype&quot;: &quot;float64&quot;,
+    &quot;seed&quot;: seed, &quot;states&quot;: len(x), &quot;train&quot;: len(train_i), &quot;test&quot;: len(test_i),
+    &quot;samples&quot;: len(sample_i), &quot;updates&quot;: 4000, &quot;theta&quot;: theta.tolist(),
+    &quot;gradient_max_abs_error&quot;: float(grad_errors.max()),
+    &quot;shift_probability_max_abs_error&quot;: float(shift_error),
+    &quot;probability_sum&quot;: float(p.sum()), &quot;baseline_test_nll&quot;: float(baseline_nll),
+    &quot;fitted_test_nll&quot;: test_nll, &quot;train_nll&quot;: float(losses[-1]),
+    &quot;target_to_fitted_kl_nats&quot;: target_kl, &quot;sample_tv_from_fitted&quot;: sample_tv,
+    &quot;final_gradient_norm&quot;: float(np.linalg.norm(objective(theta)[1])),
+    &quot;assertions&quot;: &quot;PASS&quot;
+}
+(out / &quot;run-output.json&quot;).write_text(json.dumps(metrics, indent=2), encoding=&quot;utf-8&quot;)
+np.savez(out / &quot;measured-data.npz&quot;, x=x, phi=phi, target=target,
+         q_train=q_train, q_test=q_test, theta=theta, p=p, energy=energy,
+         sample_freq=sample_freq, losses=losses, analytic=analytic,
+         numeric=numeric, grad_errors=grad_errors, shifted_p=shifted_p)
+print(f&quot;CPU float64 | seed={seed} | states={len(x)} | parameters=4&quot;)
+print(f&quot;train={len(train_i)} | test={len(test_i)} | samples={len(sample_i)} | updates=4000&quot;)
+print(f&quot;gradient max abs error: {grad_errors.max():.3e}&quot;)
+print(f&quot;constant-shift probability max abs error: {shift_error:.3e}&quot;)
+print(f&quot;probability sum: {p.sum():.12f}&quot;)
+print(f&quot;held-out NLL: uniform={baseline_nll:.6f}, fitted={test_nll:.6f} nats/state draw&quot;)
+print(f&quot;known-target KL(target || fitted): {target_kl:.6f} nats&quot;)
+print(f&quot;sample TV from fitted probabilities: {sample_tv:.6f}&quot;)
+print(f&quot;final gradient norm: {metrics['final_gradient_norm']:.3e}&quot;)
+print(&quot;all assertions: PASS&quot;)
+
+plt.rcParams.update({&quot;font.family&quot;: &quot;DejaVu Sans&quot;, &quot;font.size&quot;: 11})
+fig, axes = plt.subplots(2, 2, figsize=(13, 8.5))
+axes[0, 0].plot(x, target, label=&quot;Known authored target&quot;, color=&quot;#153449&quot;)
+axes[0, 0].plot(x, p, label=&quot;Fitted EBM&quot;, color=&quot;#087F8C&quot;, linestyle=&quot;--&quot;)
+axes[0, 0].set(title=&quot;Exact masses on the 81 states&quot;, xlabel=&quot;state x&quot;, ylabel=&quot;probability mass&quot;)
+axes[0, 0].legend()
+axes[0, 1].plot(losses, color=&quot;#087F8C&quot;)
+axes[0, 1].set(title=&quot;Exact training NLL&quot;, xlabel=&quot;coefficient update&quot;, ylabel=&quot;nats / state draw&quot;)
+axes[1, 0].bar(x, sample_freq, width=0.045, color=&quot;#C66B2B&quot;, alpha=0.7, label=&quot;20,000 categorical draws&quot;)
+axes[1, 0].plot(x, p, color=&quot;#153449&quot;, label=&quot;Fitted probabilities&quot;)
+axes[1, 0].set(title=&quot;Sampling variation remains&quot;, xlabel=&quot;state x&quot;, ylabel=&quot;frequency / probability&quot;)
+axes[1, 0].legend(fontsize=9)
+axes[1, 1].bar(range(1, 5), np.maximum(grad_errors, 1e-18), color=&quot;#397BA5&quot;)
+axes[1, 1].axhline(1e-7, color=&quot;#C66B2B&quot;, linestyle=&quot;--&quot;, label=&quot;assertion threshold&quot;)
+axes[1, 1].set(yscale=&quot;log&quot;, xticks=range(1, 5), title=&quot;Gradient check at stated probe&quot;, xlabel=&quot;coefficient index&quot;, ylabel=&quot;absolute error&quot;)
+axes[1, 1].legend(fontsize=9)
+for ax in axes.flat:
+    ax.grid(alpha=0.15)
+fig.suptitle(&quot;Inside AI · Deep Learning Models · Part 13\nActual finite-state CPU run · seed 13&quot;, color=&quot;#153449&quot;)
+fig.tight_layout(rect=(0, 0, 1, 0.94))
+fig.savefig(out / &quot;figures/figure-6-output.png&quot;, dpi=180)
+fig.savefig(out / &quot;figures/figure-6-output.svg&quot;)
+plt.close(fig)
+</code></pre>
+<p><strong>Actual output: 15 October 2026, CPU float64, seed 13</strong></p>
+<pre><code class="language-text">CPU float64 | seed=13 | states=81 | parameters=4
+train=6000 | test=6000 | samples=20000 | updates=4000
+gradient max abs error: 5.988e-11
+constant-shift probability max abs error: 1.322e-15
+probability sum: 1.000000000000
+held-out NLL: uniform=4.394449, fitted=4.107736 nats/state draw
+known-target KL(target || fitted): 0.064320 nats
+sample TV from fitted probabilities: 0.022309
+final gradient norm: 2.170e-12
+all assertions: PASS
+</code></pre>
+<p><img alt="Measured fitted masses, training loss, categorical samples and gradient-check errors" src="assets/part-13/figure-6-output.png" /></p>
+<p><em>Figure 6. Actual outputs from the supplied script. Top left compares the complete authored target with the fitted EBM. Top right shows exact training NLL before each update and after the last one. Bottom left compares 20,000 categorical sample frequencies with the fitted law. Bottom right shows four coefficient-gradient errors at the stated probe; the dashed line is the assertion threshold.</em></p>
+<p>The test NLL improved by 0.286713 nats per state draw over uniform. The finite-difference discrepancy was at most 5.988e-11. Generated frequencies had TV 0.022309 from the fitted masses. These are measurements from this authored finite example, not numbers from either paper.</p>
+<p>The sample size, seed, target and feature basis are fixed here. We haven't tested other seeds, continuous-space generalization, neural energies or approximate samplers. A small positive KL is still a mismatch. Even a tiny KL on this target would not establish performance outside these 81 states.</p>
+<p>Try removing the model expectation from a copy of <code>objective</code> while leaving the likelihood calculation unchanged. Then rerun the finite-difference check. You'll see why lowering observed energies alone isn't the same gradient. Keep the original working script so the deliberate failure stays easy to undo.</p>
+<p>For the preceding model, read <a href="https://medium.com/@thesomilsinghofficial/deep-learning-12-a-flow-can-reverse-perfectly-and-still-learn-the-wrong-thing-4dd4b823bc5f">Part 12: composing normalizing flows and checking their gradients</a>. Next we'll unpack the partition-function derivative and what changes when model samples have to be approximate.</p>
+<p>The primary sources are <a href="https://arxiv.org/html/1903.08689v2">Du and Mordatch, <em>Implicit Generation and Modeling with Energy-Based Models</em>, v2, 10 June 2019</a> and <a href="https://arxiv.org/html/1912.03263v3">Grathwohl et al., <em>Your classifier is secretly an energy based model and you should treat it like one</em>, v3, 15 September 2020</a>. The derivations, finite target, code, figures and measurements in this lesson are original teaching material.</p>
+<p>Read the series on <a href="https://medium.com/@thesomilsinghofficial">Medium</a> and <a href="https://thesomilsingh.substack.com/">Substack</a>.</p>

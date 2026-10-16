@@ -203,6 +203,21 @@
       "source": "part-12.html",
       "page": "part-12-flow-foundations.html",
       "date": "14 October 2026"
+    },
+    {
+      "part": "13",
+      "type": "Overview",
+      "model": "Energy-based models",
+      "title": "Lower energy still doesn’t tell you the probability",
+      "description": "Build an energy-based model you can normalize exactly, check its learning gradient and see where a good optimizer still leaves a bad fit.",
+      "image": "assets/part-13/figure-1.png",
+      "image_alt": "Energy scores and normalized masses in an authored three-state illustration",
+      "medium": "https://medium.com/@thesomilsinghofficial/deep-learning-13-lower-energy-still-doesnt-tell-you-the-probability-20b449862c3f",
+      "substack": "https://thesomilsingh.substack.com/p/deep-learning-13-lower-energy-still",
+      "published": true,
+      "source": "part-13.html",
+      "page": "part-13-ebm-overview.html",
+      "date": "15 October 2026"
     }
   ],
   "news": [

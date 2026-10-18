@@ -27,4 +27,4 @@ Hosted chat:
 For more AI notes, follow the Inside AI newsletter:
 [Read here](https://www.linkedin.com/build-relation/newsletter-follow?entityUrn=7511777490416250880)
 
-[X Article](https://x.com/Skywalkerlyzv/article/2107459439796388099) · [Inside AI company summary](https://www.linkedin.com/feed/update/urn:li:share:7513227968677163008/?actorCompanyId=143953415)
+X post removed; research retained · [Inside AI company summary](https://www.linkedin.com/feed/update/urn:li:share:7513227968677163008/?actorCompanyId=143953415)

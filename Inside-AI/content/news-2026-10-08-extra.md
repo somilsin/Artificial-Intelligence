@@ -60,7 +60,7 @@ The full preprint and method are publicly readable. I have not verified a separa
 
 Submitted 7 October 2026; surfaced in the 8 October arXiv feed. Primary paper: https://arxiv.org/abs/2610.10507
 
-[Primary paper](https://arxiv.org/abs/2610.10507) · [Full X Article](https://x.com/Skywalkerlyzv/article/2108184227195879666) · [Inside AI company summary](https://www.linkedin.com/feed/update/urn:li:share:7513950267353165824?actorCompanyId=143953415)
+[Primary paper](https://arxiv.org/abs/2610.10507) · X post removed; research retained · [Inside AI company summary](https://www.linkedin.com/feed/update/urn:li:share:7513950267353165824?actorCompanyId=143953415)
 
 ## 3. A base model can fail the agent harness and still be worth training
 
@@ -120,7 +120,7 @@ The paper links a public benchmark website and code. Model comparisons reflect t
 
 Submitted 7 October 2026; surfaced in the 8 October arXiv feed. Primary paper: https://arxiv.org/abs/2610.09944
 
-[Primary paper](https://arxiv.org/abs/2610.09944) · [Full X Article](https://x.com/Skywalkerlyzv/article/2108198953095463183) · [Inside AI company summary](https://www.linkedin.com/feed/update/urn:li:share:7513964806048190465?actorCompanyId=143953415)
+[Primary paper](https://arxiv.org/abs/2610.09944) · X post removed; research retained · [Inside AI company summary](https://www.linkedin.com/feed/update/urn:li:share:7513964806048190465?actorCompanyId=143953415)
 
 ## 5. Agent memory can retrieve the right fact and still give you a bad prompt
 
@@ -150,6 +150,6 @@ The full preprint is public. Correct keys are an important condition, not a solv
 
 Submitted 7 October 2026; surfaced in the 8 October arXiv feed. Primary paper: https://arxiv.org/abs/2610.10265
 
-[Primary paper](https://arxiv.org/abs/2610.10265) · [Full X Article](https://x.com/Skywalkerlyzv/article/2108199464804798816) · [Inside AI company summary](https://www.linkedin.com/feed/update/urn:li:share:7513965486624346112?actorCompanyId=143953415)
+[Primary paper](https://arxiv.org/abs/2610.10265) · X post removed; research retained · [Inside AI company summary](https://www.linkedin.com/feed/update/urn:li:share:7513965486624346112?actorCompanyId=143953415)
 
 

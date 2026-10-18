@@ -65,12 +65,13 @@
       "image_alt": "A continuous encoder vector selects a discrete code while a surrogate sends learning information back",
       "medium": "https://medium.com/@thesomilsinghofficial/the-vq-vae-gradient-trick-what-learns-when-a-code-is-selected-b7f4a54db78d",
       "substack": "https://thesomilsingh.substack.com/p/the-vq-vae-gradient-trick-what-learns",
-      "x": "https://x.com/Skywalkerlyzv/article/2107140033794973870",
       "company": "https://www.linkedin.com/pulse/vq-vae-gradient-trick-what-learns-when-code-selected-71ntc/",
       "published": true,
       "source": "part-04.html",
       "page": "part-04-vq-vae-gradients.html",
-      "date": "5 October 2026"
+      "date": "5 October 2026",
+      "historical_x_url": "https://x.com/Skywalkerlyzv/article/2107140033794973870",
+      "x_status": "removed_by_owner_native_verified"
     },
     {
       "part": "05",
@@ -462,25 +463,34 @@
           "id": "x-original-muse-wonder",
           "source_event_key": "meta:muse-wonder:2026-10-12",
           "source": "https://research.meta.ai/blog/muse-wonder",
-          "live_url": "https://x.com/Skywalkerlyzv/status/2110013977090789652",
           "copy_sha256_utf8": "6aa25d6c4187bae21b1eefc1e3265b71ea1cc8d28e99b55f2ecc3f69a6c7dc84",
-          "native_published_at_utc": "2026-10-13T14:25:08Z"
+          "native_published_at_utc": "2026-10-13T14:25:08Z",
+          "historical_live_url": "https://x.com/Skywalkerlyzv/status/2110013977090789652",
+          "status": "removed_by_owner_native_verified",
+          "removal_native_verified_at_utc": "2026-10-16T13:09:57.767Z",
+          "removal_status_recorded_at_utc": "2026-10-16T16:45:34.747467+00:00"
         },
         {
           "id": "x-reference-anthropic-distillation-defenses",
           "source_event_key": "anthropic:distillation-defenses:2026-10-12:x:2109795898909950247",
           "source": "https://www.anthropic.com/research/distillation-defenses",
-          "live_url": "https://x.com/Skywalkerlyzv/status/2110021197958447465",
           "copy_sha256_utf8": "1966d97f8ca2cfdb2f3eedc02955e9e772e069d75e15c5b78c98b0b508059eb0",
-          "native_published_at_utc": "2026-10-13T14:53:50Z"
+          "native_published_at_utc": "2026-10-13T14:53:50Z",
+          "historical_live_url": "https://x.com/Skywalkerlyzv/status/2110021197958447465",
+          "status": "removed_by_owner_native_verified",
+          "removal_native_verified_at_utc": "2026-10-16T13:08:09.423Z",
+          "removal_status_recorded_at_utc": "2026-10-16T16:45:34.747467+00:00"
         },
         {
           "id": "x-reference-ai2-tutormoments-update",
           "source_event_key": "ai2:tutormoments-frontier-update:x:2109746787405742292",
           "source": "https://tutormoments.allen.ai/",
-          "live_url": "https://x.com/Skywalkerlyzv/status/2110030713160630669",
           "copy_sha256_utf8": "83a96c5e73c1c04f1811a619f7e8c8fe4baf4e32a0fe22e097f12f2498aa4d7c",
-          "native_published_at_utc": "2026-10-13T15:31:39Z"
+          "native_published_at_utc": "2026-10-13T15:31:39Z",
+          "historical_live_url": "https://x.com/Skywalkerlyzv/status/2110030713160630669",
+          "status": "removed_by_owner_native_verified",
+          "removal_native_verified_at_utc": "2026-10-16T13:06:34.349Z",
+          "removal_status_recorded_at_utc": "2026-10-16T16:45:34.747467+00:00"
         }
       ]
     },
@@ -504,41 +514,56 @@
           "id": "scaledown-context",
           "source_event_key": "langchain:scaledown-deep-agents:2026-10-13",
           "source": "https://www.langchain.com/blog/building-long-running-agents-with-scaledown-and-deep-agents",
-          "live_url": "https://x.com/Skywalkerlyzv/status/2110365212583096436",
           "copy_sha256_utf8": "47d64cb0b9e6bd0a323c0a6ab054bffa56ca153c54cc027ddf0990ffce6b8d68",
-          "native_published_at_utc": "2026-10-14T13:40:50Z"
+          "native_published_at_utc": "2026-10-14T13:40:50Z",
+          "historical_live_url": "https://x.com/Skywalkerlyzv/status/2110365212583096436",
+          "status": "removed_by_owner_native_verified",
+          "removal_native_verified_at_utc": "2026-10-16T13:06:24.558Z",
+          "removal_status_recorded_at_utc": "2026-10-16T16:45:34.747467+00:00"
         },
         {
           "id": "argon-robotics",
           "source_event_key": "google:argon-robotics:2026-10-13",
           "source": "https://developers.googleblog.com/en/gemini-4-argon-for-robotics/",
-          "live_url": "https://x.com/Skywalkerlyzv/status/2110366763271791024",
           "copy_sha256_utf8": "0ba6b25cb7d3c07bd2d11ef0dd3f86981bb750848c9f5f267ebfe3c5271af944",
-          "native_published_at_utc": "2026-10-14T13:46:59Z"
+          "native_published_at_utc": "2026-10-14T13:46:59Z",
+          "historical_live_url": "https://x.com/Skywalkerlyzv/status/2110366763271791024",
+          "status": "removed_by_owner_native_verified",
+          "removal_native_verified_at_utc": "2026-10-16T13:05:45.705Z",
+          "removal_status_recorded_at_utc": "2026-10-16T16:45:34.747467+00:00"
         },
         {
           "id": "gemma-scam",
           "source_event_key": "google:govtech-scam-detection:2026-10-14",
           "source": "https://deepmind.google/blog/on-device-ai-scam-detection-mddi/",
-          "live_url": "https://x.com/Skywalkerlyzv/status/2110387715489563129",
           "copy_sha256_utf8": "6164393948c77c0801dc453ac77cceb95a4dab137501bf99eacb0a87a74ce80c",
-          "native_published_at_utc": "2026-10-14T15:10:15Z"
+          "native_published_at_utc": "2026-10-14T15:10:15Z",
+          "historical_live_url": "https://x.com/Skywalkerlyzv/status/2110387715489563129",
+          "status": "removed_by_owner_native_verified",
+          "removal_native_verified_at_utc": "2026-10-16T13:05:39.537Z",
+          "removal_status_recorded_at_utc": "2026-10-16T16:45:34.747467+00:00"
         },
         {
           "id": "molmo2fish",
           "source_event_key": "ai2:molmo2fish:2026-10-13",
           "source": "https://allenai.org/blog/molmo2fish",
-          "live_url": "https://x.com/Skywalkerlyzv/status/2110388416223567921",
           "copy_sha256_utf8": "9be30c4a8aaf1e720c19e0fd002ba0b5d1840603588ef4147bde640d1f078260",
-          "native_published_at_utc": "2026-10-14T15:13:02Z"
+          "native_published_at_utc": "2026-10-14T15:13:02Z",
+          "historical_live_url": "https://x.com/Skywalkerlyzv/status/2110388416223567921",
+          "status": "removed_by_owner_native_verified",
+          "removal_native_verified_at_utc": "2026-10-16T13:05:32.843Z",
+          "removal_status_recorded_at_utc": "2026-10-16T16:45:34.747467+00:00"
         },
         {
           "id": "singapore-mou",
           "source_event_key": "anthropic:singapore-mou:2026-10-14",
           "source": "https://www.anthropic.com/news/singapore-office-opening",
-          "live_url": "https://x.com/Skywalkerlyzv/status/2110388984430113028",
           "copy_sha256_utf8": "fe33b396eee6cfe031187f4f3f47b5da5f7213323016ef37485fc5f2856e5361",
-          "native_published_at_utc": "2026-10-14T15:15:17Z"
+          "native_published_at_utc": "2026-10-14T15:15:17Z",
+          "historical_live_url": "https://x.com/Skywalkerlyzv/status/2110388984430113028",
+          "status": "removed_by_owner_native_verified",
+          "removal_native_verified_at_utc": "2026-10-16T13:05:06.771Z",
+          "removal_status_recorded_at_utc": "2026-10-16T16:45:34.747467+00:00"
         }
       ]
     },
@@ -563,45 +588,85 @@
           "source_event_key": "google:deep-review-public:2026-10-14",
           "source": "https://research.google/blog/analyzing-technical-documents-with-deep-review/",
           "copy_sha256_utf8": "59ca44f2086313925581b39547cc8228cf1e913d3c9b00090578d44de8d1ed17",
-          "status": "live_native_verified",
-          "live_url": "https://x.com/Skywalkerlyzv/status/2110755678986064210",
-          "native_published_at_utc": "2026-10-15T15:32:24Z"
+          "status": "removed_by_owner_native_verified",
+          "native_published_at_utc": "2026-10-15T15:32:24Z",
+          "historical_live_url": "https://x.com/Skywalkerlyzv/status/2110755678986064210",
+          "removal_native_verified_at_utc": "2026-10-16T13:04:39.351Z",
+          "removal_status_recorded_at_utc": "2026-10-16T16:45:34.747467+00:00"
         },
         {
           "id": "earth-ai",
           "source_event_key": "google:earth-ai-geospatial-agent-report:2026-10-14",
           "source": "https://research.google/blog/putting-earth-ai-to-work-geospatial-agents-for-our-planets-biggest-challenges/",
           "copy_sha256_utf8": "d51ee7cef64da5fa1d49ef943e2c4d41d951bb03e303fcc8a71b83fff363983d",
-          "status": "live_native_verified",
-          "live_url": "https://x.com/Skywalkerlyzv/status/2110759503046267211",
-          "native_published_at_utc": "2026-10-15T15:47:36Z"
+          "status": "removed_by_owner_native_verified",
+          "native_published_at_utc": "2026-10-15T15:47:36Z",
+          "historical_live_url": "https://x.com/Skywalkerlyzv/status/2110759503046267211",
+          "removal_native_verified_at_utc": "2026-10-16T12:59:29.109115+00:00",
+          "removal_status_recorded_at_utc": "2026-10-16T16:45:34.747467+00:00"
         },
         {
           "id": "hiro-acev2",
           "source_event_key": "ai2:hiro-acev2:2026-10-14",
           "source": "https://huggingface.co/blog/allenai/hiro-acev2",
           "copy_sha256_utf8": "b91679cb6304ea3118c59c8d28a95c606ec52f31c36df8f726af0fcd89352c06",
-          "status": "live_native_verified",
-          "live_url": "https://x.com/Skywalkerlyzv/status/2110791649718886829",
-          "native_published_at_utc": "2026-10-15T17:55:20Z"
+          "status": "removed_by_owner_native_verified",
+          "native_published_at_utc": "2026-10-15T17:55:20Z",
+          "historical_live_url": "https://x.com/Skywalkerlyzv/status/2110791649718886829",
+          "removal_native_verified_at_utc": null,
+          "removal_status_recorded_at_utc": "2026-10-16T16:45:34.747467+00:00"
         },
         {
           "id": "apertus-report",
           "source_event_key": "swiss-ai:apertus15-release-notes:2026-10-15",
           "source": "https://huggingface.co/blog/swiss-ai/apertus-v15-release-notes",
           "copy_sha256_utf8": "df54f54e5703a980b9709f06e7261bc46c63d742c5482b2f2364a056eeda5128",
-          "status": "live_native_verified",
-          "live_url": "https://x.com/Skywalkerlyzv/status/2110791994541027813",
-          "native_published_at_utc": "2026-10-15T17:56:42Z"
+          "status": "removed_by_owner_native_verified",
+          "native_published_at_utc": "2026-10-15T17:56:42Z",
+          "historical_live_url": "https://x.com/Skywalkerlyzv/status/2110791994541027813",
+          "removal_native_verified_at_utc": "2026-10-16T12:18:43.064Z",
+          "removal_status_recorded_at_utc": "2026-10-16T16:45:34.747467+00:00"
         },
         {
           "id": "langsmith-ai-search",
           "source_event_key": "langchain:langsmith-ai-search:2026-10-13",
           "source": "https://www.langchain.com/blog/agent-traces-ai-search-langsmith",
           "copy_sha256_utf8": "6806bcf6ef6478829ddc66eafc2d238434cfa33ee31f7d67b6d2c426beb29869",
-          "status": "live_native_verified",
-          "live_url": "https://x.com/Skywalkerlyzv/status/2110792372040905093",
-          "native_published_at_utc": "2026-10-15T17:58:12Z"
+          "status": "removed_by_owner_native_verified",
+          "native_published_at_utc": "2026-10-15T17:58:12Z",
+          "historical_live_url": "https://x.com/Skywalkerlyzv/status/2110792372040905093",
+          "removal_native_verified_at_utc": "2026-10-16T12:11:08.716Z",
+          "removal_status_recorded_at_utc": "2026-10-16T16:45:34.747467+00:00"
+        }
+      ]
+    },
+    {
+      "id": "2026-10-16",
+      "date": "16 October 2026",
+      "title": "Keep the equations. Give the image a layout.",
+      "description": "Two things I like in today’s AI work: traceable Indic translations and image layout controls. Plus the latest EBM notes.",
+      "topics": [
+        "Indic translations with a source trail",
+        "FLUX 3 Image Klein bounding-box layouts",
+        "Part 13: energy scores still need a normalizer"
+      ],
+      "source": "news-2026-10-16.html",
+      "approval": "pending_exact_review_and_native_live_gates",
+      "reading_label": "Read the notes ↗",
+      "verified_items": [
+        {
+          "title": "Indic data: keep the equations and the source trail",
+          "source": "https://huggingface.co/blog/nvidia/scaling-indic-pretraining",
+          "live_url": "https://x.com/Skywalkerlyzv/status/2111076327201902650",
+          "company": "https://www.linkedin.com/feed/update/urn:li:share:7516845462931410945?actorCompanyId=143953415",
+          "source_event_key": "nvidia-ai4bharat:indic-pretraining-announcement:2026-10-16"
+        },
+        {
+          "title": "FLUX 3 Image Klein: give the model a layout",
+          "source": "https://huggingface.co/blog/flux-3",
+          "live_url": "https://x.com/Skywalkerlyzv/status/2111078339226349813",
+          "company": "https://www.linkedin.com/feed/update/urn:li:share:7516845698638819329?actorCompanyId=143953415",
+          "source_event_key": "bfl:flux3-klein-release:2026-10-15"
         }
       ]
     }

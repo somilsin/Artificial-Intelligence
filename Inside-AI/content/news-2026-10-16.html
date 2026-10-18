@@ -1,0 +1,18 @@
+<h1>AI notes · 16 October 2026</h1>
+<p>Somil Singh · Inside AI</p>
+<section><h2>Indic data: keep the equations and the source trail</h2>
+<p>Okay, this is pretty cool. They&#x27;re checking what survives translation, right down to the equations 👇</p>
+<p>NVIDIA and AI4Bharat&#x27;s new Indic data work keeps a trail from each translation back to its English source. A 12-language workflow also repairs translations that score poorly.</p>
+<p>The planned corpus is about 2.8T tokens across 22 languages. Still marked &quot;releasing soon&quot;, so this is the write-up to read for now.</p>
+<p><a href="https://huggingface.co/blog/nvidia/scaling-indic-pretraining">https://huggingface.co/blog/nvidia/scaling-indic-pretraining</a></p>
+<p><a href="https://x.com/Skywalkerlyzv/status/2111076327201902650">Read the Inside AI post on X ↗</a> · <a href="https://www.linkedin.com/feed/update/urn:li:share:7516845462931410945?actorCompanyId=143953415">Read the corresponding company post ↗</a></p></section>
+<section><h2>FLUX 3 Image Klein: give the model a layout</h2>
+<p>Ooh, this is the bit I like: give the model a layout, then ask it to make the image 😄</p>
+<p>FLUX 3 Image Klein takes bounding boxes in the prompt. Handy when the subject needs to sit left and the title needs breathing room.</p>
+<p>Tiny gotcha in the Diffusers guide: [y_min, x_min, y_max, x_max], scaled 0–1000. Y comes first. Still inspect what it generates.</p>
+<p>Guide by Aritra Roy Gosthipaty, Sayak Paul and Linoy Tsaban:<br><a href="https://huggingface.co/blog/flux-3">https://huggingface.co/blog/flux-3</a></p>
+<p><a href="https://x.com/Skywalkerlyzv/status/2111078339226349813">Read the Inside AI post on X ↗</a> · <a href="https://www.linkedin.com/feed/update/urn:li:share:7516845698638819329?actorCompanyId=143953415">Read the corresponding company post ↗</a></p></section>
+<section><h2>From my latest notes</h2>
+<p>EBMs are fun until you ask for the actual probability 😅</p>
+<p>A low energy score is only half the story. You still need to account for all the other possibilities through the normalizer.</p>
+<p><a href="part-13-ebm-overview.html">Read the full Part 13 lesson with maths, code and actual output ↗</a> · <a href="https://x.com/Skywalkerlyzv/status/2111076613127590139">Read the X note ↗</a></p></section>

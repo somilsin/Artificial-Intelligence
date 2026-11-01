@@ -1,4 +1,3 @@
-<!-- Shared decorative layout inspired by my original vision README and profile README. -->
 <div align="center">
 
 <h1>🌌 Artificial Intelligence</h1>
@@ -30,91 +29,13 @@
 
 <br>
 
-## 📖 About This Repository
+I keep my AI projects here, along with Inside AI and both of my portfolios. Pick a folder below to explore the work.
 
----
+## 📂 Projects
 
-I keep my artificial intelligence applications, portfolio source and public learning work together here. Each project folder has its own notes and entry points.
-
-<br>
-
-## 🚀 Key Implementations
-
----
-
-* Inside AI: Model notes and article links.
-* BehaviorAI: Evidence analysis and coaching design.
-* Main Portfolio: My professional work, research, Inside AI and creator portfolio in one place.
-* My Creator Portfolio: Visual stories, dated audience snapshots and selected YouTube work for collaborations.
-
-<br>
-
-## 🎓 Project Guide
-
----
-
-| Project | What I keep here |
+| Project | What's inside |
 | :--- | :--- |
-| [Inside AI](Inside-AI/README.md) | I use Inside AI to share model explainers and research notes with diagrams, code and links to my published articles. |
-| [BehaviorAI](behaviorai-lovexai/README.md) | I built BehaviorAI for the Softway LoveXAI Hackathon. Its two agent workflow turns employee evidence into a behavioral change plan with human review. |
-| [Main Portfolio](somilsin_portfolio/README.md) | I present my experience, research and projects alongside Inside AI and my creator portfolio. Source and published assets live together here. |
-| [My Creator Portfolio](my-creator-portfolio/README.md) | I share visual stories, a dated Instagram and YouTube audience snapshot, selected videos and collaboration details. |
-
-<br>
-
-## 🛠️ Tech Stack
-
----
-
-<p align="center">
-<img src="https://skillicons.dev/icons?i=python,html,css,js&theme=dark" alt="Python, HTML, CSS, JavaScript" />
-</p>
-
-`Python` · `HTML` · `CSS` · `JavaScript`
-
-<br>
-
-## ⚙️ Getting Started
-
----
-
-```bash
-git clone https://github.com/somilsin/Artificial-Intelligence.git
-cd Artificial-Intelligence
-```
-
-I open the README in the project folder I want to use. Each project has its own dependencies and entry points.
-
-<br>
-
-## 📝 My Notes and Results
-
----
-
-I keep publication review separate from website builds. Inside AI publishes approved news only and BehaviorAI requires an Anthropic API key for live analysis.
-
-<br>
-
-## 📚 References and Credit
-
----
-
-I retain course credit and original licenses in the individual project folders. Reorganizing the source does not change its authorship or license.
-
-<br>
-
-<div align="center">
-
-### Get In Touch
-
-I share my learning and projects here. Connect with me on [LinkedIn](https://linkedin.com/in/somil-singh), explore [my portfolio](https://somilsin.github.io/Artificial-Intelligence/portfolio/) or visit [my creator portfolio for collaborations](https://yours-trulyhq-portfolio-updated.icybasin.chatgpt.site/).
-
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/somil-singh)
-[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:somils@andrew.cmu.edu)
-[![X](https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/Skywalkerlyzv)
-[![Medium](https://img.shields.io/badge/Medium-000000?style=for-the-badge&logo=medium&logoColor=white)](https://medium.com/@thesomilsinghofficial)
-[![Substack](https://img.shields.io/badge/Substack-FF6719?style=for-the-badge&logo=substack&logoColor=white)](https://thesomilsingh.substack.com/)
-
-*Thanks for stopping by!*
-
-</div>
+| [Inside AI](Inside-AI/README.md) | My AI articles, model explainers and world AI updates. |
+| [BehaviorAI](behaviorai-lovexai/README.md) | The coaching design tool I built at the Softway LoveXAI Hackathon. |
+| [Main Portfolio](somilsin_portfolio/README.md) | My work, research and projects, with links to Inside AI and YoursTrulyHQ. |
+| [My Creator Portfolio](my-creator-portfolio/README.md) | My visual stories, YouTube explainers and a place to reach me for collabs. |

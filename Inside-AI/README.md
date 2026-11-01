@@ -1,4 +1,3 @@
-<!-- Shared decorative layout inspired by my original vision README and profile README. -->
 <div align="center">
 
 <h1>🌌 Inside AI</h1>
@@ -22,101 +21,31 @@
 [![Medium](https://img.shields.io/badge/Medium-000000?style=for-the-badge&logo=medium&logoColor=white)](https://medium.com/@thesomilsinghofficial)
 [![Substack](https://img.shields.io/badge/Substack-FF6719?style=for-the-badge&logo=substack&logoColor=white)](https://thesomilsingh.substack.com/)
 
-[Open this project](https://github.com/somilsin/Artificial-Intelligence/tree/main/Inside-AI) · [My GitHub](https://github.com/somilsin) · [My portfolio](https://somilsin.github.io/Artificial-Intelligence/portfolio/)
+[Open this project](https://github.com/somilsin/Artificial-Intelligence/tree/main/Inside-AI) · [My GitHub](https://github.com/somilsin) · [Main Portfolio](https://somilsin.github.io/Artificial-Intelligence/portfolio/)
 
 </div>
 
 <br>
 
-## 📖 About This Repository
+Inside AI is where I share what I'm learning about AI. I work through models with diagrams, maths and code, then put the explanations here. I also share world AI updates with links to the original sources.
 
----
+## 📖 Read and watch
 
-I use Inside AI to share model explainers and research notes with diagrams, code and links to my published articles.
+* [Inside AI website](https://somilsin.github.io/Artificial-Intelligence/Inside-AI/)
+* [Deep Learning Models newsletter](https://www.linkedin.com/newsletters/7511777490416250880/)
+* [Medium](https://medium.com/@thesomilsinghofficial) and [Substack](https://thesomilsingh.substack.com/)
+* [YouTube explainers](https://www.youtube.com/@YoursTrulyHQ)
+* [World AI updates on X](https://x.com/Skywalkerlyzv)
 
-<br>
+## ⚙️ Build the site
 
-## 🚀 Key Implementations
-
----
-
-* Model notes and article links
-* Static website builder with a preview mode
-* News review before publication
-
-<br>
-
-## 🎓 Project Guide
-
----
-
-### Overview
-
-Run `python build.py --preview` for local review including pending news. Run `python build.py` for the release build. Pending news is omitted from the release build. Approval is recorded in `content/site.json`; no automatic process may change it to approved.
-
-The root category Pages workflow builds and deploys website changes from main. Website updates require Somil's review before merging or pushing to main. No daily autonomous deployment is configured.
-
-Model cards link to existing published articles. The LinkedIn newsletter link points to the existing newsletter, without creating or transferring a newsletter.
-
-[Read Inside AI](https://somilsin.github.io/Artificial-Intelligence/Inside-AI/)
-
-The website uses the category path above. My portfolio source is in Learning Archive and its public website is [here](https://somilsin.github.io/Artificial-Intelligence/portfolio/).
-
-<br>
-
-## 🛠️ Tech Stack
-
----
-
-<p align="center">
-<img src="https://skillicons.dev/icons?i=python,html,css,git&theme=dark" alt="Python, HTML, CSS, Git" />
-</p>
-
-`Python` · `HTML` · `CSS` · `Git`
-
-<br>
-
-## ⚙️ Getting Started
-
----
+From this folder:
 
 ```bash
-git clone https://github.com/somilsin/Artificial-Intelligence.git
-cd Artificial-Intelligence/Inside-AI
+python build.py --preview
+python build.py
 ```
 
-I read the project notes and dependency files before choosing its runtime.
+The preview includes pending news. The regular build leaves pending items out. Only I approve news in `content/site.json`; an automated process must not approve it for me.
 
-<br>
-
-## 📝 My Notes and Results
-
----
-
-I use this folder to revisit the implementation choices and explain what I learned. The source is preserved here; I make execution claims only where I have recorded the outputs.
-
-<br>
-
-## 📚 References and Credit
-
----
-
-I retain the source context and any existing licenses with the project. The category move changes the location of the files rather than their ownership.
-
-<br>
-
-<div align="center">
-
-### Get In Touch
-
-I share my learning and projects here. Connect with me on [LinkedIn](https://linkedin.com/in/somil-singh) or explore [my portfolio](https://somilsin.github.io/Artificial-Intelligence/portfolio/).
-
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/somil-singh)
-[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:somils@andrew.cmu.edu)
-[![X](https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/Skywalkerlyzv)
-[![Medium](https://img.shields.io/badge/Medium-000000?style=for-the-badge&logo=medium&logoColor=white)](https://medium.com/@thesomilsinghofficial)
-[![Substack](https://img.shields.io/badge/Substack-FF6719?style=for-the-badge&logo=substack&logoColor=white)](https://thesomilsingh.substack.com/)
-
-*Thanks for stopping by!*
-
-</div>
+The root GitHub Pages workflow publishes site changes pushed to `main`.

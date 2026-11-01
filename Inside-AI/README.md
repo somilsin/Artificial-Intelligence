@@ -1,7 +1,8 @@
 <div align="center">
 
-<h1>🌌 Inside AI</h1>
-<h3><code>Learn it. Build it. Explain it.</code></h3>
+# 🌌 Inside AI
+
+### Learn it. Build it. Explain it.
 
 <img src="https://readme-typing-svg.demolab.com/?font=Fira+Code&weight=500&size=22&pause=1000&color=58A6FF&center=true&vCenter=true&width=900&lines=Learn%20it.%20Build%20it.%20Explain%20it.;Learn+it.+Build+it.+Explain+it." alt="Learn it. Build it. Explain it." />
 
@@ -25,11 +26,23 @@
 
 </div>
 
-<br>
+---
+
+## 📖 About This Repository
 
 Inside AI is where I share what I'm learning about AI. I work through models with diagrams, maths and code, then put the explanations here. I also share world AI updates with links to the original sources.
 
-## 📖 Read and watch
+---
+
+## 🚀 Key Implementations
+
+* Model notes and article links
+* Static website builder with a preview mode
+* News review before publication
+
+---
+
+## 🎓 Project Guide
 
 * [Inside AI website](https://somilsin.github.io/Artificial-Intelligence/Inside-AI/)
 * [Deep Learning Models newsletter](https://www.linkedin.com/newsletters/7511777490416250880/)
@@ -37,7 +50,19 @@ Inside AI is where I share what I'm learning about AI. I work through models wit
 * [YouTube explainers](https://www.youtube.com/@YoursTrulyHQ)
 * [World AI updates on X](https://x.com/Skywalkerlyzv)
 
-## ⚙️ Build the site
+---
+
+## 🛠️ Tech Stack
+
+<p align="center">
+<img src="https://skillicons.dev/icons?i=python,html,css,git&theme=dark" alt="Python, HTML, CSS, Git" />
+</p>
+
+`Python` · `HTML` · `CSS` · `Git`
+
+---
+
+## ⚙️ Getting Started
 
 From this folder:
 
@@ -49,3 +74,27 @@ python build.py
 The preview includes pending news. The regular build leaves pending items out. Only I approve news in `content/site.json`; an automated process must not approve it for me.
 
 The root GitHub Pages workflow publishes site changes pushed to `main`.
+
+---
+
+## 📚 References and Credit
+
+The articles link to the papers, original announcements and code they discuss. Course material and borrowed code keep their original credit.
+
+---
+
+<div align="center">
+
+### Get In Touch
+
+If you'd like to chat about the work, you can reach me on [LinkedIn](https://linkedin.com/in/somil-singh).
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/somil-singh)
+[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:somils@andrew.cmu.edu)
+[![X](https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/Skywalkerlyzv)
+[![Medium](https://img.shields.io/badge/Medium-000000?style=for-the-badge&logo=medium&logoColor=white)](https://medium.com/@thesomilsinghofficial)
+[![Substack](https://img.shields.io/badge/Substack-FF6719?style=for-the-badge&logo=substack&logoColor=white)](https://thesomilsingh.substack.com/)
+
+*Thanks for stopping by!*
+
+</div>

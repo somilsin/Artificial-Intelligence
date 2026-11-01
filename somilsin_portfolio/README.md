@@ -1,7 +1,8 @@
 <div align="center">
 
-<h1>✨ Main Portfolio</h1>
-<h3><code>A personal space for my work and research</code></h3>
+# ✨ Main Portfolio
+
+### A personal space for my work and research
 
 [🌐 View My Main Portfolio](https://somilsin.github.io/Artificial-Intelligence/portfolio/) · [🎨 My Creator Portfolio](https://yours-trulyhq-portfolio-updated.icybasin.chatgpt.site/) · [AI Repository](../README.md)
 
@@ -27,18 +28,46 @@
 
 </div>
 
-<br>
+---
+
+## 📖 About This Repository
 
 I built this as one place for my work, research and projects. Inside AI is where I share what I'm learning. YoursTrulyHQ is where I make visual stories.
 
-## ✨ Explore
+---
 
-* My experience and the projects I've worked on.
-* Inside AI articles and an introduction to the series.
-* My creator portfolio, with a trailer and links to Instagram and YouTube.
-* Source links for the work shown on the site.
+## 🚀 Key Implementations
 
-## ⚙️ Run locally
+* Project chapters and research links
+* Particle effects and interactive scenes
+* Inside AI and creator showcases with playable trailers
+* Main site source and published assets in one folder
+
+---
+
+## 🎓 Project Guide
+
+| Folder | What's inside |
+| :--- | :--- |
+| `src/` | The page components, project chapters and source links. |
+| `public/media/` | Both trailers, with posters, captions and transcripts. |
+| `scripts/` | The static build and creator trailer script. |
+| `public-sites/portfolio/` | The version published through GitHub Pages. |
+| [My Creator Portfolio](../my-creator-portfolio/README.md) | My visual storytelling portfolio. |
+
+---
+
+## 🛠️ Tech Stack
+
+<p align="center">
+<img src="https://skillicons.dev/icons?i=react,ts,html,css&theme=dark" alt="React, TypeScript, HTML, CSS" />
+</p>
+
+`React` · `TypeScript` · `HTML` · `CSS`
+
+---
+
+## ⚙️ Getting Started
 
 From this folder:
 
@@ -47,7 +76,7 @@ npm install --package-lock=false
 npm run dev
 ```
 
-## 🌐 Build for GitHub Pages
+### Build for GitHub Pages
 
 ```bash
 GH_PAGES_BASE=/Artificial-Intelligence/portfolio/ npm run build:static
@@ -56,3 +85,27 @@ GH_PAGES_BASE=/Artificial-Intelligence/portfolio/ npm run build:static
 In PowerShell, set `$env:GH_PAGES_BASE='/Artificial-Intelligence/portfolio/'` first, then run `npm run build:static`.
 
 The build goes into `dist/client`. Copy it into `public-sites/portfolio/` to update the version published by the repo's Pages workflow.
+
+---
+
+## 📚 References and Credit
+
+Built with React, TanStack Start and Tailwind CSS.
+
+---
+
+<div align="center">
+
+### Get In Touch
+
+If you'd like to chat about the work, you can reach me on [LinkedIn](https://linkedin.com/in/somil-singh).
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/somil-singh)
+[![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:somils@andrew.cmu.edu)
+[![X](https://img.shields.io/badge/X-000000?style=for-the-badge&logo=x&logoColor=white)](https://x.com/Skywalkerlyzv)
+[![Medium](https://img.shields.io/badge/Medium-000000?style=for-the-badge&logo=medium&logoColor=white)](https://medium.com/@thesomilsinghofficial)
+[![Substack](https://img.shields.io/badge/Substack-FF6719?style=for-the-badge&logo=substack&logoColor=white)](https://thesomilsingh.substack.com/)
+
+*Thanks for stopping by!*
+
+</div>

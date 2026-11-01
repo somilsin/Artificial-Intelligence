@@ -1,7 +1,7 @@
 <!-- Shared decorative layout inspired by my original vision README and profile README. -->
 <div align="center">
 
-<h1>🌙 YoursTrulyHQ Portfolio</h1>
+<h1>🌙 My Creator Portfolio</h1>
 <h3><code>Visual stories, audience highlights and YouTube explainers</code></h3>
 
 [View the live portfolio](https://yours-trulyhq-portfolio-updated.icybasin.chatgpt.site/) · [Instagram](https://www.instagram.com/yours_trulyhq/) · [YouTube](https://www.youtube.com/@YoursTrulyHQ)
@@ -14,7 +14,7 @@
 
 ---
 
-This folder contains a static export of my YoursTrulyHQ portfolio. The live site is hosted separately and is available at the link above. The export keeps the page, styles, interactions and artwork together for review or local browsing.
+This folder contains a static export of my creator portfolio for YoursTrulyHQ. The live site is hosted separately and is available at the link above. The export keeps the page, styles, interactions and artwork together for review or local browsing.
 
 <br>
 

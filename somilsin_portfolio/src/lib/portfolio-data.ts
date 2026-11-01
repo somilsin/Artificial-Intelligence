@@ -14,18 +14,18 @@ export const chapters: Chapter[] = [
     "numeral": "I",
     "title": "Experience",
     "subtitle": "Chapter I",
-    "status": "LIVE · 11 ROLES",
+    "status": "CAREER & RESEARCH",
     "blurb": "AI engineering at Oracle, machine learning research at Strand Life Sciences, earlier 3D perception research at IISc and public learning through Inside AI.",
     "entries": [
       {
         "title": "Inside AI · Founder and Creator",
         "meta": "October 2026 to present",
-        "body": "Building Inside AI, a public AI learning initiative with an open source focus. I share research notes, diagrams and code across AI, machine learning, deep learning, computer vision and robotics. Published the first four Deep Learning Models articles on VAE and VQ VAE. I also curate sourced world AI updates and develop educational videos. Learning in public, because sharing is caring."
+        "body": "Building Inside AI, an open source learning hub for foundational AI and deep learning. I share research notes, diagrams, code, model explainers and world AI updates. Published the first five Deep Learning Models articles on LinkedIn, covering VAE, VQ VAE and GANs. I also develop educational videos and explore GTM, brand growth and marketing through Inside AI."
       },
       {
         "title": "Strand Life Sciences · Machine Learning Researcher",
-        "meta": "September 2026 to present · Part time",
-        "body": "Research deep learning methods and build predictive pipelines for early cancer detection using clinical blood data, with a focus on limited samples and data bias. Developed a variational autoencoder (VAE) to debias tabular cancer data, outperforming the previous model for early detection across 10 cancer types."
+        "meta": "Research experience · Previously documented",
+        "body": "Researched deep learning methods and built predictive pipelines for early cancer detection using clinical blood data, with a focus on limited samples and data bias. Developed a variational autoencoder (VAE) to debias tabular cancer data, outperforming the previous model for early detection across 10 cancer types."
       },
       {
         "title": "Oracle · Primavera Cloud · Full Stack AI Engineer",
@@ -120,7 +120,7 @@ export const chapters: Chapter[] = [
       {
         "title": "Inside AI",
         "meta": "Public AI learning and research · October 2026",
-        "body": "My public learning initiative. Published Parts 01 to 04 explain VAE and VQ VAE through colourful diagrams, maths, runnable code and recorded outputs. Sourced world AI updates and a completed eight minute VAE explainer extend the written notes."
+        "body": "My public learning initiative. The first five LinkedIn model articles cover VAE, VQ VAE and GANs through diagrams, maths, runnable code and recorded outputs. Sourced world AI updates and a public VAE video explainer extend the written notes."
       },
       {
         "title": "TensorTonic Machine Learning Solutions",

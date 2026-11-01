@@ -3,7 +3,7 @@ export type SourceRef = {
   claim: string;
   evidenceNote?: string;
   /** Where on the page the claim appears. */
-  section: "Hero" | "Metrics" | "Experience" | "Work" | "Stack" | "Credentials" | "Inside AI";
+  section: "Hero" | "Metrics" | "Experience" | "Work" | "Stack" | "Credentials" | "Inside AI" | "Creator";
   /** GitHub evidence: full repo name (owner/repo) and optional PR / file path. */
   repo?: string;
   repoPath?: string;
@@ -18,8 +18,21 @@ export const GITHUB_USER = "somilsin";
 
 export const SOURCES: SourceRef[] = [
   {
-    claim: "My professional timeline follows the roles and dates on my LinkedIn profile, including Oracle, Strand, IISc, Samsung, Solar Secure, Wipro and my founder experience.",
-    evidenceNote: "Role details were checked against my live LinkedIn profile on 6 October 2026. Professional performance figures are profile statements rather than public benchmarks.",
+    claim: "YoursTrulyHQ creator portfolio with visual stories, public videos and collaboration details.",
+    section: "Creator",
+    external: { label: "My Creator Portfolio", href: "https://yours-trulyhq-portfolio-updated.icybasin.chatgpt.site/" },
+    evidenceNote: "The creator portfolio labels its audience snapshot as checked on 31 October 2026.",
+    cv: { label: "Creator showcase and trailer", anchor: "#creator" },
+  },
+  {
+    claim: "Deep Learning 05 on GANs was published on LinkedIn on 30 October 2026.",
+    section: "Inside AI",
+    external: { label: "Read the published GAN article", href: "https://www.linkedin.com/pulse/deep-learning-05-gan-spots-every-fake-how-does-its-learn-singh--sydof/" },
+    cv: { label: "Published model reading", anchor: "#inside-ai" },
+  },
+  {
+    claim: "My professional timeline follows the roles and dates on my LinkedIn profile, including Oracle, IISc, Samsung, Solar Secure, Wipro and my founder experience.",
+    evidenceNote: "Current role details were rechecked against my live LinkedIn experience on 1 November 2026. Professional performance figures are profile statements rather than public benchmarks. Separately documented research retains its own source note.",
     section: "Experience",
     external: { label: "My LinkedIn experience", href: "https://www.linkedin.com/in/somil-singh/details/experience/" },
     cv: { label: "Professional timeline", anchor: "#experience" },
@@ -49,7 +62,7 @@ export const SOURCES: SourceRef[] = [
     cv: { label: "Framework codebase study", anchor: "#work" },
   },
 {
-  "claim": "Founder of Inside AI. Four published articles introduce VAE and VQ VAE through visual notes and code.",
+  "claim": "Founder of Inside AI. Five published LinkedIn model articles cover VAE, VQ VAE and GANs.",
   "section": "Inside AI",
   "repo": "somilsin/Artificial-Intelligence",
   "repoPath": "/tree/main/Inside-AI",
@@ -72,9 +85,9 @@ export const SOURCES: SourceRef[] = [
   }
 },
 {
-  "claim": "Machine Learning Researcher at Strand Life Sciences, September 2026 to present, part time.",
+  "claim": "Previously documented machine learning research at Strand Life Sciences on early cancer detection.",
   "section": "Experience",
-  "evidenceNote": "Professional role and research outcomes as described in my profile. Private clinical data and benchmarks are not published here.",
+  "evidenceNote": "Research was documented on my profile on 6 October 2026. The position was absent from the live experience page checked on 1 November 2026, so this portfolio does not assert current employment or an unverified end date. Private clinical data and benchmarks are not published here.",
   "external": {
     "label": "My LinkedIn experience",
     "href": "https://www.linkedin.com/in/somil-singh/details/experience/"

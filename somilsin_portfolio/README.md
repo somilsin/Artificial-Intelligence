@@ -1,8 +1,10 @@
 <!-- Shared decorative layout inspired by my original vision README and profile README. -->
 <div align="center">
 
-<h1>✨ Interactive Portfolio Website</h1>
+<h1>✨ Main Portfolio</h1>
 <h3><code>A personal space for my work and research</code></h3>
+
+[🌐 View My Main Portfolio](https://somilsin.github.io/Artificial-Intelligence/portfolio/) · [🎨 My Creator Portfolio](https://yours-trulyhq-portfolio-updated.icybasin.chatgpt.site/) · [AI Repository](../README.md)
 
 <img src="https://readme-typing-svg.demolab.com/?font=Fira+Code&weight=500&size=22&pause=1000&color=58A6FF&center=true&vCenter=true&width=900&lines=A%20personal%20space%20for%20my%20work%20and%20research;Learn+it.+Build+it.+Explain+it." alt="A personal space for my work and research" />
 
@@ -22,7 +24,7 @@
 [![Medium](https://img.shields.io/badge/Medium-000000?style=for-the-badge&logo=medium&logoColor=white)](https://medium.com/@thesomilsinghofficial)
 [![Substack](https://img.shields.io/badge/Substack-FF6719?style=for-the-badge&logo=substack&logoColor=white)](https://thesomilsingh.substack.com/)
 
-[Open this project](https://github.com/somilsin/Artificial-Intelligence/tree/main/somilsin_portfolio) · [My GitHub](https://github.com/somilsin) · [My portfolio](https://somilsin.github.io/Artificial-Intelligence/portfolio/)
+[Open this project](https://github.com/somilsin/Artificial-Intelligence/tree/main/somilsin_portfolio) · [My GitHub](https://github.com/somilsin) · [Main Portfolio](https://somilsin.github.io/Artificial-Intelligence/portfolio/)
 
 </div>
 
@@ -32,7 +34,7 @@
 
 ---
 
-I built my portfolio with React and TanStack Start. I use chapters, interactive scenes and links to present my experience and projects.
+This is my main portfolio, built with React and TanStack Start. It brings my professional experience, research and projects together with Inside AI and my creator work at YoursTrulyHQ.
 
 <br>
 
@@ -42,7 +44,8 @@ I built my portfolio with React and TanStack Start. I use chapters, interactive 
 
 * Project chapters and research links
 * Particle effects and interactive scenes
-* A built static website at the new category path
+* Inside AI and creator showcases with playable trailers
+* Main site source and published assets in one folder
 
 <br>
 
@@ -50,9 +53,13 @@ I built my portfolio with React and TanStack Start. I use chapters, interactive 
 
 ---
 
-### Overview
-
-I built this portfolio with React and TanStack Start. I use chapters to present my work and interactive scenes to make the site feel personal. The source includes particle effects, a skills scene and links to my projects.
+| Project | What I keep here |
+| :--- | :--- |
+| `src/` | React components, professional timeline, project chapters and source references. |
+| `public/media/` | Inside AI and creator trailers with posters, captions and transcripts. |
+| `scripts/` | Static build and creator trailer generation. |
+| `public-sites/portfolio/` | The built files published at `/Artificial-Intelligence/portfolio/`. |
+| [My Creator Portfolio](../my-creator-portfolio/README.md) | The separate visual storytelling portfolio linked from this main site. |
 
 <br>
 
@@ -75,8 +82,8 @@ I built this portfolio with React and TanStack Start. I use chapters to present 
 ### Run my site locally
 
 ```bash
-bun install --frozen-lockfile
-bun run dev
+npm install --package-lock=false
+npm run dev
 ```
 
 ### Build the published version
@@ -84,10 +91,12 @@ bun run dev
 I keep this source and its public website assets together in Artificial Intelligence.
 
 ```bash
-GH_PAGES_BASE=/Artificial-Intelligence/portfolio/ bun run build:static
+GH_PAGES_BASE=/Artificial-Intelligence/portfolio/ npm run build:static
 ```
 
-The static build writes `dist/client` with an index page and a fallback page. The portfolio workflow builds a preview artifact for this folder. The website is published at [my portfolio](https://somilsin.github.io/Artificial-Intelligence/portfolio/) after the generated assets are verified.
+The static build writes `dist/client` with an index page and a fallback page. Copy that output into `public-sites/portfolio/` when updating the checked-in export. The root `.github/workflows/pages.yml` publishes this nested export at [Main Portfolio](https://somilsin.github.io/Artificial-Intelligence/portfolio/). The `public-sites` folder is a repository build location, not a public URL.
+
+On PowerShell, set the base path with `$env:GH_PAGES_BASE='/Artificial-Intelligence/portfolio/'` before running `npm run build:static`.
 
 I retain the Lovable project instructions and published history in the repository backup. Repository consolidation changes the source location. Existing external editor integrations need their repository target updated before they can sync future edits.
 
@@ -97,7 +106,7 @@ I retain the Lovable project instructions and published history in the repositor
 
 ---
 
-I use this folder to revisit the implementation choices and explain what I learned. The source is preserved here; I make execution claims only where I have recorded the outputs.
+The November 2026 refresh adds the YoursTrulyHQ creator showcase and a 24 second silent trailer, links the published GAN article and corrects the public VAE video duration to 6:57. Audience metrics remain labelled with their October snapshot date. Current roles were rechecked against LinkedIn on 1 November 2026. Earlier research retains its dated source note without an unverified current employment claim.
 
 <br>
 

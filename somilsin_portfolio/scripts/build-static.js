@@ -1,4 +1,4 @@
-import { execSync } from "node:child_process";
+import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -52,7 +52,7 @@ function main() {
   clean();
 
   // Build with the GitHub Pages Vite config.
-  execSync("bunx vite build --config vite.github.config.ts", {
+  execFileSync(process.execPath, [path.join(root, "node_modules/vite/bin/vite.js"), "build", "--config", "vite.github.config.ts"], {
     cwd: root,
     stdio: "inherit",
     env: {
@@ -64,6 +64,9 @@ function main() {
 
   // The SPA prerender emits _shell.html; rename it and add fallback routing.
   normalizeShell();
+  if (!fs.existsSync(path.join(clientDir, "index.html"))) {
+    throw new Error("Static build did not emit index.html; deployment stopped.");
+  }
   copy404();
   addCname();
   addNoJekyll();

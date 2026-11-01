@@ -4,6 +4,8 @@
 <h1>🌌 Artificial Intelligence</h1>
 <h3><code>Build, explain and learn in public</code></h3>
 
+[🌐 Main Portfolio](https://somilsin.github.io/Artificial-Intelligence/portfolio/) · [🎨 My Creator Portfolio](https://yours-trulyhq-portfolio-updated.icybasin.chatgpt.site/)
+
 <img src="https://readme-typing-svg.demolab.com/?font=Fira+Code&weight=500&size=22&pause=1000&color=58A6FF&center=true&vCenter=true&width=900&lines=Build%2C%20explain%20and%20learn%20in%20public;Learn+it.+Build+it.+Explain+it." alt="Build, explain and learn in public" />
 
 <p>
@@ -22,7 +24,7 @@
 [![Medium](https://img.shields.io/badge/Medium-000000?style=for-the-badge&logo=medium&logoColor=white)](https://medium.com/@thesomilsinghofficial)
 [![Substack](https://img.shields.io/badge/Substack-FF6719?style=for-the-badge&logo=substack&logoColor=white)](https://thesomilsingh.substack.com/)
 
-[Open this project](https://github.com/somilsin/Artificial-Intelligence) · [My GitHub](https://github.com/somilsin) · [My portfolio](https://somilsin.github.io/Artificial-Intelligence/portfolio/) · [My Creator Portfolio](https://yours-trulyhq-portfolio-updated.icybasin.chatgpt.site/)
+[Open this project](https://github.com/somilsin/Artificial-Intelligence) · [My GitHub](https://github.com/somilsin) · [Main Portfolio](https://somilsin.github.io/Artificial-Intelligence/portfolio/) · [My Creator Portfolio](https://yours-trulyhq-portfolio-updated.icybasin.chatgpt.site/)
 
 </div>
 
@@ -42,7 +44,7 @@ I keep my artificial intelligence applications, portfolio source and public lear
 
 * Inside AI: Model notes and article links.
 * BehaviorAI: Evidence analysis and coaching design.
-* Interactive Portfolio Website: My project chapters and research links.
+* Main Portfolio: My professional work, research, Inside AI and creator portfolio in one place.
 * My Creator Portfolio: Visual stories, dated audience snapshots and selected YouTube work for collaborations.
 
 <br>
@@ -55,7 +57,7 @@ I keep my artificial intelligence applications, portfolio source and public lear
 | :--- | :--- |
 | [Inside AI](Inside-AI/README.md) | I use Inside AI to share model explainers and research notes with diagrams, code and links to my published articles. |
 | [BehaviorAI](behaviorai-lovexai/README.md) | I built BehaviorAI for the Softway LoveXAI Hackathon. Its two agent workflow turns employee evidence into a behavioral change plan with human review. |
-| [Interactive Portfolio Website](somilsin_portfolio/README.md) | I present my experience and projects through chapters, interactive scenes and research links. |
+| [Main Portfolio](somilsin_portfolio/README.md) | I present my experience, research and projects alongside Inside AI and my creator portfolio. Source and published assets live together here. |
 | [My Creator Portfolio](my-creator-portfolio/README.md) | I share visual stories, a dated Instagram and YouTube audience snapshot, selected videos and collaboration details. |
 
 <br>

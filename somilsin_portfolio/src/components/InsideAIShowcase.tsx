@@ -13,6 +13,7 @@ const reading = [
   { part: "02", title: "Why a VAE needs KL divergence and a little noise", topic: "VAE · Foundations", href: "https://medium.com/@thesomilsinghofficial/why-a-vae-needs-kl-divergence-variational-inference-and-a-little-noise-e29c5932d597" },
   { part: "03", title: "How a VQ VAE learns a dictionary of image codes", topic: "VQ VAE · Overview", href: "https://medium.com/@thesomilsinghofficial/how-a-vq-vae-turns-an-image-into-a-code-from-a-learned-dictionary-c5b0e0b96c64" },
   { part: "04", title: "The VQ VAE gradient trick: what learns when a code is selected?", topic: "VQ VAE · Foundations", href: "https://medium.com/@thesomilsinghofficial/the-vq-vae-gradient-trick-what-learns-when-a-code-is-selected-b7f4a54db78d" },
+  { part: "05", title: "If a GAN spots every fake, how does its generator learn?", topic: "GAN · Overview · LinkedIn", href: "https://www.linkedin.com/pulse/deep-learning-05-gan-spots-every-fake-how-does-its-learn-singh--sydof/" },
 ];
 
 export default function InsideAIShowcase() {
@@ -49,7 +50,7 @@ export default function InsideAIShowcase() {
 
         <div className="mt-14 grid gap-10 lg:grid-cols-3">
           <div className="reveal border-t border-[color:var(--color-border)] pt-6 lg:col-span-2">
-            <p className="eyebrow text-[color:var(--color-primary)]">Deep Learning Models · Published Parts 01 to 04</p>
+            <p className="eyebrow text-[color:var(--color-primary)]">Deep Learning Models · Selected published reading</p>
             <div className="mt-5 grid gap-x-8 sm:grid-cols-2">
               {reading.map((item) => (
                 <a key={item.part} href={item.href} target="_blank" rel="noopener noreferrer" className="group border-b border-[color:var(--color-border)] py-6">
@@ -64,7 +65,7 @@ export default function InsideAIShowcase() {
             <h3 className="serif-display mt-5 text-3xl">The developments behind the headlines.</h3>
             <p className="prose-editorial mt-4">Sourced AI and technology updates with original announcement dates, practical context and links to the primary sources.</p>
             <a href="https://somilsin.github.io/Artificial-Intelligence/Inside-AI/#news" target="_blank" rel="noopener noreferrer" className="mt-6 inline-block eyebrow text-[color:var(--color-primary)]">Read the published updates ↗</a>
-            <p className="mt-7 text-sm leading-relaxed text-[color:var(--color-foreground)]/65">Alongside the articles, I create detailed AI video explainers and graphite space reels for YoursTrulyHQ. The next model notes explore GANs and diffusion.</p>
+            <p className="mt-7 text-sm leading-relaxed text-[color:var(--color-foreground)]/65">The published reading now includes GANs. Explore my visual stories and AI video explainers in the creator section below.</p>
           </div>
         </div>
       </div>

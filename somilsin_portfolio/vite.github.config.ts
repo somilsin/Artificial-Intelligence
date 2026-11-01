@@ -14,14 +14,16 @@ export default defineConfig({
       spa: {
         enabled: true,
         prerender: {
-          crawlLinks: true,
+          enabled: true,
+          crawlLinks: false,
         },
       },
       sitemap: {
         host: "https://somilsin.github.io/Artificial-Intelligence/portfolio",
       },
       prerender: {
-        failOnError: false,
+        enabled: true,
+        failOnError: true,
       },
     }),
     viteReact(),

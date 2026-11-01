@@ -1,0 +1,12 @@
+{
+  "pages": [
+    {
+      "path": "/",
+      "sitemap": {
+        "exclude": true
+      }
+    }
+  ],
+  "host": "https://somilsin.github.io/Artificial-Intelligence/portfolio",
+  "lastBuilt": "2026-11-01T16:40:38.469Z"
+}

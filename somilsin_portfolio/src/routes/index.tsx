@@ -3,18 +3,19 @@ import { useEffect, useState } from "react";
 import ParticleHead from "@/components/fx/ParticleHead";
 import SourcesPanel from "@/components/SourcesPanel";
 import InsideAIShowcase from "@/components/InsideAIShowcase";
+import CreatorShowcase from "@/components/CreatorShowcase";
 
 export const Route = createFileRoute("/")({
   component: Index,
   head: () => ({
     meta: [
-      { title: "Somil Singh · AI & Computer Vision Engineer" },
+      { title: "Somil Singh · Main Portfolio" },
       {
         name: "description",
         content:
-          "AI and Computer Vision Engineer, Inside AI founder and machine learning researcher at Strand Life Sciences. Visual study notes, code and published computer vision research.",
+          "Somil Singh's main portfolio for AI engineering, computer vision research, Inside AI and YoursTrulyHQ visual stories. Explore the work, articles and creator portfolio.",
       },
-      { property: "og:title", content: "Somil Singh · AI & Computer Vision Engineer" },
+      { property: "og:title", content: "Somil Singh · Main Portfolio" },
       {
         property: "og:description",
         content:
@@ -28,6 +29,7 @@ export const Route = createFileRoute("/")({
 
 const NAV = [
   { id: "inside-ai", label: "Inside AI" },
+  { id: "creator", label: "Creator" },
   { id: "experience", label: "Experience" },
   { id: "work", label: "Work" },
   { id: "stack", label: "Stack" },
@@ -38,8 +40,8 @@ const NAV = [
 
 const METRICS = [
   {
-    "value": "04",
-    "label": "published Inside AI model articles"
+    "value": "05",
+    "label": "published LinkedIn model articles"
   },
   {
     "value": "04",
@@ -50,8 +52,8 @@ const METRICS = [
     "label": "coauthored computer vision paper in IJISRT"
   },
   {
-    "value": "08 min",
-    "label": "completed VAE video explainer"
+    "value": "6:57",
+    "label": "public VAE video explainer"
   }
 ];
 
@@ -61,8 +63,8 @@ const EXPERIENCE = [
     "name": "Inside AI",
     "tag": "October 2026 to present",
     "points": [
-      "Building Inside AI, a public AI learning initiative with an open source focus. I share research notes, diagrams and code across AI, machine learning, deep learning, computer vision and robotics.",
-      "Published the first four Deep Learning Models articles on VAE and VQ VAE. I also curate sourced world AI updates and develop educational videos. Learning in public, because sharing is caring."
+      "Building Inside AI, an open source learning hub for foundational AI and deep learning. I share research notes, diagrams, code, model explainers and world AI updates.",
+      "Published the first five Deep Learning Models articles on LinkedIn, covering VAE, VQ VAE and GANs. I also develop educational videos and explore GTM, brand growth and marketing through Inside AI."
     ],
     "link": {
       "label": "View my LinkedIn experience ↗",
@@ -72,9 +74,9 @@ const EXPERIENCE = [
   {
     "role": "Machine Learning Researcher",
     "name": "Strand Life Sciences",
-    "tag": "September 2026 to present · Part time",
+    "tag": "Research experience · Previously documented",
     "points": [
-      "Research deep learning methods and build predictive pipelines for early cancer detection using clinical blood data, with a focus on limited samples and data bias.",
+      "Researched deep learning methods and built predictive pipelines for early cancer detection using clinical blood data, with a focus on limited samples and data bias.",
       "Developed a variational autoencoder (VAE) to debias tabular cancer data, outperforming the previous model for early detection across 10 cancer types."
     ],
     "link": {
@@ -288,7 +290,7 @@ const WORK: WorkItem[] = [
     "n": "08",
     "title": "Inside AI",
     "meta": "Public AI learning and research · October 2026",
-    "body": "My public learning initiative. Published Parts 01 to 04 explain VAE and VQ VAE through colourful diagrams, maths, runnable code and recorded outputs. Sourced world AI updates and a completed eight minute VAE explainer extend the written notes.",
+    "body": "My public learning initiative. The first five LinkedIn model articles cover VAE, VQ VAE and GANs through diagrams, maths, runnable code and recorded outputs. Sourced world AI updates and a public VAE video explainer extend the written notes.",
     "href": "https://somilsin.github.io/Artificial-Intelligence/Inside-AI/",
     "hrefLabel": "Visit Inside AI ↗",
     "secondary": {
@@ -488,7 +490,7 @@ function Index() {
               AI · COMPUTER VISION · ROBOTICS
             </span>
           </a>
-          <nav className="hidden gap-6 md:flex">
+          <nav aria-label="Main navigation" className="hidden gap-5 xl:flex">
             {NAV.map((n) => (
               <a
                 key={n.id}
@@ -504,6 +506,9 @@ function Index() {
             ))}
           </nav>
         </div>
+        <nav aria-label="Mobile section navigation" className="flex gap-5 overflow-x-auto px-6 pb-4 md:px-12 xl:hidden">
+          {NAV.map((n) => <a key={n.id} href={`#${n.id}`} className="eyebrow shrink-0 text-[color:var(--color-foreground)]/75">{n.label}</a>)}
+        </nav>
       </header>
 
       {/* Right side scroll dots */}
@@ -536,7 +541,7 @@ function Index() {
         <div className="relative z-10 grid w-full grid-cols-1 gap-16 px-6 md:grid-cols-12 md:px-12">
           <div className="md:col-span-6 lg:col-span-5 xl:col-span-4">
             <p className="reveal serif-italic-accent text-lg md:text-xl">
-              Founder of Inside AI · Cloud and AI at Oracle.
+              AI and tech creator at Inside AI · Cloud and AI at Oracle.
             </p>
             <h1
               className="reveal serif-display mt-8 text-[3.25rem] leading-[0.98] tracking-[-0.015em] md:mt-10 md:text-[5.5rem] lg:text-[6.25rem]"
@@ -567,6 +572,7 @@ function Index() {
               >
                 See the work
               </a>
+              <a href="#creator" className="mt-2 inline-flex eyebrow text-[color:var(--color-primary)]">Explore my creator portfolio ↗</a>
             </div>
 
             <div className="reveal mt-10 flex items-center gap-8" data-reveal-delay="320">
@@ -611,6 +617,7 @@ function Index() {
       </section>
 
       <InsideAIShowcase />
+      <CreatorShowcase />
 
       {/* METRICS */}
       <section className="relative px-6 pt-24 md:px-12">
@@ -638,8 +645,8 @@ function Index() {
             in public.
           </h2>
           <p className="reveal prose-editorial mt-6 max-w-xl" data-reveal-delay="100">
-            My work spans AI infrastructure at Oracle, early cancer detection at Strand and earlier
-            research in 3D perception at IISc. Inside AI is where I turn that curiosity into shared learning.
+            My work spans AI infrastructure at Oracle, early cancer detection research and
+            3D perception at IISc. Inside AI is where I turn that curiosity into shared learning.
           </p>
 
           <div className="mt-16 space-y-14">
@@ -805,7 +812,7 @@ function Index() {
           </h2>
           <p className="reveal prose-editorial mt-6 max-w-xl" data-reveal-delay="100">
             Interested in visual intelligence, robotics and AI infrastructure? I am also open to
-            educational collaborations through Inside AI. Send me a note.
+            educational collaborations through Inside AI and creative collaborations through YoursTrulyHQ. Send me a note.
           </p>
 
           <div className="reveal mt-12 flex flex-col gap-3 sm:max-w-md" data-reveal-delay="200">

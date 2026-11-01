@@ -22,7 +22,7 @@
 [![Medium](https://img.shields.io/badge/Medium-000000?style=for-the-badge&logo=medium&logoColor=white)](https://medium.com/@thesomilsinghofficial)
 [![Substack](https://img.shields.io/badge/Substack-FF6719?style=for-the-badge&logo=substack&logoColor=white)](https://thesomilsingh.substack.com/)
 
-[Open this project](https://github.com/somilsin/Artificial-Intelligence) · [My GitHub](https://github.com/somilsin) · [My portfolio](https://somilsin.github.io/Artificial-Intelligence/portfolio/)
+[Open this project](https://github.com/somilsin/Artificial-Intelligence) · [My GitHub](https://github.com/somilsin) · [My portfolio](https://somilsin.github.io/Artificial-Intelligence/portfolio/) · [YoursTrulyHQ](https://yours-trulyhq-portfolio-updated.icybasin.chatgpt.site/)
 
 </div>
 
@@ -43,6 +43,7 @@ I keep my artificial intelligence applications, portfolio source and public lear
 * Inside AI: Model notes and article links.
 * BehaviorAI: Evidence analysis and coaching design.
 * Interactive Portfolio Website: My project chapters and research links.
+* YoursTrulyHQ Portfolio: Visual stories, dated audience snapshots and selected YouTube work for collaborations.
 
 <br>
 
@@ -55,6 +56,7 @@ I keep my artificial intelligence applications, portfolio source and public lear
 | [Inside AI](Inside-AI/README.md) | I use Inside AI to share model explainers and research notes with diagrams, code and links to my published articles. |
 | [BehaviorAI](behaviorai-lovexai/README.md) | I built BehaviorAI for the Softway LoveXAI Hackathon. Its two agent workflow turns employee evidence into a behavioral change plan with human review. |
 | [Interactive Portfolio Website](somilsin_portfolio/README.md) | I present my experience and projects through chapters, interactive scenes and research links. |
+| [YoursTrulyHQ Portfolio](public-sites/yours-trulyhq-portfolio/README.md) | I share visual stories, a dated Instagram and YouTube audience snapshot, selected videos and collaboration details. |
 
 <br>
 
@@ -103,7 +105,7 @@ I retain course credit and original licenses in the individual project folders. 
 
 ### Get In Touch
 
-I share my learning and projects here. Connect with me on [LinkedIn](https://linkedin.com/in/somil-singh) or explore [my portfolio](https://somilsin.github.io/Artificial-Intelligence/portfolio/).
+I share my learning and projects here. Connect with me on [LinkedIn](https://linkedin.com/in/somil-singh), explore [my portfolio](https://somilsin.github.io/Artificial-Intelligence/portfolio/) or visit [YoursTrulyHQ for collaborations](https://yours-trulyhq-portfolio-updated.icybasin.chatgpt.site/).
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/somil-singh)
 [![Email](https://img.shields.io/badge/Email-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:somils@andrew.cmu.edu)

@@ -4,7 +4,7 @@
 
 ### A personal space for my work and research
 
-[🌐 View My Main Portfolio](https://somilsin.github.io/Artificial-Intelligence/portfolio/) · [🎨 My Creator Portfolio](https://yours-trulyhq-portfolio-updated.icybasin.chatgpt.site/) · [AI Repository](../README.md)
+[🌐 View My Main Portfolio](https://somilsin.github.io/Artificial-Intelligence/portfolio/) · [🎨 My Creator Portfolio](https://somilsin.github.io/Artificial-Intelligence/my-creator-portfolio/) · [AI Repository](../README.md)
 
 <img src="https://readme-typing-svg.demolab.com/?font=Fira+Code&weight=500&size=22&pause=1000&color=58A6FF&center=true&vCenter=true&width=900&lines=A%20personal%20space%20for%20my%20work%20and%20research;Learn+it.+Build+it.+Explain+it." alt="A personal space for my work and research" />
 

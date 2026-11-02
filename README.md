@@ -4,7 +4,7 @@
 
 ### Build, explain and learn in public
 
-[🌐 Main Portfolio](https://somilsin.github.io/Artificial-Intelligence/portfolio/) · [🎨 My Creator Portfolio](https://yours-trulyhq-portfolio-updated.icybasin.chatgpt.site/)
+[🌐 Main Portfolio](https://somilsin.github.io/Artificial-Intelligence/portfolio/) · [🎨 My Creator Portfolio](https://somilsin.github.io/Artificial-Intelligence/my-creator-portfolio/)
 
 <img src="https://readme-typing-svg.demolab.com/?font=Fira+Code&weight=500&size=22&pause=1000&color=58A6FF&center=true&vCenter=true&width=900&lines=Build%2C%20explain%20and%20learn%20in%20public;Learn+it.+Build+it.+Explain+it." alt="Build, explain and learn in public" />
 
@@ -24,7 +24,7 @@
 [![Medium](https://img.shields.io/badge/Medium-000000?style=for-the-badge&logo=medium&logoColor=white)](https://medium.com/@thesomilsinghofficial)
 [![Substack](https://img.shields.io/badge/Substack-FF6719?style=for-the-badge&logo=substack&logoColor=white)](https://thesomilsingh.substack.com/)
 
-[Open this project](https://github.com/somilsin/Artificial-Intelligence) · [My GitHub](https://github.com/somilsin) · [Main Portfolio](https://somilsin.github.io/Artificial-Intelligence/portfolio/) · [My Creator Portfolio](https://yours-trulyhq-portfolio-updated.icybasin.chatgpt.site/)
+[Open this project](https://github.com/somilsin/Artificial-Intelligence) · [My GitHub](https://github.com/somilsin) · [Main Portfolio](https://somilsin.github.io/Artificial-Intelligence/portfolio/) · [My Creator Portfolio](https://somilsin.github.io/Artificial-Intelligence/my-creator-portfolio/)
 
 </div>
 

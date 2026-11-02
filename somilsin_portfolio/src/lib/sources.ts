@@ -20,8 +20,8 @@ export const SOURCES: SourceRef[] = [
   {
     claim: "YoursTrulyHQ creator portfolio with visual stories, public videos and collaboration details.",
     section: "Creator",
-    external: { label: "My Creator Portfolio", href: "https://yours-trulyhq-portfolio-updated.icybasin.chatgpt.site/" },
-    evidenceNote: "The creator portfolio labels its audience snapshot as checked on 31 October 2026.",
+    external: { label: "My Creator Portfolio", href: "https://somilsin.github.io/Artificial-Intelligence/my-creator-portfolio/" },
+    evidenceNote: "The creator portfolio labels its audience snapshot as checked on 2 November 2026.",
     cv: { label: "Creator showcase and trailer", anchor: "#creator" },
   },
   {

@@ -1,4 +1,4 @@
-const creatorUrl = "https://yours-trulyhq-portfolio-updated.icybasin.chatgpt.site/";
+const creatorUrl = "https://somilsin.github.io/Artificial-Intelligence/my-creator-portfolio/";
 
 export default function CreatorShowcase() {
   const media = `${import.meta.env.BASE_URL}media/`;
@@ -31,7 +31,7 @@ export default function CreatorShowcase() {
         <div className="mt-12 grid gap-8 md:grid-cols-3">
           {[["Emotions", "Small stories about connection, solitude and finding the courage to keep going."], ["Space", "Cosmic scale and familiar feelings, brought together through a graphite aesthetic."], ["Curiosity", "AI and science explainers on Pencil Science by YoursTrulyHQ."]].map(([title, text]) => <div key={title} className="reveal border-t border-[color:var(--color-border)] pt-6"><h3 className="serif-display text-3xl">{title}</h3><p className="prose-editorial mt-4">{text}</p></div>)}
         </div>
-        <p className="reveal mt-8 text-sm leading-relaxed text-[color:var(--color-foreground)]/65">The creator portfolio includes an audience snapshot checked on 31 October 2026, selected public videos and contact details for collaborations.</p>
+        <p className="reveal mt-8 text-sm leading-relaxed text-[color:var(--color-foreground)]/65">The creator portfolio includes an audience snapshot checked on 2 November 2026, selected public videos and contact details for collaborations.</p>
       </div>
     </section>
   );

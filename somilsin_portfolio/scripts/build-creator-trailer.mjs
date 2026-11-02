@@ -33,7 +33,7 @@ for (const [slug, title, label] of scenes) {
 fs.writeFileSync(path.join(work, "concat.txt"), scenes.map(([slug]) => `file '${slug}.mp4'`).join("\n"));
 run(["-f", "concat", "-safe", "0", "-i", "concat.txt", "-c", "copy", "-movflags", "+faststart", path.join(media, "creator-trailer.mp4")]);
 run(["-ss", "2", "-i", path.join(media, "creator-trailer.mp4"), "-frames:v", "1", "-q:v", "2", path.join(media, "creator-trailer-poster.jpg")]);
-fs.writeFileSync(path.join(media, "creator-trailer-transcript.txt"), "YoursTrulyHQ. Visual stories by Somil Singh.\n\n24 second silent montage using existing reel excerpts.\n" + scenes.map(([, title, label], i) => `${i * 4}–${(i + 1) * 4} seconds: ${title}. ${label}.`).join("\n") + "\n\nDigitally created visuals with generative assistance.\nExplore the stories, AI explainers and collaboration details at https://yours-trulyhq-portfolio-updated.icybasin.chatgpt.site/\n");
+fs.writeFileSync(path.join(media, "creator-trailer-transcript.txt"), "YoursTrulyHQ. Visual stories by Somil Singh.\n\n24 second silent montage using existing reel excerpts.\n" + scenes.map(([, title, label], i) => `${i * 4}–${(i + 1) * 4} seconds: ${title}. ${label}.`).join("\n") + "\n\nDigitally created visuals with generative assistance.\nExplore the stories, AI explainers and collaboration details at https://somilsin.github.io/Artificial-Intelligence/my-creator-portfolio/\n");
 const stamp = (sec) => `00:00:${String(sec).padStart(2, "0")}.000`;
 fs.writeFileSync(path.join(media, "creator-trailer.vtt"), "WEBVTT\n\n" + scenes.map(([, title, label], i) => `${stamp(i * 4)} --> ${stamp((i + 1) * 4)}\nYoursTrulyHQ. ${title}. ${label}.\n`).join("\n"));
 console.log("Creator trailer, poster, captions and transcript generated.");

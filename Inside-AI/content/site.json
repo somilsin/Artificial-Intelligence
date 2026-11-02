@@ -24,7 +24,8 @@
       "image_alt": "VAE overview illustration from the published article",
       "medium": "https://medium.com/@thesomilsinghofficial/how-vaes-learn-to-generate-new-images-9ebfd7a6a508",
       "substack": "https://thesomilsingh.substack.com/p/how-vaes-learn-to-generate-new-images",
-      "published": true
+      "published": true,
+      "video": "https://www.youtube.com/watch?v=Dd-k03EHi2s"
     },
     {
       "part": "02",
@@ -36,7 +37,8 @@
       "image_alt": "Concept map showing the mathematical foundations behind a VAE",
       "medium": "https://medium.com/@thesomilsinghofficial/why-a-vae-needs-kl-divergence-variational-inference-and-a-little-noise-e29c5932d597",
       "substack": "https://thesomilsingh.substack.com/p/why-a-vae-needs-kl-divergence-variational",
-      "published": true
+      "published": true,
+      "video": "https://www.youtube.com/watch?v=Dd-k03EHi2s"
     },
     {
       "part": "03",
@@ -88,7 +90,8 @@
       "published": true,
       "source": "part-05.html",
       "page": "part-05-gan.html",
-      "date": "6 October 2026"
+      "date": "6 October 2026",
+      "newsletter": "https://www.linkedin.com/pulse/deep-learning-05-gan-spots-every-fake-how-does-its-learn-singh--sydof/"
     },
     {
       "part": "06",

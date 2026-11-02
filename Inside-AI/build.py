@@ -54,7 +54,7 @@ for item in data['articles']:
         article_page += '</main>' + footer() + '</body></html>'
         (out / file).write_text(article_page, encoding='utf-8')
         reading_links.append('<a href="' + esc(file) + '">Read here ↗</a>')
-    for key, label in [('medium', 'Medium'), ('substack', 'Substack'), ('x', 'X'), ('company', 'LinkedIn')]:
+    for key, label in [('medium', 'Medium'), ('substack', 'Substack'), ('x', 'X'), ('company', 'LinkedIn'), ('newsletter', 'LinkedIn newsletter'), ('video', 'Watch video')]:
         if item.get(key):
             reading_links.append('<a href="' + esc(item[key]) + '">' + label + ' ↗</a>')
     cards.append(f'''<article class="article-card" data-article data-type="{esc(item['type'])}">

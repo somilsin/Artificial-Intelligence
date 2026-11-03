@@ -1,15 +1,8 @@
 const projects=[...document.querySelectorAll('.project')];
-const filters=[...document.querySelectorAll('[data-filter]')];
-let visibleProjects=projects,activeProject=null,lastTrigger=null;
+const visibleProjects=projects;let activeProject=null,lastTrigger=null;
 const dialog=document.getElementById('story-dialog');
 const art=document.getElementById('story-art'),video=document.getElementById('story-video');
 const artButton=document.getElementById('show-art'),videoButton=document.getElementById('show-video');
-filters.forEach(button=>button.addEventListener('click',()=>{
-  filters.forEach(item=>{const active=item===button;item.classList.toggle('active',active);item.setAttribute('aria-pressed',String(active));});
-  projects.forEach(item=>item.hidden=button.dataset.filter!=='all'&&item.dataset.category!==button.dataset.filter);
-  visibleProjects=projects.filter(item=>!item.hidden);
-  document.getElementById('result-count').textContent=`${visibleProjects.length} stories to explore`;
-}));
 function showArt(){video.pause();video.hidden=true;art.hidden=false;artButton.setAttribute('aria-pressed','true');videoButton.setAttribute('aria-pressed','false');}
 function renderStory(project){
   activeProject=project;showArt();const {slug,title,category,description}=project.dataset;

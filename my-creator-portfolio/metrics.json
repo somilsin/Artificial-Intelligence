@@ -1,84 +1,64 @@
 {
-  "checked_at": "2026-11-02T10:34:08.031698+00:00",
+  "checked_at": "2026-11-03T13:30:00+00:00",
   "snapshot_type": "manually verified native platform dashboards and public content pages",
   "instagram": {
     "handle": "yours_trulyhq",
-    "period": "Last 30 days, as displayed by Instagram on 2 November 2026",
+    "period": "Last 30 days, as displayed by Instagram on 3 November 2026",
     "source": "https://www.instagram.com/accounts/insights/?timeframe=30",
-    "views": 369163,
-    "viewers": 218892,
-    "interactions": 33504,
-    "accounts_engaged": 22062,
-    "non_follower_view_share_percent": 97.3,
-    "profile_visits": 1279,
+    "views": 379957,
+    "viewers": 223563,
+    "interactions": 34101,
+    "accounts_engaged": 22366,
+    "non_follower_view_share_percent": 97.4,
+    "profile_visits": 1298,
     "external_link_taps": 4,
-    "total_followers": 2504,
+    "total_followers": 2508,
     "note": "Follower total is current, not followers gained. Views are not unique people. Dashboard totals may include paid activity.",
-    "checked_at": "2026-11-02T10:34:08.031698+00:00",
+    "checked_at": "2026-11-03T13:30:00+00:00",
     "period_start": null,
     "period_end": null,
-    "rounding": "Dashboard integer totals as displayed; percentages rounded to one decimal. Instagram did not expose calendar endpoints in the date menu."
+    "rounding": "Dashboard integer totals as displayed; percentages rounded to one decimal. Instagram did not expose calendar endpoints in the date menu.",
+    "interactions_per_100_views": 9.0
   },
   "youtube": {
     "handle": "YoursTrulyHQ",
-    "period_start": "2026-10-05",
-    "period_end": "2026-11-01",
+    "period_start": null,
+    "period_end": null,
     "source": "https://studio.youtube.com/channel/UCAIsLOKUoqi5aXzRFt3U-qQ/analytics/tab-overview/period-default",
-    "views": 7247,
-    "watch_hours": 15.7,
+    "views": 8762,
+    "watch_hours": 19.1,
     "net_subscriber_change": 13,
     "total_subscribers": 85,
-    "note": "5 October–1 November 2026. Subscriber total is current at observation. Channel metrics include public, private, unlisted and deleted videos in YouTube Studio.",
-    "period": "Last 28 days",
-    "checked_at": "2026-11-02T10:34:08.031698+00:00",
-    "rounding": "Exact 7,247 view total exposed by Studio; headline 7.2K. Watch hours displayed to one decimal."
+    "note": "Last 28 days as shown in Studio on 3 November 2026. Subscriber total is current at observation. Channel metrics include public, private, unlisted and deleted videos in YouTube Studio.",
+    "period": "Last 28 days, as displayed in Studio on 3 November 2026",
+    "checked_at": "2026-11-03T13:30:00+00:00",
+    "rounding": "Exact view total and watch hours to one decimal as displayed by Studio."
   },
   "instagram_reels": [
     {
+      "rank": 1,
       "slug": "solitude",
-      "displayed_views": "93.1K",
+      "displayed_views": "93.3K",
       "url": "https://www.instagram.com/reel/DeYdVUqCCw2/",
-      "checked_at": "2026-11-02T10:34:08.031698+00:00",
+      "checked_at": "2026-11-03T13:30:00+00:00",
       "source": "https://www.instagram.com/yours_trulyhq/reels/",
       "definition": "Lifetime public reel view display. K suffix is retained without estimating an exact count."
     },
     {
+      "rank": 2,
       "slug": "connection",
-      "displayed_views": "74.2K",
+      "displayed_views": "77.1K",
       "url": "https://www.instagram.com/reel/De8OuaeCG-H/",
-      "checked_at": "2026-11-02T10:34:08.031698+00:00",
+      "checked_at": "2026-11-03T13:30:00+00:00",
       "source": "https://www.instagram.com/yours_trulyhq/reels/",
       "definition": "Lifetime public reel view display. K suffix is retained without estimating an exact count."
     },
     {
-      "slug": "magnetar",
-      "displayed_views": "8,104",
-      "url": "https://www.instagram.com/reel/De0kopFCW55/",
-      "checked_at": "2026-11-02T10:34:08.031698+00:00",
-      "source": "https://www.instagram.com/yours_trulyhq/reels/",
-      "definition": "Lifetime public reel view display. K suffix is retained without estimating an exact count."
-    },
-    {
-      "slug": "aurora",
-      "displayed_views": "5,141",
-      "url": "https://www.instagram.com/reel/DfBcK_Li3UH/",
-      "checked_at": "2026-11-02T10:34:08.031698+00:00",
-      "source": "https://www.instagram.com/yours_trulyhq/reels/",
-      "definition": "Lifetime public reel view display. K suffix is retained without estimating an exact count."
-    },
-    {
-      "slug": "courage",
-      "displayed_views": "578",
-      "url": "https://www.instagram.com/reel/DfGhdaVCFRJ/",
-      "checked_at": "2026-11-02T10:34:08.031698+00:00",
-      "source": "https://www.instagram.com/yours_trulyhq/reels/",
-      "definition": "Lifetime public reel view display. K suffix is retained without estimating an exact count."
-    },
-    {
+      "rank": 3,
       "slug": "rebirth",
-      "displayed_views": "19.5K",
-      "url": "https://www.instagram.com/reel/DeTz2kQCXyH/",
-      "checked_at": "2026-11-02T10:34:08.031698+00:00",
+      "displayed_views": "20.8K",
+      "url": "https://www.instagram.com/reel/DeTzdpGi7sU/",
+      "checked_at": "2026-11-03T13:30:00+00:00",
       "source": "https://www.instagram.com/yours_trulyhq/reels/",
       "definition": "Lifetime public reel view display. K suffix is retained without estimating an exact count."
     }
@@ -89,7 +69,7 @@
       "title": "Longing",
       "public_displayed_views": "1.5K",
       "url": "https://www.youtube.com/shorts/_SCZIZpYaRc",
-      "checked_at": "2026-11-02T10:34:08.031698+00:00",
+      "checked_at": "2026-11-03T13:30:00+00:00",
       "source": "https://www.youtube.com/@YoursTrulyHQ/shorts",
       "definition": "Lifetime public display count; K suffix retained as shown."
     },
@@ -102,19 +82,20 @@
       "format": "full-length AI explainer",
       "duration_displayed": "6:57",
       "source": "https://www.youtube.com/@YoursTrulyHQ/videos",
-      "checked_at": "2026-11-02T10:34:08.031698+00:00",
+      "checked_at": "2026-11-03T13:30:00+00:00",
       "definition": "Lifetime public display count; K suffix retained as shown."
     },
     {
       "id": "M34IasLdAbY",
       "title": "How does a tornado start spinning?",
-      "public_displayed_views": "592",
+      "public_displayed_views": "596",
       "url": "https://www.youtube.com/shorts/M34IasLdAbY",
-      "checked_at": "2026-11-02T10:34:08.031698+00:00",
+      "checked_at": "2026-11-03T13:30:00+00:00",
       "source": "https://www.youtube.com/@YoursTrulyHQ/shorts",
       "definition": "Lifetime public display count; K suffix retained as shown."
     }
   ],
   "refresh": "Static snapshot, not a live analytics connection. Public individual video views are lifetime display counts and not monthly totals.",
-  "verification_note": "Native Instagram Insights and public reel grid, YouTube Studio last 28 days and public channel Videos/Shorts checked in designated Chrome on 2 November 2026. Studio period totals are separate from public lifetime content counts. No platform audiences are combined."
+  "verification_note": "Native Instagram Insights and public reel grid checked in Chrome on 3 November 2026. YouTube Studio last 28 days from the 3 November 2026 Studio check. Public Shorts and video counts checked on the channel pages the same day. No platform audiences are combined.",
+  "instagram_reels_selection": "Top 3 distinct stories by public view count on 3 November 2026. A repost of Solitude (DeYdt_Pioz6, 68.6K) is left out so each story appears once; Rebirth links to its higher-viewed post."
 }

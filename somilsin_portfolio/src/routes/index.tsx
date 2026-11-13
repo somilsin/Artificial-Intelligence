@@ -40,8 +40,8 @@ const NAV = [
 
 const METRICS = [
   {
-    "value": "05",
-    "label": "published LinkedIn model articles"
+    "value": "07",
+    "label": "published LinkedIn lessons"
   },
   {
     "value": "04",
@@ -64,7 +64,7 @@ const EXPERIENCE = [
     "tag": "October 2026 to present",
     "points": [
       "Building Inside AI, an open source learning hub for foundational AI and deep learning. I share research notes, diagrams, code, model explainers and world AI updates.",
-      "Published the first five Deep Learning Models articles on LinkedIn, covering VAE, VQ VAE and GANs. I also develop educational videos and explore GTM, brand growth and marketing through Inside AI."
+      "I published five articles on VAE, VQ VAE and GANs on LinkedIn and followed them with two notes on physics based LLMs. I also develop educational videos and explore GTM, brand growth and marketing through Inside AI."
     ],
     "link": {
       "label": "View my LinkedIn experience ↗",
@@ -290,7 +290,7 @@ const WORK: WorkItem[] = [
     "n": "08",
     "title": "Inside AI",
     "meta": "Public AI learning and research · October 2026",
-    "body": "My public learning initiative. The first five LinkedIn model articles cover VAE, VQ VAE and GANs through diagrams, maths, runnable code and recorded outputs. Sourced world AI updates and a public VAE video explainer extend the written notes.",
+    "body": "My public learning initiative. I cover VAE, VQ VAE, GANs and physics based LLMs through diagrams, maths, runnable code and recorded outputs. Sourced world AI updates and a public VAE video explainer extend the written notes.",
     "href": "https://somilsin.github.io/Artificial-Intelligence/Inside-AI/",
     "hrefLabel": "Visit Inside AI ↗",
     "secondary": {

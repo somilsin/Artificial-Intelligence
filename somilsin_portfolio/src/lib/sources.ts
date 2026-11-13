@@ -21,7 +21,7 @@ export const SOURCES: SourceRef[] = [
     claim: "YoursTrulyHQ creator portfolio with visual stories, public videos and collaboration details.",
     section: "Creator",
     external: { label: "My Creator Portfolio", href: "https://somilsin.github.io/Artificial-Intelligence/my-creator-portfolio/" },
-    evidenceNote: "The creator portfolio labels its audience snapshot as checked on 2 November 2026.",
+    evidenceNote: "The creator portfolio labels its audience snapshot as checked on 13 November 2026.",
     cv: { label: "Creator showcase and trailer", anchor: "#creator" },
   },
   {
@@ -62,7 +62,7 @@ export const SOURCES: SourceRef[] = [
     cv: { label: "Framework codebase study", anchor: "#work" },
   },
 {
-  "claim": "Founder of Inside AI. Five published LinkedIn model articles cover VAE, VQ VAE and GANs.",
+  "claim": "Founder of Inside AI. Seven published LinkedIn lessons cover VAE, VQ VAE, GANs and physics based LLMs.",
   "section": "Inside AI",
   "repo": "somilsin/Artificial-Intelligence",
   "repoPath": "/tree/main/Inside-AI",

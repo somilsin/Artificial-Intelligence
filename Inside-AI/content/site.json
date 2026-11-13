@@ -222,6 +222,34 @@
       "source": "part-13.html",
       "page": "part-13-ebm-overview.html",
       "date": "15 October 2026"
+    },
+    {
+      "part": "01",
+      "type": "Overview",
+      "title": "Physics based LLMs 01: What am I actually predicting?",
+      "description": "I use a moving cart to show what a prediction target is and how to define it.",
+      "date": "4 November 2026",
+      "substack": "https://thesomilsingh.substack.com/p/physics-based-llms-01-what-am-i-actually",
+      "newsletter": "https://www.linkedin.com/pulse/physics-based-llms-01-what-am-i-actually-predicting-somil-singh--maomf/",
+      "series": "Physics based LLMs",
+      "model": "Physics based LLMs",
+      "image": "assets/physics-based-llms-01.png",
+      "image_alt": "Cover from the published Physics based LLMs part 01 LinkedIn edition",
+      "published": true
+    },
+    {
+      "part": "02",
+      "type": "Foundations",
+      "title": "Physics based LLMs 02. Fit the cart's velocity from position readings",
+      "description": "I fit the velocity of a cart from position readings and use the fit to predict where it goes next.",
+      "date": "12 November 2026",
+      "substack": "https://thesomilsingh.substack.com/p/physics-based-llms-02-fit-the-carts",
+      "newsletter": "https://www.linkedin.com/pulse/physics-based-llms-02-fit-carts-velocity-from-somil-singh--fkszf/",
+      "series": "Physics based LLMs",
+      "model": "Physics based LLMs",
+      "image": "assets/physics-based-llms-02.png",
+      "image_alt": "Cover from the published Physics based LLMs part 02 LinkedIn edition",
+      "published": true
     }
   ],
   "news": [

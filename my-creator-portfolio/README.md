@@ -33,7 +33,7 @@ This is my space for visual stories about the world around us and the feelings w
 * A brand partnerships section with the formats I offer and how a collab runs from brief to live.
 * Contact details for creative collaborations and brand partnerships.
 
-The figures in `metrics.json` were checked on 3 November 2026. Instagram uses its last 30 days window and YouTube uses the last 28 days shown in Studio. This is a dated snapshot, not a live analytics feed. Current follower and subscriber totals are labelled separately from period growth.
+The figures in `metrics.json` were checked on 13 November 2026. Instagram uses its last 30 days window and YouTube uses the 16 October to 12 November 2026 window shown in Studio. This is a dated snapshot, not a live analytics feed. Current follower and subscriber totals are labelled separately from period growth.
 
 ---
 

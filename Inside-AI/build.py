@@ -57,9 +57,10 @@ for item in data['articles']:
     for key, label in [('medium', 'Medium'), ('substack', 'Substack'), ('x', 'X'), ('company', 'LinkedIn'), ('newsletter', 'LinkedIn newsletter'), ('video', 'Watch video')]:
         if item.get(key):
             reading_links.append('<a href="' + esc(item[key]) + '">' + label + ' ↗</a>')
+    series = esc(item.get('series', 'Deep Learning Models'))
     cards.append(f'''<article class="article-card" data-article data-type="{esc(item['type'])}">
 <img class="article-art" src="{esc(item['image'])}" alt="{esc(item['image_alt'])}" loading="lazy" width="640" height="360">
-<div class="article-copy"><div class="part-label label"><span>Part {item['part']} · Deep Learning Models</span><span class="type">{item['type']}</span></div>
+<div class="article-copy"><div class="part-label label"><span>Part {item['part']} · {series}</span><span class="type">{item['type']}</span></div>
 <h3>{esc(item['title'])}</h3><p>{esc(item['description'])}</p><nav class="reading" aria-label="Read Part {item['part']}">
 {''.join(reading_links)}</nav></div></article>''')
 
@@ -117,7 +118,7 @@ page += f'''<a class="skip" href="#main">Skip to content</a>
 <div class="tools"><div class="filters" role="group" aria-label="Filter model notes"><button data-filter="All" aria-pressed="true">All notes</button><button data-filter="Overview" aria-pressed="false">Overview</button><button data-filter="Foundations" aria-pressed="false">Foundations</button></div>
 <label class="search" for="article-search">Search <input id="article-search" type="search" placeholder="Try KL divergence" autocomplete="off"></label></div>
 <p id="result-count" class="label" aria-live="polite">{len(cards)} notes</p><div class="cards">{''.join(cards)}</div><p id="no-results" class="empty" hidden>No notes match that search. Try VAE or clear the filter.</p>
-<div class="path"><span class="label">Inside AI series</span><p>Starting with generative AI. VAE, VQ VAE, GAN and diffusion are already in the library. Pick a model and follow along.</p></div></div></section>
+<div class="path"><span class="label">Inside AI series</span><p>Starting with generative AI. I’ve added my first two notes on physics based LLMs alongside the deep learning series.</p></div></div></section>
 <section class="section news" id="news" aria-labelledby="news-title"><div class="wrap"><div class="section-head"><div><span class="label">02 / World AI</span><h2 class="display" id="news-title">Research moves fast.<br>Let’s make sense of it.</h2></div><p class="section-note">What’s happening in AI and why it matters. Lemme connect the dots, with the original research and announcements linked.</p></div>{news_html}</div></section>
 <section class="section about" id="about" aria-labelledby="about-title"><div class="wrap"><span class="label">03 / Why Inside AI exists</span><div class="about-grid"><h2 class="display" id="about-title">Learning in public.<br>Bringing you all along.</h2><div class="about-copy"><p>I’m an AI engineer @ Oracle and I’m actively upskilling in the fields I’m passionate about. Inside AI is where I share what I learn, from foundational models to new research.</p><p><strong>From my notes to your next project.</strong> Expect model explainers, diagrams and code for projects and interview prep. Questions are welcome. If something clicks, share it with a friend ❤️</p></div></div>
 <div class="principles"><div><span class="label">Understand</span><p>Build intuition before diving into the maths.</p></div><div><span class="label">Try</span><p>Connect the ideas to runnable code and actual output.</p></div><div><span class="label">Check</span><p>Read the sources and separate reported claims from verified results.</p></div></div>

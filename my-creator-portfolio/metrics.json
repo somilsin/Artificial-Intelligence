@@ -1,20 +1,20 @@
 {
-  "checked_at": "2026-11-23T05:35:00Z",
+  "checked_at": "2026-11-23T08:00:01Z",
   "snapshot_type": "manually verified native platform dashboards and public content pages",
   "instagram": {
     "handle": "yours_trulyhq",
     "period": "Last 30 days, as displayed by Instagram on 23 November 2026",
     "source": "https://www.instagram.com/accounts/insights/?timeframe=30",
-    "views": 201272,
-    "viewers": 130124,
-    "interactions": 21251,
-    "accounts_engaged": 13848,
-    "non_follower_view_share_percent": 96.9,
-    "profile_visits": 850,
+    "views": 199615,
+    "viewers": 128659,
+    "interactions": 21066,
+    "accounts_engaged": 13803,
+    "non_follower_view_share_percent": 96.8,
+    "profile_visits": 890,
     "external_link_taps": 3,
     "total_followers": 3908,
     "note": "Follower total is current, not followers gained. Views are not unique people. Dashboard totals may include paid activity.",
-    "checked_at": "2026-11-23T05:35:00Z",
+    "checked_at": "2026-11-23T08:00:01Z",
     "period_start": null,
     "period_end": null,
     "rounding": "Dashboard integer totals as displayed; percentages rounded to one decimal. Instagram did not expose calendar endpoints in the date menu.",
@@ -31,7 +31,7 @@
     "total_subscribers": 99,
     "note": "Subscriber total is current at observation. Period views, watch time and net subscriber change are from the Studio Advanced mode total. Channel totals can include multiple visibility states.",
     "period": "25 October to 21 November 2026 (Last 28 days)",
-    "checked_at": "2026-11-23T05:35:00Z",
+    "checked_at": "2026-11-23T08:00:01Z",
     "rounding": "Advanced mode exact view and net subscriber totals. Watch hours as displayed to one decimal."
   },
   "instagram_reels": [
@@ -96,6 +96,6 @@
     }
   ],
   "refresh": "Static snapshot, not a live analytics connection. Public individual video views are lifetime display counts and not monthly totals.",
-  "verification_note": "Native Instagram Insights, YouTube Studio and public grids checked around 11:05 IST on 23 November 2026. No platform audiences are combined.",
+  "verification_note": "Native Instagram Insights and YouTube Studio analytics refreshed on 23 November 2026. Individual public counts retain their own observed timestamps. No platform audiences are combined.",
   "instagram_reels_selection": "Three existing featured stories. Ranks compare only these selected reels; card order follows the portfolio layout."
 }

@@ -13,6 +13,10 @@
     "portfolio": "https://somilsin.github.io/Artificial-Intelligence/portfolio/",
     "email": "mailto:insideaicosmos@gmail.com"
   },
+  "newsletter_audience": {
+    "subscribers": 759,
+    "observed_date": "23 November 2026"
+  },
   "articles": [
     {
       "part": "01",

@@ -17,6 +17,24 @@
     "subscribers": 759,
     "observed_date": "23 November 2026"
   },
+  "channel_highlights": {
+    "LinkedIn": [
+      {
+        "title": "Physics based LLMs 02. Fit the cart’s velocity from position readings",
+        "url": "https://www.linkedin.com/pulse/physics-based-llms-02-fit-carts-velocity-from-somil-singh--fkszf/"
+      }
+    ],
+    "X": [
+      {
+        "title": "Tool retrieval",
+        "url": "https://x.com/Skywalkerlyzv/status/2123998551260778912"
+      },
+      {
+        "title": "How Duplex works in Gemini",
+        "url": "https://x.com/Skywalkerlyzv/status/2124830967189684402"
+      }
+    ]
+  },
   "articles": [
     {
       "part": "01",

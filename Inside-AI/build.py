@@ -96,7 +96,8 @@ if visible:
 <h3>{esc(item['title'])}</h3><p>{esc(item.get('description', 'What’s happening in AI, why it matters and what you can try. Original sources and the limits come with every update.'))}</p>
 <a class="button" href="{file}">{esc(item.get('reading_label', 'Read the updates ↗'))}</a></div><ol class="news-list">{''.join('<li>'+esc(topic)+'</li>' for topic in item['topics'])}</ol></article>'''
     if len(visible) > 1:
-        news_html += '<nav class="news-archive reading" aria-label="Earlier world AI editions">' + ''.join('<a href="news-' + esc(previous['id']) + '.html">' + esc(previous['date'] + ' · ' + previous['title']) + ' ↗</a>' for previous in reversed(visible[:-1])) + '</nav>'
+        archive = ''.join('<a href="news-' + esc(previous['id']) + '.html">' + esc(previous['date'] + ' · ' + previous['title']) + ' ↗</a>' for previous in reversed(visible[:-1]))
+        news_html += '<details class="news-archive-panel"><summary>Earlier World AI editions</summary><nav class="news-archive reading" aria-label="Earlier World AI editions">' + archive + '</nav></details>'
 for item in visible:
     file = 'news-' + item['id'] + '.html'
     text = (ROOT / 'content' / item['source']).read_text(encoding='utf-8')
@@ -105,13 +106,29 @@ for item in visible:
     page += '<main class="reader"><a class="back label" href="index.html#news">← Back to Inside AI</a>' + body + '</main>' + footer() + '</body></html>'
     (out / file).write_text(page, encoding='utf-8')
 
+channel_cards = []
+for platform, examples in data['channel_highlights'].items():
+    ranked = sorted(
+        (example for example in examples if example.get('views', 0) > 700),
+        key=lambda example: example['views'],
+        reverse=True,
+    )
+    fallback = [example for example in examples if 'views' not in example]
+    selected = ranked[:2] if ranked else fallback[:2 if platform == 'X' else 1]
+    items = []
+    for example in selected:
+        views = example.get('views')
+        proof = f'<small>{views:,} views · {esc(example["observed_date"])}</small>' if views else ''
+        items.append(f'<li><a href="{esc(example["url"])}"><div>{esc(example["title"])}{proof}</div><span aria-hidden="true">↗</span></a></li>')
+    channel_cards.append(f'<article class="editorial-channel"><h3>{esc(platform)}</h3><ul>{"".join(items)}</ul></article>')
+
 page = head('Inside AI | Model Explainers and AI Study Notes', data['description'], data['proposed_site_url'])
 page += f'''<a class="skip" href="#main">Skip to content</a>
 <header class="topbar"><nav class="wrap nav" aria-label="Main navigation"><a class="brand" href="#main"><img src="assets/inside-ai-logo.png" alt="" width="49" height="49">Inside AI</a>
 <div class="navlinks"><a href="#library">Library</a><a href="#news">World AI</a><a href="#services">Services</a><a href="#about">About</a><a class="outline" href="#channels">Find me ↗</a></div></nav></header>
 <main id="main"><section class="hero" aria-labelledby="hero-title"><div class="hero-inner"><div class="label">A public learning journal · Somil Singh</div>
 <h1 class="display" id="hero-title"><span>Learn it.</span><span>Build it.</span><span><em>Explain it.</em></span></h1>
-<p>I’m upskilling in AI, ML, DL, CV and robotics and bringing yall along. Sharing what I learn from the ground up, with diagrams and code to help you build projects and get interview ready alongside me. Sharing is caring ❤️</p>
+<p>Sharing what I learn from the ground up, with diagrams and code to help you build projects and get interview ready alongside me.</p>
 <div class="actions"><a class="button primary" href="#library">Read the model notes ↗</a><a class="button" href="#news">Explore world AI ↓</a></div>
 <nav class="hero-channels" aria-label="Follow Inside AI">
   <a href="{esc(links['medium'])}">Medium <span aria-hidden="true">↗</span></a>
@@ -126,6 +143,7 @@ page += f'''<a class="skip" href="#main">Skip to content</a>
 <p id="result-count" class="label" aria-live="polite">{len(cards)} notes</p><div class="cards">{''.join(cards)}</div><p id="no-results" class="empty" hidden>No notes match that search. Try VAE or clear the filter.</p>
 <div class="path"><span class="label">Inside AI series</span><p>Starting with generative AI. I’ve added my first two notes on physics based LLMs alongside the deep learning series.</p></div></div></section>
 <section class="section news" id="news" aria-labelledby="news-title"><div class="wrap"><div class="section-head"><div><span class="label">02 / World AI</span><h2 class="display" id="news-title">Research moves fast.<br>Let’s make sense of it.</h2></div><p class="section-note">What’s happening in AI and why it matters. Lemme connect the dots, with the original research and announcements linked.</p></div>{news_html}</div></section>
+<section class="wrap editorial-channels" aria-label="Selected work on LinkedIn and X">{''.join(channel_cards)}</section>
 <section class="section about" id="about" aria-labelledby="about-title"><div class="wrap"><span class="label">03 / Why Inside AI exists</span><div class="about-grid"><h2 class="display" id="about-title">Learning in public.<br>Bringing you all along.</h2><div class="about-copy"><p>I’m an AI engineer @ Oracle and I’m actively upskilling in the fields I’m passionate about. Inside AI is where I share what I learn, from foundational models to new research.</p><p><strong>From my notes to your next project.</strong> Expect model explainers, diagrams and code for projects and interview prep. Questions are welcome. If something clicks, share it with a friend ❤️</p></div></div>
 <div class="principles"><div><span class="label">Understand</span><p>Build intuition before diving into the maths.</p></div><div><span class="label">Try</span><p>Connect the ideas to runnable code and actual output.</p></div><div><span class="label">Check</span><p>Read the sources and separate reported claims from verified results.</p></div></div>
 <img class="banner" src="assets/linkedin-banner.png" alt="Inside AI. Learn it. Build it. Explain it. AI, ML, DL, computer vision and robotics. Daily notes, diagrams and code." loading="lazy" width="2171" height="724"></div></section>

@@ -25,13 +25,19 @@ document.getElementById('next-story').addEventListener('click',()=>stepStory(1))
 document.getElementById('prev-story').addEventListener('click',()=>stepStory(-1));
 dialog.addEventListener('keydown',event=>{if(event.target===video)return;if(event.key==='ArrowRight'){event.preventDefault();stepStory(1);}if(event.key==='ArrowLeft'){event.preventDefault();stepStory(-1);}});
 
-// Load external video players only after the visitor chooses to watch.
-document.querySelectorAll('.load-youtube').forEach(button=>button.addEventListener('click',()=>{
-  const frame=document.createElement('iframe');
-  frame.src=`https://www.youtube-nocookie.com/embed/${encodeURIComponent(button.dataset.videoId)}?playsinline=1&rel=0`;
-  frame.title=button.dataset.videoTitle;
-  frame.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
-  frame.referrerPolicy='strict-origin-when-cross-origin';
-  frame.allowFullscreen=true;
-  button.replaceWith(frame);
-}));
+// Load external players only when a visitor chooses a video.
+document.querySelectorAll('.load-video').forEach(button => {
+  button.addEventListener('click', () => {
+    const { instagramId, videoId, videoTitle } = button.dataset;
+    const frame = document.createElement('iframe');
+    frame.src = instagramId
+      ? `https://www.instagram.com/reel/${encodeURIComponent(instagramId)}/embed/`
+      : `https://www.youtube-nocookie.com/embed/${encodeURIComponent(videoId)}?autoplay=1&playsinline=1&rel=0`;
+    frame.title = videoTitle;
+    frame.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+    frame.referrerPolicy = 'strict-origin-when-cross-origin';
+    frame.allowFullscreen = true;
+    button.replaceWith(frame);
+    frame.focus();
+  });
+});

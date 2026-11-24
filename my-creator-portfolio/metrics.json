@@ -97,5 +97,20 @@
   ],
   "refresh": "Static snapshot, not a live analytics connection. Public individual video views are lifetime display counts and not monthly totals.",
   "verification_note": "Native Instagram Insights and YouTube Studio analytics refreshed on 23 November 2026. Individual public counts retain their own observed timestamps. No platform audiences are combined.",
-  "instagram_reels_selection": "Three existing featured stories. Ranks compare only these selected reels; card order follows the portfolio layout."
+  "instagram_reels_selection": "Three existing featured stories. Ranks compare only these selected reels; card order follows the portfolio layout.",
+  "showcase": {
+    "instagram": {
+      "title": "Connection",
+      "url": "https://www.instagram.com/reel/De8OuaeCG-H/",
+      "source": "https://www.instagram.com/yours_trulyhq/reels/"
+    },
+    "youtube": {
+      "title": "Memory",
+      "url": "https://www.youtube.com/shorts/7DnCD9NrkyQ",
+      "displayed_views": "2.2K",
+      "observed_date": "2026-11-24",
+      "source": "https://www.youtube.com/@YoursTrulyHQ/shorts",
+      "definition": "Highest displayed lifetime views among graphite Shorts in the public channel list at observation."
+    }
+  }
 }

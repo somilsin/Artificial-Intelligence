@@ -113,7 +113,12 @@ page += f'''<a class="skip" href="#main">Skip to content</a>
 <h1 class="display" id="hero-title"><span>Learn it.</span><span>Build it.</span><span><em>Explain it.</em></span></h1>
 <p>I’m upskilling in AI, ML, DL, CV and robotics and bringing yall along. Sharing what I learn from the ground up, with diagrams and code to help you build projects and get interview ready alongside me. Sharing is caring ❤️</p>
 <div class="actions"><a class="button primary" href="#library">Read the model notes ↗</a><a class="button" href="#news">Explore world AI ↓</a></div>
-<a class="scroll-note label" href="#library">Step inside ↓</a></div></section>
+<nav class="hero-channels" aria-label="Follow Inside AI">
+  <a href="{esc(links['medium'])}">Medium <span aria-hidden="true">↗</span></a>
+  <a href="{esc(links['substack'])}">Substack <span aria-hidden="true">↗</span></a>
+  <a href="{esc(links['newsletter'])}">LinkedIn <span aria-hidden="true">↗</span></a>
+  <a href="{esc(links['x'])}">X <span aria-hidden="true">↗</span></a>
+</nav></div></section>
 <div class="topic-ribbon" aria-label="Topics"><b>AI</b><span>Machine learning</span><span>Deep learning</span><span>Computer vision</span><span>Robotics</span></div>
 <section class="section library" id="library" aria-labelledby="library-title"><div class="wrap"><div class="section-head"><div><span class="label">01 / The model library</span><h2 class="display" id="library-title">One model. Two ways in.</h2></div><p class="section-note">Start with the overview and code. Then let’s connect the dots with the maths behind them.</p></div>
 <div class="tools"><div class="filters" role="group" aria-label="Filter model notes"><button data-filter="All" aria-pressed="true">All notes</button><button data-filter="Overview" aria-pressed="false">Overview</button><button data-filter="Foundations" aria-pressed="false">Foundations</button></div>

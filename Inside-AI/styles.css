@@ -8,3 +8,33 @@ a{color:inherit;text-underline-offset:5px}button,input{font:inherit}a,button{tou
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important;animation:none!important}}
 
 .reader img{max-width:100%;height:auto;display:block;margin:24px auto;background:#fff}.reader pre{max-width:100%;overflow-x:auto;white-space:pre;padding:18px;background:var(--panel);border:1px solid var(--rule);font:13px/1.6 var(--font-mono)}.reader pre code{padding:0;background:none;overflow-wrap:normal}.reader h3{font-family:var(--font-display);font-size:30px;font-weight:400;line-height:1.25;margin:42px 0 14px;color:var(--gold)}.reader li{font-size:16px;line-height:1.8;color:#ccc3b5;margin-bottom:9px}.reading{flex-wrap:wrap}.news-archive{margin-top:24px;gap:18px}
+
+.hero-channels {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin: 24px auto 0;
+}
+.hero-channels a {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 44px;
+  padding: 7px 13px;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  color: var(--cream);
+  font: 13px/1.2 var(--font-mono);
+  text-decoration: none;
+}
+.hero-channels a span { color: var(--gold); }
+.hero-channels a:hover,
+.hero-channels a:focus-visible {
+  border-color: var(--gold);
+  background: var(--panel);
+}
+.hero-channels a:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}

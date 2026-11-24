@@ -1,11 +1,12 @@
 const links = [
-  ["Explore Inside AI", "https://somilsin.github.io/Artificial-Intelligence/Inside-AI/"],
+  ["Inside AI Portfolio", "https://somilsin.github.io/Artificial-Intelligence/Inside-AI/"],
   ["Medium", "https://medium.com/@thesomilsinghofficial"],
   ["Substack", "https://thesomilsingh.substack.com/"],
   ["X Articles", "https://x.com/Skywalkerlyzv"],
-  ["LinkedIn company", "https://www.linkedin.com/company/inside-ai-by-somil/"],
+  ["GitHub", "https://github.com/somilsin/Artificial-Intelligence/tree/main/Inside-AI"],
+  ["Inside AI company page", "https://www.linkedin.com/company/inside-ai-by-somil/"],
   ["Visual stories", "https://www.instagram.com/yours_trulyhq/"],
-  ["Newsletter", "https://www.linkedin.com/newsletters/7511777490416250880/"],
+  ["LinkedIn newsletter", "https://www.linkedin.com/newsletters/7511777490416250880/"],
 ];
 
 const reading = [

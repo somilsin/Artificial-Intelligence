@@ -23,14 +23,14 @@ esc = html.escape
 links = data['links']
 newsletter_audience = data['newsletter_audience']
 
-def head(title, description, canonical):
+def head(title, description, canonical, image='linkedin-banner.png'):
     return f'''<!doctype html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{esc(title)}</title><meta name="description" content="{esc(description)}">
 <link rel="canonical" href="{esc(canonical)}"><meta name="theme-color" content="#0E0C09">
 <meta property="og:title" content="{esc(title)}"><meta property="og:description" content="{esc(description)}">
 <meta property="og:type" content="website"><meta property="og:url" content="{esc(canonical)}">
-<meta property="og:image" content="{esc(data['proposed_site_url'])}assets/linkedin-banner.png">
+<meta property="og:image" content="{esc(data['proposed_site_url'])}assets/{esc(image)}">
 <link rel="icon" href="assets/inside-ai-logo.png"><link rel="stylesheet" href="styles.css"></head><body>'''
 
 def footer():
@@ -122,7 +122,7 @@ for platform, examples in data['channel_highlights'].items():
         items.append(f'<li><a href="{esc(example["url"])}"><div>{esc(example["title"])}{proof}</div><span aria-hidden="true">↗</span></a></li>')
     channel_cards.append(f'<article class="editorial-channel"><h3>{esc(platform)}</h3><ul>{"".join(items)}</ul></article>')
 
-page = head('Inside AI | Model Explainers and AI Study Notes', data['description'], data['proposed_site_url'])
+page = head('Inside AI | Model Explainers and AI Study Notes', data['description'], data['proposed_site_url'], 'inside-ai-featured.jpg')
 page += f'''<a class="skip" href="#main">Skip to content</a>
 <header class="topbar"><nav class="wrap nav" aria-label="Main navigation"><a class="brand" href="#main"><img src="assets/inside-ai-logo.png" alt="" width="49" height="49">Inside AI</a>
 <div class="navlinks"><a href="#library">Library</a><a href="#news">World AI</a><a href="#services">Services</a><a href="#about">About</a><a class="outline" href="#channels">Find me ↗</a></div></nav></header>
@@ -133,7 +133,9 @@ page += f'''<a class="skip" href="#main">Skip to content</a>
 <nav class="hero-channels" aria-label="Follow Inside AI">
   <a href="{esc(links['medium'])}">Medium <span aria-hidden="true">↗</span></a>
   <a href="{esc(links['substack'])}">Substack <span aria-hidden="true">↗</span></a>
-  <a href="{esc(links['newsletter'])}">LinkedIn <span aria-hidden="true">↗</span></a>
+  <a href="{esc(links['source'])}">GitHub <span aria-hidden="true">↗</span></a>
+  <a href="{esc(links['newsletter'])}">LinkedIn newsletter <span aria-hidden="true">↗</span></a>
+  <a href="{esc(links['company'])}">Inside AI company page <span aria-hidden="true">↗</span></a>
   <a href="{esc(links['x'])}">X <span aria-hidden="true">↗</span></a>
 </nav></div></section>
 <div class="topic-ribbon" aria-label="Topics"><b>AI</b><span>Machine learning</span><span>Deep learning</span><span>Computer vision</span><span>Robotics</span></div>

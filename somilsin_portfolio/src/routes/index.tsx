@@ -22,6 +22,7 @@ export const Route = createFileRoute("/")({
           "AI engineering at Oracle, cancer detection research at Strand Life Sciences and earlier 3D perception research at IISc. Founder of Inside AI and coauthor of computer vision research in IJISRT.",
       },
       { property: "og:type", content: "profile" },
+      { property: "og:image", content: "https://somilsin.github.io/Artificial-Intelligence/portfolio/media/main-portfolio-featured.jpg" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
@@ -572,7 +573,10 @@ function Index() {
               >
                 See the work
               </a>
-              <a href="#creator" className="mt-2 inline-flex eyebrow text-[color:var(--color-primary)]">Explore my creator portfolio ↗</a>
+              <nav aria-label="My portfolios" className="mt-2 flex flex-wrap gap-x-6 gap-y-3">
+                <a href="https://somilsin.github.io/Artificial-Intelligence/my-creator-portfolio/" className="eyebrow text-[color:var(--color-primary)]">My Creator Portfolio</a>
+                <a href="https://somilsin.github.io/Artificial-Intelligence/Inside-AI/" className="eyebrow text-[color:var(--color-primary)]">Inside AI Portfolio</a>
+              </nav>
             </div>
 
             <div className="reveal mt-10 flex items-center gap-8" data-reveal-delay="320">

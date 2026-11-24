@@ -19,6 +19,8 @@ concurrency:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    env:
+      PAGES_ARTIFACT: github-pages-${{ github.run_attempt }}
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
@@ -43,8 +45,27 @@ jobs:
           printf '%s' '<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Somil Singh | Artificial Intelligence</title><main><h1>My Artificial Intelligence Projects</h1><ul><li><a href="Inside-AI/">Inside AI</a></li><li><a href="behaviorai-lovexai/">BehaviorAI</a></li><li><a href="portfolio/">My Portfolio</a></li><li><a href="my-creator-portfolio/">My Creator Portfolio</a></li></ul><p><a href="https://github.com/somilsin/Artificial-Intelligence">Source and notes</a></p></main></html>' > _site/index.html
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
+        id: pages_upload
         with:
           path: _site
+          name: ${{ env.PAGES_ARTIFACT }}
+      - name: Wait for the uploaded Pages artifact
+        env:
+          ARTIFACT_ID: ${{ steps.pages_upload.outputs.artifact_id }}
+          ARTIFACTS_URL: ${{ github.api_url }}/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/artifacts
+        run: |
+          for attempt in {1..8}; do
+            if curl --silent --show-error --fail --max-time 5 --header 'Cache-Control: no-cache' \
+              "${ARTIFACTS_URL}?name=${PAGES_ARTIFACT}&attempt=${attempt}" \
+              | jq -e --arg id "$ARTIFACT_ID" 'any(.artifacts[]; (.id | tostring) == $id and (.expired | not))' >/dev/null; then
+              exit 0
+            fi
+            sleep 3
+          done
+          echo '::error::The uploaded Pages artifact is not visible yet'
+          exit 1
       - name: Deploy websites
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          artifact_name: ${{ env.PAGES_ARTIFACT }}
